@@ -1,4 +1,6 @@
-package com.example.bballstatstrack;
+package com.example.bballstatstrack.activities;
+
+import com.example.bballstatstrack.R;
 
 import android.app.Activity;
 import android.os.Bundle;
