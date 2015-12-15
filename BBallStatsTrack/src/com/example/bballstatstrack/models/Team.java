@@ -7,15 +7,13 @@ public class Team
 {
     private String mName;
 
-    private int mScore = 0;
-
     List< Player > mPlayerList = new ArrayList< Player >();
 
     List< Player > mInGamePlayerList = new ArrayList< Player >( 5 );
 
     public Team( String name, List< Player > playerList )
     {
-        mName = name;
+        setName( name );
         mPlayerList = playerList;
     }
 
@@ -52,5 +50,35 @@ public class Team
     {
         mInGamePlayerList.remove( out );
         mInGamePlayerList.add( in );
+    }
+
+    public int getTotalScore()
+    {
+        int score = 0;
+        for( Player player : mPlayerList )
+        {
+            score += ( player.get2ptFGMade() * 2 ) + ( player.get3ptFGMade() * 3 ) + player.getFTMade();
+        }
+        return score;
+    }
+
+    public int getTotalRebounds()
+    {
+        int rebounds = 0;
+        for( Player player : mPlayerList )
+        {
+            rebounds += player.getOffRebound() + player.getDefRebound();
+        }
+        return rebounds;
+    }
+
+    public String getName()
+    {
+        return mName;
+    }
+
+    public void setName( String name )
+    {
+        mName = name;
     }
 }

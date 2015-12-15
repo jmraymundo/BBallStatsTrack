@@ -73,6 +73,18 @@ public class Player
         mLastName = lastName;
     }
 
+    public void shoot2pt( boolean made )
+    {
+        if( made )
+        {
+            m2ptFGMade++;
+        }
+        else
+        {
+            m2ptFGMiss++;
+        }
+    }
+
     public int get2ptFGMiss()
     {
         return m2ptFGMiss;
@@ -81,6 +93,18 @@ public class Player
     public int get2ptFGMade()
     {
         return m2ptFGMade;
+    }
+
+    public void shoot3pt( boolean made )
+    {
+        if( made )
+        {
+            m3ptFGMade++;
+        }
+        else
+        {
+            m3ptFGMiss++;
+        }
     }
 
     public int get3ptFGMiss()
@@ -93,6 +117,18 @@ public class Player
         return m3ptFGMade;
     }
 
+    public void shootFT( boolean made )
+    {
+        if( made )
+        {
+            mFTMade++;
+        }
+        else
+        {
+            mFTMiss++;
+        }
+    }
+
     public int getFTMiss()
     {
         return mFTMiss;
@@ -101,6 +137,18 @@ public class Player
     public int getFTMade()
     {
         return mFTMade;
+    }
+
+    public void makeRebound( boolean offensive )
+    {
+        if( offensive )
+        {
+            mOffRebound++;
+        }
+        else
+        {
+            mDefRebound++;
+        }
     }
 
     public int getOffRebound()
@@ -113,9 +161,19 @@ public class Player
         return mDefRebound;
     }
 
+    public void makeAssist()
+    {
+        mAssist++;
+    }
+
     public int getAssist()
     {
         return mAssist;
+    }
+
+    public void mainTurnover()
+    {
+        mTurnover++;
     }
 
     public int getTurnover()
@@ -123,9 +181,19 @@ public class Player
         return mTurnover;
     }
 
+    public void makeSteal()
+    {
+        mSteal++;
+    }
+
     public int getSteal()
     {
         return mSteal;
+    }
+
+    public void makeBlock()
+    {
+        mBlock++;
     }
 
     public int getBlock()
@@ -133,9 +201,19 @@ public class Player
         return mBlock;
     }
 
+    public void makeFoul()
+    {
+        mFoulCount++;
+    }
+
     public int getFoulCount()
     {
         return mFoulCount;
+    }
+
+    public void incrementPlayingTime()
+    {
+        mPlayingTimeSec++;
     }
 
     public int getPlayingTimeSec()
@@ -143,8 +221,4 @@ public class Player
         return mPlayingTimeSec;
     }
 
-    public void incrementPlayingTime()
-    {
-        mPlayingTimeSec++;
-    }
 }

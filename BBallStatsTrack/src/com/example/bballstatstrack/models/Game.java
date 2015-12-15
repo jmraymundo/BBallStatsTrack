@@ -10,7 +10,7 @@ public class Game
 
     private boolean isGameOngoing = false;
 
-    private int mQuarter = 0;
+    private int mPeriod = 0;
 
     private int mCurrentGameClock;
 
@@ -22,12 +22,37 @@ public class Game
 
     private final int mReducedMaxShotClock;
 
-    private GameTimer mTimerThread = new GameTimer();
-
     public Game( int maxGameClock, int resetShotClock )
     {
         mMaxGameClock = maxGameClock;
         mReducedMaxShotClock = resetShotClock;
+        initializeClocks();
+    }
+
+    private void initializeClocks()
+    {
+        resetGameClock();
+        resetShotClock( true );
+    }
+
+    public int getCurrentGameClock()
+    {
+        return mCurrentGameClock;
+    }
+
+    public int getCurrentShotClock()
+    {
+        return mCurrentShotClock;
+    }
+
+    public void nextPeriod()
+    {
+        mPeriod++;
+    }
+
+    public int getPeriod()
+    {
+        return mPeriod;
     }
 
     public void resetShotClock( boolean isMax )
@@ -52,7 +77,7 @@ public class Game
         isGameOngoing = false;
     }
 
-    public void continueGame()
+    public void startGame()
     {
         isGameOngoing = true;
     }
@@ -67,25 +92,16 @@ public class Game
         mHasBallPossession = newTeam;
     }
 
-    private class GameTimer implements Runnable
+    public void updateTime()
     {
-        public void run()
-        {
-            if( isGameOngoing )
-            {
-                mAwayTeam.updatePlayingTime();
-                mHomeTeam.updatePlayingTime();
-                mCurrentGameClock--;
-                mCurrentShotClock--;
-            }
-            try
-            {
-                Thread.sleep( 1000 );
-            }
-            catch( InterruptedException e )
-            {
-                e.printStackTrace();
-            }
-        }
-    };
+        mAwayTeam.updatePlayingTime();
+        mHomeTeam.updatePlayingTime();
+        mCurrentGameClock--;
+        mCurrentShotClock--;
+    }
+
+    public boolean isGameOngoing()
+    {
+        return isGameOngoing;
+    }
 }
