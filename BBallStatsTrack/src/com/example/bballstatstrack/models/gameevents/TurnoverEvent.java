@@ -13,7 +13,6 @@ public class TurnoverEvent extends GameEvent
     {
         super( Event.TURNOVER, player, team );
         mTurnoverType = type;
-        resolveEvent();
     }
 
     @Override
@@ -40,5 +39,9 @@ public class TurnoverEvent extends GameEvent
     public void resolveEvent()
     {
         mPlayer.makeTurnover();
+        if( mAppended != null )
+        {
+            mAppended.resolveEvent();
+        }
     }
 }

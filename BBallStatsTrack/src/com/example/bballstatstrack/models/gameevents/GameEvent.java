@@ -71,5 +71,5 @@ public abstract class GameEvent
         throw new GameEventException( this, appendedEvent );
     }
 
-    public abstract void resolveEvent() throws GameEventException;
+    public abstract void resolveEvent();
 }

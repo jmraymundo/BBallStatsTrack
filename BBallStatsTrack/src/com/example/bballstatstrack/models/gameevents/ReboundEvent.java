@@ -2,6 +2,7 @@ package com.example.bballstatstrack.models.gameevents;
 
 import com.example.bballstatstrack.models.Player;
 import com.example.bballstatstrack.models.Team;
+import com.example.bballstatstrack.models.gameevents.exceptions.GameEventException;
 
 public class ReboundEvent extends GameEvent
 {
@@ -11,8 +12,6 @@ public class ReboundEvent extends GameEvent
     {
         super( Event.REBOUND, player, team );
         mReboundType = type;
-        resolveEvent();
-        resolveEvent();
     }
 
     @Override
@@ -29,6 +28,10 @@ public class ReboundEvent extends GameEvent
             case TEAM_REBOUND:
                 mTeam.makeTeamRebound();
                 return;
+        }
+        if( mAppended != null )
+        {
+            mAppended.resolveEvent();
         }
     }
 }

@@ -10,7 +10,6 @@ public class BlockEvent extends GameEvent
     public BlockEvent( Player player, Team team )
     {
         super( Event.BLOCK, player, team );
-        resolveEvent();
     }
 
     @Override
@@ -31,5 +30,9 @@ public class BlockEvent extends GameEvent
     public void resolveEvent()
     {
         mPlayer.makeBlock();
+        if( mAppended != null )
+        {
+            mAppended.resolveEvent();
+        }
     }
 }

@@ -15,7 +15,6 @@ public class ShootEvent extends GameEvent
         super( Event.SHOOT, player, team );
         mShotClass = shotClass;
         mShotType = shotType;
-        resolveEvent();
     }
 
     @Override
@@ -29,6 +28,10 @@ public class ShootEvent extends GameEvent
             case MISSED:
                 handleShot( false );
                 return;
+        }
+        if( mAppended != null )
+        {
+            mAppended.resolveEvent();
         }
     }
 
