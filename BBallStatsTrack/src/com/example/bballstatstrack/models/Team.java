@@ -11,7 +11,13 @@ public class Team
 
     SparseArray< Player > mPlayerList = new SparseArray< Player >();
 
+    private int mTotalFouls;
+
     List< Player > mInGamePlayerList = new ArrayList< Player >( 5 );
+
+    private int mTeamRebound;
+
+    private int mTimeOuts;
 
     public Team( String name, List< Player > playerList )
     {
@@ -81,5 +87,40 @@ public class Team
     public void setName( String name )
     {
         mName = name;
+    }
+
+    public void addFoul()
+    {
+        mTotalFouls++;
+    }
+
+    public int getTotalFouls()
+    {
+        return mTotalFouls;
+    }
+
+    public void makeTeamRebound()
+    {
+        mTeamRebound++;
+    }
+
+    public int getTeamRebounds()
+    {
+        return mTeamRebound;
+    }
+
+    public void useTimeOut()
+    {
+        mTimeOuts--;
+    }
+
+    public int getTimeOuts()
+    {
+        return mTimeOuts;
+    }
+
+    public void setTimeOuts( int timeOuts )
+    {
+        mTimeOuts = timeOuts;
     }
 }
