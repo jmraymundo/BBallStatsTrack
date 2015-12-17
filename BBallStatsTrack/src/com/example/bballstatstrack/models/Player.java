@@ -171,7 +171,7 @@ public class Player
         return mAssist;
     }
 
-    public void mainTurnover()
+    public void makeTurnover()
     {
         mTurnover++;
     }

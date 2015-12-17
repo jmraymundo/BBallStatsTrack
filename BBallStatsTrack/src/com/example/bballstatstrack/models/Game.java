@@ -8,7 +8,7 @@ public class Game
 
     private Team mHasBallPossession;
 
-    private boolean isGameOngoing = false;
+    private boolean isGameOngoing;
 
     private int mPeriod = 0;
 
@@ -22,11 +22,24 @@ public class Game
 
     private final int mReducedMaxShotClock;
 
-    public Game( int maxGameClock, int resetShotClock )
+    public Game( int maxGameClock, int resetShotClock, Team awayTeam, Team homeTeam )
     {
         mMaxGameClock = maxGameClock;
         mReducedMaxShotClock = resetShotClock;
+        mAwayTeam = awayTeam;
+        mHomeTeam = homeTeam;
         initializeClocks();
+        pauseGame();
+    }
+
+    public Team getAwayTeam()
+    {
+        return mAwayTeam;
+    }
+
+    public Team getHomeTeam()
+    {
+        return mHomeTeam;
     }
 
     private void initializeClocks()
