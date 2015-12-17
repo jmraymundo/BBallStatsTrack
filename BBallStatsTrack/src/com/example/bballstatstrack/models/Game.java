@@ -1,5 +1,9 @@
 package com.example.bballstatstrack.models;
 
+import com.example.bballstatstrack.models.gameevents.GameEvent;
+
+import android.util.SparseArray;
+
 public class Game
 {
     private Team mAwayTeam;
@@ -22,6 +26,10 @@ public class Game
 
     private final int mReducedMaxShotClock;
 
+    private SparseArray< SparseArray< GameEvent > > mGameLog = new SparseArray< SparseArray< GameEvent > >();
+
+    private SparseArray< GameEvent > mPeriodLog = new SparseArray< GameEvent >();
+
     public Game( int maxGameClock, int resetShotClock, Team awayTeam, Team homeTeam )
     {
         mMaxGameClock = maxGameClock;
@@ -30,6 +38,11 @@ public class Game
         mHomeTeam = homeTeam;
         initializeClocks();
         pauseGame();
+    }
+
+    public void addNewEvent( GameEvent event )
+    {
+        mPeriodLog.append( mCurrentGameClock, event );
     }
 
     public Team getAwayTeam()
@@ -60,6 +73,7 @@ public class Game
 
     public void nextPeriod()
     {
+        mGameLog.append( mPeriod, mPeriodLog );
         mPeriod++;
     }
 
@@ -100,9 +114,16 @@ public class Game
         return mHasBallPossession;
     }
 
-    public void setTeamWithPossession( Team newTeam )
+    public void swapBallPossession()
     {
-        mHasBallPossession = newTeam;
+        if( mHasBallPossession.equals( mHomeTeam ) )
+        {
+            mHasBallPossession = mAwayTeam;
+        }
+        else
+        {
+            mHasBallPossession = mHomeTeam;
+        }
     }
 
     public void updateTime()
@@ -117,4 +138,5 @@ public class Game
     {
         return isGameOngoing;
     }
+
 }
