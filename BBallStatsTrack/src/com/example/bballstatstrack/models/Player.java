@@ -1,5 +1,7 @@
 package com.example.bballstatstrack.models;
 
+import org.json.JSONObject;
+
 public class Player
 {
     private int mNumber;
@@ -221,4 +223,8 @@ public class Player
         return mPlayingTimeSec;
     }
 
+    public JSONObject toJSON()
+    {
+        JSONObject jsonObject = new JSONObject();
+    }
 }

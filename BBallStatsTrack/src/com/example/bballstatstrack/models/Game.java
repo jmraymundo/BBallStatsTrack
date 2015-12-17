@@ -1,5 +1,7 @@
 package com.example.bballstatstrack.models;
 
+import org.json.JSONObject;
+
 import com.example.bballstatstrack.models.gameevents.GameEvent;
 
 import android.util.SparseArray;
@@ -138,5 +140,4 @@ public class Game
     {
         return isGameOngoing;
     }
-
 }
