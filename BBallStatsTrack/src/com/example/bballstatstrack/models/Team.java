@@ -3,21 +3,26 @@ package com.example.bballstatstrack.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.util.SparseArray;
+
 public class Team
 {
     private String mName;
 
-    List< Player > mPlayerList = new ArrayList< Player >();
+    SparseArray< Player > mPlayerList = new SparseArray< Player >();
 
     List< Player > mInGamePlayerList = new ArrayList< Player >( 5 );
 
     public Team( String name, List< Player > playerList )
     {
         setName( name );
-        mPlayerList = playerList;
+        for( Player player : playerList )
+        {
+            mPlayerList.append( player.getNumber(), player );
+        }
     }
 
-    public List< Player > getPlayers()
+    public SparseArray< Player > getPlayers()
     {
         return mPlayerList;
     }
@@ -27,15 +32,9 @@ public class Team
         return mInGamePlayerList;
     }
 
-    public void selectStarters( List< Integer > starters )
+    public void addStarter( int playerNumber )
     {
-        for( Player player : mPlayerList )
-        {
-            if( starters.contains( player.getNumber() ) )
-            {
-                mInGamePlayerList.add( player );
-            }
-        }
+        mInGamePlayerList.add( mPlayerList.get( playerNumber ) );
     }
 
     public void updatePlayingTime()
@@ -55,8 +54,9 @@ public class Team
     public int getTotalScore()
     {
         int score = 0;
-        for( Player player : mPlayerList )
+        for( int index = 0; index < mPlayerList.size(); index++ )
         {
+            Player player = mPlayerList.valueAt( index );
             score += ( player.get2ptFGMade() * 2 ) + ( player.get3ptFGMade() * 3 ) + player.getFTMade();
         }
         return score;
@@ -65,8 +65,9 @@ public class Team
     public int getTotalRebounds()
     {
         int rebounds = 0;
-        for( Player player : mPlayerList )
+        for( int index = 0; index < mPlayerList.size(); index++ )
         {
+            Player player = mPlayerList.valueAt( index );
             rebounds += player.getOffRebound() + player.getDefRebound();
         }
         return rebounds;
