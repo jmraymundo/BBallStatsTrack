@@ -2,8 +2,6 @@ package com.example.bballstatstrack.models.gameevents;
 
 import java.util.ArrayList;
 
-import org.junit.Test;
-
 import com.example.bballstatstrack.models.Player;
 import com.example.bballstatstrack.models.Team;
 import com.example.bballstatstrack.models.gameevents.GameEvent.ShootingFoulType;
@@ -12,10 +10,11 @@ import com.example.bballstatstrack.models.gameevents.GameEvent.ShotType;
 import com.example.bballstatstrack.models.gameevents.exceptions.GameEventException;
 import com.example.bballstatstrack.models.gameevents.foulevents.ShootingFoulEvent;
 
-public class TestGameEventException
+import junit.framework.TestCase;
+
+public class TestGameEventException extends TestCase
 {
-    @Test
-    public void test()
+    public void testThis()
     {
         Player player = new Player( 0, "John", "Doe" );
         Team team = new Team( "Team name", new ArrayList< Player >() );
