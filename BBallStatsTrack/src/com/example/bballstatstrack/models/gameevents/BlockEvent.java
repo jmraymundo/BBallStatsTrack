@@ -15,15 +15,17 @@ public class BlockEvent extends GameEvent
     @Override
     public void append( GameEvent appendedEvent ) throws GameEventException
     {
+        if( mAppended != null )
+        {
+            mAppended.append( appendedEvent );
+            return;
+        }
         if( appendedEvent instanceof ReboundEvent )
         {
             mAppended = appendedEvent;
             return;
         }
-        else
-        {
-            super.append( appendedEvent );
-        }
+        super.append( appendedEvent );
     }
 
     @Override
@@ -34,5 +36,16 @@ public class BlockEvent extends GameEvent
         {
             mAppended.resolveEvent();
         }
+    }
+
+    @Override
+    public String toString()
+    {
+        String output = "Blocked by " + mPlayer.getFullName() + ". ";
+        if( mAppended != null )
+        {
+            output = output.concat( mAppended.toString() );
+        }
+        return output.trim();
     }
 }

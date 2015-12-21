@@ -1,11 +1,16 @@
 package com.example.bballstatstrack.models.gameevents;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.example.bballstatstrack.models.Player;
 import com.example.bballstatstrack.models.Team;
 import com.example.bballstatstrack.models.gameevents.exceptions.GameEventException;
 
 public class ReboundEvent extends GameEvent
 {
+    public static final String REBOUND_TYPE = "reboundType";
+
     ReboundType mReboundType;
 
     public ReboundEvent( ReboundType type, Player player, Team team )
@@ -33,5 +38,36 @@ public class ReboundEvent extends GameEvent
         {
             mAppended.resolveEvent();
         }
+    }
+
+    @Override
+    public JSONObject toJSON() throws JSONException
+    {
+        JSONObject jsonObject = super.toJSON();
+        jsonObject.put( REBOUND_TYPE, mReboundType );
+        return jsonObject;
+    }
+
+    @Override
+    public String toString()
+    {
+        String type = "";
+        String rebounder = "";
+        switch( mReboundType )
+        {
+            case OFFENSIVE:
+                type = "Offensive";
+                rebounder = mPlayer.getFullName();
+                break;
+            case DEFENSIVE:
+                type = "Defensive";
+                rebounder = mPlayer.getFullName();
+                break;
+            case TEAM_REBOUND:
+                type = "Team";
+                rebounder = mTeam.getName();
+                break;
+        }
+        return type + " rebound by " + rebounder + ".";
     }
 }

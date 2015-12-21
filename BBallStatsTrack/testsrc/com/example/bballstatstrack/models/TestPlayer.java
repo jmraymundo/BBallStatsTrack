@@ -1,30 +1,28 @@
 package com.example.bballstatstrack.models;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
 import org.junit.Before;
 import org.junit.Test;
 
-public class TestPlayer
+import junit.framework.TestCase;
+
+public class TestPlayer extends TestCase
 {
     Player mTestPlayer;
 
     @Before
-    public void before()
+    public void setUp()
     {
         int number = 0;
         String firstName = "John";
         String lastName = "Doe";
-        mTestPlayer = new Player( number, firstName, lastName );
+        mTestPlayer = new Player( number, firstName + " " + lastName );
     }
 
     @Test
     public void testPlayer()
     {
         assertEquals( 0, mTestPlayer.getNumber() );
-        assertEquals( "John", mTestPlayer.getFirstName() );
-        assertEquals( "Doe", mTestPlayer.getLastName() );
+        assertEquals( "John Doe", mTestPlayer.getFullName() );
     }
 
     @Test

@@ -1,14 +1,38 @@
 package com.example.bballstatstrack.models;
 
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import android.util.Log;
 
 public class Player
 {
+    private static final String B_BALL_STAT_TRACK = "BBallStatTrack";
+
+    protected enum PlayerStats
+    {
+        NUMBER( "number" ), NAME( "fullName" ), MISS_1PT( "ftMiss" ), MADE_1PT( "ftMade" ), MISS_2PT(
+                "2ptFGMiss" ), MADE_2PT( "2ptFGMade" ), MISS_3PT( "3ptFGMiss" ), MADE_3PT(
+                        "3ptFGMade" ), OFFENSIVE_REBOUND( "offRebound" ), DEFENSIVE_REBOUND( "defRebound" ), ASSIST(
+                                "assist" ), TURNOVER( "turnover" ), STEAL( "steal" ), BLOCK( "block" ), FOUL(
+                                        "foul" ), PLAYING_TIME( "playingTimeSec" );
+
+        private final String mConstant;
+
+        private PlayerStats( String constant )
+        {
+            mConstant = constant;
+        }
+
+        public String toString()
+        {
+            return mConstant;
+        }
+    }
+
     private int mNumber;
 
-    private String mFirstName;
-
-    private String mLastName;
+    private String mFullName;
 
     private int m2ptFGMiss = 0;
 
@@ -34,15 +58,42 @@ public class Player
 
     private int mBlock = 0;
 
-    private int mFoulCount = 0;
+    private int mFoul = 0;
 
     private int mPlayingTimeSec = 0;
 
-    public Player( int id, String firstName, String lastName )
+    public Player( int id, String fullName )
     {
         setNumber( id );
-        setFirstName( firstName );
-        setLastName( lastName );
+        setFullName( fullName );
+    }
+
+    public Player( JSONObject player )
+    {
+        try
+        {
+            setNumber( player.getInt( PlayerStats.NUMBER.toString() ) );
+            setFullName( player.getString( PlayerStats.NAME.toString() ) );
+            mFTMade = player.getInt( PlayerStats.MADE_1PT.toString() );
+            mFTMiss = player.getInt( PlayerStats.MISS_1PT.toString() );
+            m2ptFGMade = player.getInt( PlayerStats.MADE_2PT.toString() );
+            m2ptFGMiss = player.getInt( PlayerStats.MISS_2PT.toString() );
+            m3ptFGMade = player.getInt( PlayerStats.MADE_3PT.toString() );
+            m3ptFGMiss = player.getInt( PlayerStats.MISS_3PT.toString() );
+            mOffRebound = player.getInt( PlayerStats.OFFENSIVE_REBOUND.toString() );
+            mDefRebound = player.getInt( PlayerStats.DEFENSIVE_REBOUND.toString() );
+            mAssist = player.getInt( PlayerStats.ASSIST.toString() );
+            mTurnover = player.getInt( PlayerStats.TURNOVER.toString() );
+            mSteal = player.getInt( PlayerStats.STEAL.toString() );
+            mBlock = player.getInt( PlayerStats.BLOCK.toString() );
+            mFoul = player.getInt( PlayerStats.FOUL.toString() );
+            mPlayingTimeSec = player.getInt( PlayerStats.PLAYING_TIME.toString() );
+        }
+        catch( JSONException e )
+        {
+            e.printStackTrace();
+            Log.e( B_BALL_STAT_TRACK, "Attribute missing from Player JSONObject!", e );
+        }
     }
 
     public int getNumber()
@@ -55,24 +106,14 @@ public class Player
         mNumber = number;
     }
 
-    public String getFirstName()
+    public String getFullName()
     {
-        return mFirstName;
+        return mFullName;
     }
 
-    public void setFirstName( String firstName )
+    public void setFullName( String fullName )
     {
-        mFirstName = firstName;
-    }
-
-    public String getLastName()
-    {
-        return mLastName;
-    }
-
-    public void setLastName( String lastName )
-    {
-        mLastName = lastName;
+        mFullName = fullName;
     }
 
     public void shoot2pt( boolean made )
@@ -205,12 +246,12 @@ public class Player
 
     public void makeFoul()
     {
-        mFoulCount++;
+        mFoul++;
     }
 
     public int getFoulCount()
     {
-        return mFoulCount;
+        return mFoul;
     }
 
     public void incrementPlayingTime()
@@ -223,8 +264,25 @@ public class Player
         return mPlayingTimeSec;
     }
 
-    public JSONObject toJSON()
+    public JSONObject toJSON() throws JSONException
     {
         JSONObject jsonObject = new JSONObject();
+        jsonObject.put( PlayerStats.NUMBER.toString(), getNumber() );
+        jsonObject.put( PlayerStats.NAME.toString(), getFullName() );
+        jsonObject.put( PlayerStats.MISS_1PT.toString(), getFTMiss() );
+        jsonObject.put( PlayerStats.MISS_2PT.toString(), get2ptFGMiss() );
+        jsonObject.put( PlayerStats.MISS_3PT.toString(), get3ptFGMiss() );
+        jsonObject.put( PlayerStats.MADE_1PT.toString(), getFTMade() );
+        jsonObject.put( PlayerStats.MADE_2PT.toString(), get2ptFGMade() );
+        jsonObject.put( PlayerStats.MADE_3PT.toString(), get3ptFGMade() );
+        jsonObject.put( PlayerStats.OFFENSIVE_REBOUND.toString(), getOffRebound() );
+        jsonObject.put( PlayerStats.DEFENSIVE_REBOUND.toString(), getDefRebound() );
+        jsonObject.put( PlayerStats.ASSIST.toString(), getAssist() );
+        jsonObject.put( PlayerStats.TURNOVER.toString(), getTurnover() );
+        jsonObject.put( PlayerStats.STEAL.toString(), getSteal() );
+        jsonObject.put( PlayerStats.BLOCK.toString(), getBlock() );
+        jsonObject.put( PlayerStats.FOUL.toString(), getFoulCount() );
+        jsonObject.put( PlayerStats.PLAYING_TIME.toString(), getPlayingTimeSec() );
+        return jsonObject;
     }
 }

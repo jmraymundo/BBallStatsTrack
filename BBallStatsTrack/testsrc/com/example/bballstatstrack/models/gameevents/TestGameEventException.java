@@ -16,9 +16,10 @@ public class TestGameEventException extends TestCase
 {
     public void testThis()
     {
-        Player player = new Player( 0, "John", "Doe" );
+        Player player = new Player( 0, "John Doe" );
+        Player player2 = new Player( 1, "Johnny Doe" );
         Team team = new Team( "Team name", new ArrayList< Player >() );
-        ShootingFoulEvent event = new ShootingFoulEvent( ShootingFoulType.NO_AND1, player, team );
+        ShootingFoulEvent event = new ShootingFoulEvent( ShootingFoulType.NO_AND1, player, team, player2 );
         try
         {
             event.append( new ShootEvent( ShotClass.FG_3PT, ShotType.MADE, player, team ) );

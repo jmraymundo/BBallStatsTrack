@@ -1,5 +1,8 @@
 package com.example.bballstatstrack.models.gameevents.foulevents;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.example.bballstatstrack.models.Player;
 import com.example.bballstatstrack.models.Team;
 import com.example.bballstatstrack.models.gameevents.FoulEvent;
@@ -11,18 +14,29 @@ import com.example.bballstatstrack.models.gameevents.exceptions.GameEventExcepti
 
 public class ShootingFoulEvent extends FoulEvent
 {
+    public static final String SHOOTING_FOUL_TYPE = "shootingFoulType";
+
+    public static final String SHOOTER = "shooter";
 
     private ShootingFoulType mShootingFoulType;
 
-    public ShootingFoulEvent( ShootingFoulType type, Player player, Team team )
+    private Player mShooter;
+
+    public ShootingFoulEvent( ShootingFoulType type, Player player, Team team, Player shooter )
     {
         super( FoulType.SHOOTING, player, team );
         mShootingFoulType = type;
+        mShooter = shooter;
     }
 
     @Override
     public void append( GameEvent appendedEvent ) throws GameEventException
     {
+        if( mAppended != null )
+        {
+            mAppended.append( appendedEvent );
+            return;
+        }
         if( appendedEvent instanceof ShootEvent )
         {
             switch( mShootingFoulType )
@@ -33,11 +47,38 @@ public class ShootingFoulEvent extends FoulEvent
                     mAppended = appendedEvent;
                     return;
             }
+            return;
+        }
+        super.append( appendedEvent );
+    }
+
+    @Override
+    public JSONObject toJSON() throws JSONException
+    {
+        JSONObject jsonObject = super.toJSON();
+        jsonObject.put( SHOOTING_FOUL_TYPE, mShootingFoulType );
+        jsonObject.put( SHOOTER, mShooter.getNumber() );
+        return jsonObject;
+    }
+
+    @Override
+    public String toString()
+    {
+        String shootCountText;
+        if( ShootingFoulType.NO_AND1 == mShootingFoulType )
+        {
+            shootCountText = "2 free throws. ";
         }
         else
         {
-            super.append( appendedEvent );
+            shootCountText = "1 free throw. ";
         }
+        String output = mPlayer.getFullName() + " committed a shooting foul. " + mShooter.getFullName() + " to shoot "
+                + shootCountText;
+        if( mAppended != null )
+        {
+            output = output.concat( mAppended.toString() );
+        }
+        return output.trim();
     }
-
 }

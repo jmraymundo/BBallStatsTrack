@@ -20,4 +20,10 @@ public class TimeoutEvent extends GameEvent
         }
     }
 
+    @Override
+    public String toString()
+    {
+        return " Timeout called by " + mTeam.getName() + ".";
+    }
+
 }

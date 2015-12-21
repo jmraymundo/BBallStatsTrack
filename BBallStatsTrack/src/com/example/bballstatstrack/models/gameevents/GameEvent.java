@@ -1,11 +1,22 @@
 package com.example.bballstatstrack.models.gameevents;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.example.bballstatstrack.models.Player;
 import com.example.bballstatstrack.models.Team;
 import com.example.bballstatstrack.models.gameevents.exceptions.GameEventException;
 
 public abstract class GameEvent
 {
+    public static final String TEAM_ID = "teamID";
+
+    public static final String APPENDED = "appended";
+
+    public static final String EVENT_TYPE = "event";
+
+    public static final String PLAYER_NUMBER = "playerNumber";
+
     protected Event mEvent;
 
     protected Player mPlayer;
@@ -14,7 +25,7 @@ public abstract class GameEvent
 
     protected GameEvent mAppended = null;
 
-    public GameEvent( Event event, Player player, Team team )
+    protected GameEvent( Event event, Player player, Team team )
     {
         mEvent = event;
         mPlayer = player;
@@ -70,6 +81,22 @@ public abstract class GameEvent
     {
         throw new GameEventException( this, appendedEvent );
     }
+
+    public JSONObject toJSON() throws JSONException
+    {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put( EVENT_TYPE, mEvent );
+        jsonObject.put( PLAYER_NUMBER, mPlayer.getNumber() );
+        jsonObject.put( TEAM_ID, mTeam.getID() );
+        if( mAppended != null )
+        {
+            jsonObject.put( APPENDED, mAppended.toJSON() );
+        }
+        return jsonObject;
+    }
+
+    @Override
+    public abstract String toString();
 
     public abstract void resolveEvent();
 }

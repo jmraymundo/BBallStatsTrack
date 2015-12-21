@@ -1,11 +1,20 @@
 package com.example.bballstatstrack.models.gameevents;
 
+import java.util.Locale;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.example.bballstatstrack.models.Player;
 import com.example.bballstatstrack.models.Team;
 import com.example.bballstatstrack.models.gameevents.exceptions.GameEventException;
 
 public class ShootEvent extends GameEvent
 {
+    public static final String SHOT_TYPE = "shotType";
+
+    public static final String SHOT_CLASS = "shotClass";
+
     ShotClass mShotClass;
 
     ShotType mShotType;
@@ -54,20 +63,67 @@ public class ShootEvent extends GameEvent
     @Override
     public void append( GameEvent appendedEvent ) throws GameEventException
     {
-        if( appendedEvent instanceof BlockEvent || appendedEvent instanceof ReboundEvent )
+        if( mAppended != null )
         {
-            switch( mShotType )
-            {
-                case MADE:
-                    throw new GameEventException( this, mShotType );
-                case MISSED:
+            mAppended.append( appendedEvent );
+            return;
+        }
+        switch( mShotType )
+        {
+            case MADE:
+                if( appendedEvent instanceof AssistEvent )
+                {
                     mAppended = appendedEvent;
                     return;
-            }
+                }
+                else if( appendedEvent instanceof BlockEvent || appendedEvent instanceof ReboundEvent )
+                {
+                    throw new GameEventException( this, mShotType );
+                }
+                break;
+            case MISSED:
+                if( appendedEvent instanceof BlockEvent || appendedEvent instanceof ReboundEvent )
+                {
+                    mAppended = appendedEvent;
+                    return;
+                }
+                break;
         }
-        else
+        super.append( appendedEvent );
+
+    }
+
+    @Override
+    public JSONObject toJSON() throws JSONException
+    {
+        JSONObject jsonObject = super.toJSON();
+        jsonObject.put( SHOT_CLASS, mShotClass );
+        jsonObject.put( SHOT_TYPE, mShotType );
+        return jsonObject;
+    }
+
+    @Override
+    public String toString()
+    {
+        String shotType = mShotType.name().toLowerCase( Locale.getDefault() );
+        String shotClass = "";
+        switch( mShotClass )
         {
-            super.append( appendedEvent );
+            case FT:
+                shotClass = "FT shot. ";
+                break;
+            case FG_2PT:
+                shotClass = "2pt shot. ";
+                break;
+            case FG_3PT:
+                shotClass = "3pt shot. ";
+                break;
         }
+        String output = mPlayer.getFullName() + " " + shotType + " a " + shotClass;
+        if( mAppended != null )
+        {
+            output = output.concat( mAppended.toString() );
+        }
+        return output.trim();
     }
 }

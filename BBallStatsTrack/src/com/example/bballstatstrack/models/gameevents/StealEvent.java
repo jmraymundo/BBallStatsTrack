@@ -22,4 +22,10 @@ public class StealEvent extends GameEvent
         }
     }
 
+    @Override
+    public String toString()
+    {
+        return "Steal by " + mPlayer.getFullName() + ".";
+    }
+
 }
