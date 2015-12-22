@@ -27,7 +27,7 @@ public class GameAdapter extends ArrayAdapter< Game >
         // if we weren't given a view, inflate one
         if( null == convertView )
         {
-            convertView = mActivity.getLayoutInflater().inflate( R.layout.list_item_game, null );
+            convertView = mActivity.getLayoutInflater().inflate( R.layout.list_games, null );
         }
 
         // configure the view for this Crime

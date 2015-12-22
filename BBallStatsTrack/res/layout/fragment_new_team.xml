@@ -1,0 +1,45 @@
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/TableLayout1"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	tools:context="com.example.bballstatstrack.ListGamesActivity" >
+	<TableRow
+		android:id="@+id/tableRow1"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content" >
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content" >
+			<TextView
+				android:id="@+id/textView1"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Team Name:"
+				android:textAppearance="?android:attr/textAppearanceLarge" />
+			<EditText
+				android:id="@+id/editText1"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:ems="10" >
+				<requestFocus />
+			</EditText>
+		</LinearLayout>
+	</TableRow>
+	<TableRow
+		android:id="@+id/playersArea"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content" >
+		<TableLayout
+			android:id="@+id/playerListTable"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content" >
+		</TableLayout>
+	</TableRow>
+	<Button
+		android:id="@+id/addNewPlayerButton"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/add_new_player" />
+</TableLayout>

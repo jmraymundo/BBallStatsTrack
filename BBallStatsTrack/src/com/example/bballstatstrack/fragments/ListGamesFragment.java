@@ -1,8 +1,11 @@
-package com.example.bballstatstrack.activities;
+package com.example.bballstatstrack.fragments;
 
 import java.util.ArrayList;
 
 import com.example.bballstatstrack.R;
+import com.example.bballstatstrack.activities.GameActivity;
+import com.example.bballstatstrack.activities.GameReviewActivity;
+import com.example.bballstatstrack.activities.AddNewTeamActivity;
 import com.example.bballstatstrack.adapter.GameAdapter;
 import com.example.bballstatstrack.model.GameDirectory;
 import com.example.bballstatstrack.models.Game;
@@ -77,7 +80,7 @@ public class ListGamesFragment extends ListFragment
         switch( item.getItemId() )
         {
             case R.id.menu_item_new_game:
-                Intent i = new Intent( getActivity(), NewTeamActivity.class );
+                Intent i = new Intent( getActivity(), AddNewTeamActivity.class );
                 startActivityForResult( i, 0 );
                 return true;
             default:
