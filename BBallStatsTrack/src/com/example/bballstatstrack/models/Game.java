@@ -1,5 +1,7 @@
 package com.example.bballstatstrack.models;
 
+import java.util.UUID;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -58,12 +60,15 @@ public class Game
 
     private SparseArray< GameEvent > mPeriodLog;
 
+    private UUID mID;
+
     public Game( int maxGameClock, int resetShotClock, Team awayTeam, Team homeTeam )
     {
         mMaxGameClock = maxGameClock * 60;
         mReducedMaxShotClock = resetShotClock;
         mAwayTeam = awayTeam;
         mHomeTeam = homeTeam;
+        mID = UUID.fromString( mAwayTeam.getName() + mHomeTeam.getName() + System.currentTimeMillis() );
         initializeClocks();
         initializeLogs();
         pauseGame();
@@ -204,5 +209,10 @@ public class Game
     public GameLog getGameLog()
     {
         return mGameLog;
+    }
+
+    public UUID getId()
+    {
+        return mID;
     }
 }
