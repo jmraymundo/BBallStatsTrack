@@ -17,7 +17,7 @@ public class Team
 {
     private static final String B_BALL_STAT_TRACK = "BBallStatTrack";
 
-    private enum TeamStats
+    public enum TeamStats
     {
         NAME( "name" ), PLAYER_LIST( "playerList" ), INGAME_PLAYER_LIST( "inGamePlayerList" ), TOTAL_FOULS(
                 "totalFouls" ), TEAM_REBOUNDS( "teamRebound" ), TIMEOUTS( "timeOuts" ), TEAM_ID( "signature" );
@@ -193,39 +193,6 @@ public class Team
     public void setTimeOuts( int timeOuts )
     {
         mTimeOuts = timeOuts;
-    }
-
-    public JSONObject toJSON() throws JSONException
-    {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put( TeamStats.NAME.toString(), getName() );
-        jsonObject.put( TeamStats.PLAYER_LIST.toString(), getJSONPlayerList() );
-        jsonObject.put( TeamStats.INGAME_PLAYER_LIST.toString(), getJSONIngamePlayerList() );
-        jsonObject.put( TeamStats.TOTAL_FOULS.toString(), getTotalFouls() );
-        jsonObject.put( TeamStats.TEAM_REBOUNDS.toString(), getTeamRebounds() );
-        jsonObject.put( TeamStats.TIMEOUTS.toString(), getTimeOuts() );
-        jsonObject.put( TeamStats.TEAM_ID.toString(), mID );
-        return jsonObject;
-    }
-
-    private JSONArray getJSONIngamePlayerList()
-    {
-        JSONArray jsonArray = new JSONArray();
-        for( Player player : mInGamePlayerList )
-        {
-            jsonArray.put( player.getNumber() );
-        }
-        return jsonArray;
-    }
-
-    private JSONArray getJSONPlayerList() throws JSONException
-    {
-        JSONArray jsonArray = new JSONArray();
-        for( int index = 0; index < mPlayerList.size(); index++ )
-        {
-            jsonArray.put( mPlayerList.valueAt( index ).toJSON() );
-        }
-        return jsonArray;
     }
 
     public UUID getID()

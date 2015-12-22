@@ -9,7 +9,7 @@ public class Player
 {
     private static final String B_BALL_STAT_TRACK = "BBallStatTrack";
 
-    protected enum PlayerStats
+    public enum PlayerStats
     {
         NUMBER( "number" ), NAME( "fullName" ), MISS_1PT( "ftMiss" ), MADE_1PT( "ftMade" ), MISS_2PT(
                 "2ptFGMiss" ), MADE_2PT( "2ptFGMade" ), MISS_3PT( "3ptFGMiss" ), MADE_3PT(
@@ -262,27 +262,5 @@ public class Player
     public int getPlayingTimeSec()
     {
         return mPlayingTimeSec;
-    }
-
-    public JSONObject toJSON() throws JSONException
-    {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put( PlayerStats.NUMBER.toString(), getNumber() );
-        jsonObject.put( PlayerStats.NAME.toString(), getFullName() );
-        jsonObject.put( PlayerStats.MISS_1PT.toString(), getFTMiss() );
-        jsonObject.put( PlayerStats.MISS_2PT.toString(), get2ptFGMiss() );
-        jsonObject.put( PlayerStats.MISS_3PT.toString(), get3ptFGMiss() );
-        jsonObject.put( PlayerStats.MADE_1PT.toString(), getFTMade() );
-        jsonObject.put( PlayerStats.MADE_2PT.toString(), get2ptFGMade() );
-        jsonObject.put( PlayerStats.MADE_3PT.toString(), get3ptFGMade() );
-        jsonObject.put( PlayerStats.OFFENSIVE_REBOUND.toString(), getOffRebound() );
-        jsonObject.put( PlayerStats.DEFENSIVE_REBOUND.toString(), getDefRebound() );
-        jsonObject.put( PlayerStats.ASSIST.toString(), getAssist() );
-        jsonObject.put( PlayerStats.TURNOVER.toString(), getTurnover() );
-        jsonObject.put( PlayerStats.STEAL.toString(), getSteal() );
-        jsonObject.put( PlayerStats.BLOCK.toString(), getBlock() );
-        jsonObject.put( PlayerStats.FOUL.toString(), getFoulCount() );
-        jsonObject.put( PlayerStats.PLAYING_TIME.toString(), getPlayingTimeSec() );
-        return jsonObject;
     }
 }

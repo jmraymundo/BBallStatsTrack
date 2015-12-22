@@ -15,12 +15,17 @@ public class ReboundEvent extends GameEvent
 
     public ReboundEvent( ReboundType type, Player player, Team team )
     {
-        super( Event.REBOUND, player, team );
+        super( EventType.REBOUND, player, team );
         mReboundType = type;
     }
 
+    public ReboundType getReboundType()
+    {
+        return mReboundType;
+    }
+
     @Override
-    public void resolveEvent()
+    public void resolve()
     {
         switch( mReboundType )
         {
@@ -36,16 +41,8 @@ public class ReboundEvent extends GameEvent
         }
         if( mAppended != null )
         {
-            mAppended.resolveEvent();
+            mAppended.resolve();
         }
-    }
-
-    @Override
-    public JSONObject toJSON() throws JSONException
-    {
-        JSONObject jsonObject = super.toJSON();
-        jsonObject.put( REBOUND_TYPE, mReboundType );
-        return jsonObject;
     }
 
     @Override

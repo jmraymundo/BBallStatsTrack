@@ -1,8 +1,5 @@
 package com.example.bballstatstrack.models.gameevents;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.example.bballstatstrack.models.Player;
 import com.example.bballstatstrack.models.Team;
 import com.example.bballstatstrack.models.gameevents.exceptions.GameEventException;
@@ -16,8 +13,13 @@ public class TurnoverEvent extends GameEvent
 
     public TurnoverEvent( TurnoverType type, Player player, Team team )
     {
-        super( Event.TURNOVER, player, team );
+        super( EventType.TURNOVER, player, team );
         mTurnoverType = type;
+    }
+
+    public TurnoverType getTurnoverType()
+    {
+        return mTurnoverType;
     }
 
     @Override
@@ -46,21 +48,13 @@ public class TurnoverEvent extends GameEvent
     }
 
     @Override
-    public void resolveEvent()
+    public void resolve()
     {
         mPlayer.makeTurnover();
         if( mAppended != null )
         {
-            mAppended.resolveEvent();
+            mAppended.resolve();
         }
-    }
-
-    @Override
-    public JSONObject toJSON() throws JSONException
-    {
-        JSONObject jsonObject = super.toJSON();
-        jsonObject.put( TURNOVER_TYPE, mTurnoverType );
-        return jsonObject;
     }
 
     @Override

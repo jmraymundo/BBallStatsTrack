@@ -11,30 +11,27 @@ public class SubstitutionEvent extends GameEvent
 {
     public static final String NEW_PLAYER_NUMBER = "newPlayer";
 
-    Player mNewPlayer;
+    private Player mNewPlayer;
 
     public SubstitutionEvent( Player playerOut, Player playerIn, Team team )
     {
-        super( Event.SUBSTITUTION, playerOut, team );
+        super( EventType.SUBSTITUTION, playerOut, team );
         mNewPlayer = playerIn;
     }
 
+    public Player getNewPlayer()
+    {
+        return mNewPlayer;
+    }
+
     @Override
-    public void resolveEvent()
+    public void resolve()
     {
         mTeam.substitutePlayer( mNewPlayer, mPlayer );
         if( mAppended != null )
         {
-            mAppended.resolveEvent();
+            mAppended.resolve();
         }
-    }
-
-    @Override
-    public JSONObject toJSON() throws JSONException
-    {
-        JSONObject jsonObject = super.toJSON();
-        jsonObject.put( NEW_PLAYER_NUMBER, mNewPlayer.getNumber() );
-        return jsonObject;
     }
 
     @Override

@@ -9,16 +9,16 @@ public class StealEvent extends GameEvent
 
     public StealEvent( Player player, Team team )
     {
-        super( Event.STEAL, player, team );
+        super( EventType.STEAL, player, team );
     }
 
     @Override
-    public void resolveEvent()
+    public void resolve()
     {
         mPlayer.makeSteal();
         if( mAppended != null )
         {
-            mAppended.resolveEvent();
+            mAppended.resolve();
         }
     }
 

@@ -17,7 +17,7 @@ public abstract class GameEvent
 
     public static final String PLAYER_NUMBER = "playerNumber";
 
-    protected Event mEvent;
+    protected EventType mEvent;
 
     protected Player mPlayer;
 
@@ -25,14 +25,14 @@ public abstract class GameEvent
 
     protected GameEvent mAppended = null;
 
-    protected GameEvent( Event event, Player player, Team team )
+    protected GameEvent( EventType event, Player player, Team team )
     {
         mEvent = event;
         mPlayer = player;
         mTeam = team;
     }
 
-    public enum Event
+    public enum EventType
     {
         FOUL, SHOOT, REBOUND, TURNOVER, ASSIST, SUBSTITUTION, TIME_OUT, BLOCK, STEAL;
     }
@@ -82,21 +82,28 @@ public abstract class GameEvent
         throw new GameEventException( this, appendedEvent );
     }
 
-    public JSONObject toJSON() throws JSONException
-    {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put( EVENT_TYPE, mEvent );
-        jsonObject.put( PLAYER_NUMBER, mPlayer.getNumber() );
-        jsonObject.put( TEAM_ID, mTeam.getID() );
-        if( mAppended != null )
-        {
-            jsonObject.put( APPENDED, mAppended.toJSON() );
-        }
-        return jsonObject;
-    }
-
     @Override
     public abstract String toString();
 
-    public abstract void resolveEvent();
+    public abstract void resolve();
+
+    public GameEvent getAppended()
+    {
+        return mAppended;
+    }
+
+    public EventType getEventType()
+    {
+        return mEvent;
+    }
+
+    public Player getPlayer()
+    {
+        return mPlayer;
+    }
+
+    public Team getTeam()
+    {
+        return mTeam;
+    }
 }

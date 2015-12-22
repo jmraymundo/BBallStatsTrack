@@ -17,6 +17,8 @@ import com.example.bballstatstrack.models.gameevents.GameEvent.ShotType;
 import com.example.bballstatstrack.models.gameevents.GameEvent.TurnoverType;
 import com.example.bballstatstrack.models.gameevents.exceptions.GameEventException;
 import com.example.bballstatstrack.models.gameevents.foulevents.ShootingFoulEvent;
+import com.example.bballstatstrack.models.utils.GameEventDeserializer;
+import com.example.bballstatstrack.models.utils.JSONSerializer;
 
 import android.util.Log;
 import junit.framework.TestCase;
@@ -42,6 +44,10 @@ public class TestGameEventToJSON extends TestCase
 
     Player player4;
 
+    JSONSerializer jsonSerializer;
+
+    GameEventDeserializer gameEventDeserializer;
+
     public void setUp() throws Exception
     {
         player = new Player( 0, "Michael Jordan" );
@@ -57,6 +63,8 @@ public class TestGameEventToJSON extends TestCase
         team = new Team( "Team name", teamArray );
         team2 = new Team( "Team name2", teamArray2 );
         game = new Game( 12, 24, team, team2 );
+        jsonSerializer = JSONSerializer.getInstance();
+        gameEventDeserializer = new GameEventDeserializer( game );
     };
 
     @Test
@@ -64,9 +72,9 @@ public class TestGameEventToJSON extends TestCase
     {
 
         ShootingFoulEvent event = new ShootingFoulEvent( ShootingFoulType.NO_AND1, player, team, player2 );
-        JSONObject jsonEvent = event.toJSON();
+        JSONObject jsonEvent = jsonSerializer.toJSONObject( event );
         Log.d( "POGI", jsonEvent.toString() );
-        GameEvent copyEvent = game.getGameEventFromJSONObject( jsonEvent );
+        GameEvent copyEvent = gameEventDeserializer.getGameEventFromJSONObject( jsonEvent );
         Log.d( "POGI", copyEvent.toString() );
     }
 
@@ -76,15 +84,20 @@ public class TestGameEventToJSON extends TestCase
         ShootEvent event = new ShootEvent( ShotClass.FG_3PT, ShotType.MISSED, player, team );
         event.append( new BlockEvent( player2, team2 ) );
         event.append( new ReboundEvent( ReboundType.DEFENSIVE, player2, team2 ) );
-        JSONObject jsonEvent = event.toJSON();
+        JSONObject jsonEvent = jsonSerializer.toJSONObject( event );
         Log.d( "POGI", jsonEvent.toString() );
-        GameEvent copyEvent = game.getGameEventFromJSONObject( jsonEvent );
+        GameEvent copyEvent = gameEventDeserializer.getGameEventFromJSONObject( jsonEvent );
         Log.d( "POGI", copyEvent.toString() );
     }
 
     @Test
     public void testPeriodLog() throws JSONException, GameEventException
     {
+        game.startGame();
+        team.addStarter( 0 );
+        team.addStarter( 2 );
+        team2.addStarter( 1 );
+        team2.addStarter( 3 );
         for( int x = 0; x < 10; x++ )
         {
             game.updateTime();
@@ -110,8 +123,9 @@ public class TestGameEventToJSON extends TestCase
         event3.append( new StealEvent( player3, team ) );
         Log.d( "POGI", event3.toString() );
         game.addNewEvent( event3 );
+        game.nextPeriod();
 
-        JSONObject jsonEvent = game.toJSON();
+        JSONObject jsonEvent = jsonSerializer.toJSONObject( game );
         Log.d( "POGI", jsonEvent.toString() );
     }
 

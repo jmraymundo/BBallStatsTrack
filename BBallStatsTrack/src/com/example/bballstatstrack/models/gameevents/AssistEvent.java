@@ -8,11 +8,11 @@ public class AssistEvent extends GameEvent
 
     public AssistEvent( Player player, Team team )
     {
-        super( Event.ASSIST, player, team );
+        super( EventType.ASSIST, player, team );
     }
 
     @Override
-    public void resolveEvent()
+    public void resolve()
     {
         mPlayer.makeAssist();
     }

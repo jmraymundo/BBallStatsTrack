@@ -29,6 +29,16 @@ public class ShootingFoulEvent extends FoulEvent
         mShooter = shooter;
     }
 
+    public ShootingFoulType getShootingFoulType()
+    {
+        return mShootingFoulType;
+    }
+
+    public Player getShooter()
+    {
+        return mShooter;
+    }
+
     @Override
     public void append( GameEvent appendedEvent ) throws GameEventException
     {
@@ -50,15 +60,6 @@ public class ShootingFoulEvent extends FoulEvent
             return;
         }
         super.append( appendedEvent );
-    }
-
-    @Override
-    public JSONObject toJSON() throws JSONException
-    {
-        JSONObject jsonObject = super.toJSON();
-        jsonObject.put( SHOOTING_FOUL_TYPE, mShootingFoulType );
-        jsonObject.put( SHOOTER, mShooter.getNumber() );
-        return jsonObject;
     }
 
     @Override

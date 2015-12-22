@@ -15,32 +15,24 @@ public class FoulEvent extends GameEvent
 
     protected FoulEvent( FoulType type, Player player, Team team )
     {
-        super( Event.FOUL, player, team );
+        super( EventType.FOUL, player, team );
         mType = type;
     }
 
     @Override
-    public void resolveEvent()
+    public void resolve()
     {
         mPlayer.makeFoul();
         mTeam.addFoul();
         if( mAppended != null )
         {
-            mAppended.resolveEvent();
+            mAppended.resolve();
         }
     }
 
     public FoulType getFoulType()
     {
         return mType;
-    }
-
-    @Override
-    public JSONObject toJSON() throws JSONException
-    {
-        JSONObject jsonObject = super.toJSON();
-        jsonObject.put( FOUL_TYPE, mType );
-        return jsonObject;
     }
 
     @Override

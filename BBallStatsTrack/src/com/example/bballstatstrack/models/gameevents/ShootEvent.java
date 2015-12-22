@@ -21,26 +21,36 @@ public class ShootEvent extends GameEvent
 
     public ShootEvent( ShotClass shotClass, ShotType shotType, Player player, Team team )
     {
-        super( Event.SHOOT, player, team );
+        super( EventType.SHOOT, player, team );
         mShotClass = shotClass;
         mShotType = shotType;
     }
 
+    public ShotClass getShotClass()
+    {
+        return mShotClass;
+    }
+
+    public ShotType getShotType()
+    {
+        return mShotType;
+    }
+
     @Override
-    public void resolveEvent()
+    public void resolve()
     {
         switch( mShotType )
         {
             case MADE:
                 handleShot( true );
-                return;
+                break;
             case MISSED:
                 handleShot( false );
-                return;
+                break;
         }
         if( mAppended != null )
         {
-            mAppended.resolveEvent();
+            mAppended.resolve();
         }
     }
 
@@ -91,15 +101,6 @@ public class ShootEvent extends GameEvent
         }
         super.append( appendedEvent );
 
-    }
-
-    @Override
-    public JSONObject toJSON() throws JSONException
-    {
-        JSONObject jsonObject = super.toJSON();
-        jsonObject.put( SHOT_CLASS, mShotClass );
-        jsonObject.put( SHOT_TYPE, mShotType );
-        return jsonObject;
     }
 
     @Override

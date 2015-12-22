@@ -1,16 +1,10 @@
 package com.example.bballstatstrack.models.gameevents.foulevents;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.example.bballstatstrack.models.Player;
 import com.example.bballstatstrack.models.Team;
 import com.example.bballstatstrack.models.gameevents.FoulEvent;
 import com.example.bballstatstrack.models.gameevents.GameEvent;
 import com.example.bballstatstrack.models.gameevents.ShootEvent;
-import com.example.bballstatstrack.models.gameevents.GameEvent.FoulType;
-import com.example.bballstatstrack.models.gameevents.GameEvent.NonShootingFoulType;
-import com.example.bballstatstrack.models.gameevents.GameEvent.ShootingFoulType;
 import com.example.bballstatstrack.models.gameevents.exceptions.GameEventException;
 
 public class NonShootingFoulEvent extends FoulEvent
@@ -24,6 +18,11 @@ public class NonShootingFoulEvent extends FoulEvent
     {
         super( FoulType.NON_SHOOTING, player, team );
         mNonShootingFoulType = type;
+    }
+
+    public NonShootingFoulType getNonShootingFoulType()
+    {
+        return mNonShootingFoulType;
     }
 
     @Override
@@ -47,14 +46,6 @@ public class NonShootingFoulEvent extends FoulEvent
             return;
         }
         super.append( appendedEvent );
-    }
-
-    @Override
-    public JSONObject toJSON() throws JSONException
-    {
-        JSONObject jsonObject = super.toJSON();
-        jsonObject.put( NON_SHOOTING_FOUL_TYPE, mNonShootingFoulType );
-        return jsonObject;
     }
 
     @Override

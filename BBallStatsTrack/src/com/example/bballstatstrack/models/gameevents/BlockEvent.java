@@ -9,7 +9,7 @@ public class BlockEvent extends GameEvent
 
     public BlockEvent( Player player, Team team )
     {
-        super( Event.BLOCK, player, team );
+        super( EventType.BLOCK, player, team );
     }
 
     @Override
@@ -29,12 +29,12 @@ public class BlockEvent extends GameEvent
     }
 
     @Override
-    public void resolveEvent()
+    public void resolve()
     {
         mPlayer.makeBlock();
         if( mAppended != null )
         {
-            mAppended.resolveEvent();
+            mAppended.resolve();
         }
     }
 

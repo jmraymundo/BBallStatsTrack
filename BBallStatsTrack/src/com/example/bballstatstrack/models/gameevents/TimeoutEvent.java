@@ -7,16 +7,16 @@ public class TimeoutEvent extends GameEvent
 
     public TimeoutEvent( Team team )
     {
-        super( Event.TIME_OUT, null, team );
+        super( EventType.TIME_OUT, null, team );
     }
 
     @Override
-    public void resolveEvent()
+    public void resolve()
     {
         mTeam.useTimeOut();
         if( mAppended != null )
         {
-            mAppended.resolveEvent();
+            mAppended.resolve();
         }
     }
 
