@@ -48,6 +48,8 @@ public class JSONSerializer
         JSONObject awayTeam = toJSONObject( game.getAwayTeam() );
         JSONObject homeTeam = toJSONObject( game.getHomeTeam() );
         JSONArray gameLogArray = toJSONArray( game.getGameLog() );
+        jsonObject.put( GameStats.ID.toString(), game.getId() );
+        jsonObject.put( GameStats.DATE.toString(), game.getDateMillis() );
         jsonObject.put( GameStats.AWAY_TEAM.toString(), awayTeam );
         jsonObject.put( GameStats.HOME_TEAM.toString(), homeTeam );
         jsonObject.put( GameStats.GAME_LOG.toString(), gameLogArray );

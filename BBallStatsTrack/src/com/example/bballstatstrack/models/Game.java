@@ -1,5 +1,6 @@
 package com.example.bballstatstrack.models;
 
+import java.util.Date;
 import java.util.UUID;
 
 import org.json.JSONException;
@@ -10,6 +11,7 @@ import com.example.bballstatstrack.models.gameevents.GameEvent;
 import com.example.bballstatstrack.models.gameevents.exceptions.GameEventException;
 import com.example.bballstatstrack.models.utils.GameEventDeserializer;
 
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.util.SparseArray;
 
@@ -20,7 +22,8 @@ public class Game
     public enum GameStats
     {
 
-        AWAY_TEAM( "awayTeam" ), HOME_TEAM( "homeTeam" ), GAME_LOG( "gameLog" ), PERIOD_LOG( "periodLog" );
+        ID( "id" ), AWAY_TEAM( "awayTeam" ), HOME_TEAM( "homeTeam" ), GAME_LOG( "gameLog" ), PERIOD_LOG(
+                "periodLog" ), DATE( "date" );
 
         private final String mConstant;
 
@@ -62,16 +65,20 @@ public class Game
 
     private UUID mID;
 
+    private MyDate mDate;
+
     public Game( int maxGameClock, int resetShotClock, Team awayTeam, Team homeTeam )
     {
         mMaxGameClock = maxGameClock * 60;
         mReducedMaxShotClock = resetShotClock;
         mAwayTeam = awayTeam;
         mHomeTeam = homeTeam;
-        mID = UUID.fromString( mAwayTeam.getName() + mHomeTeam.getName() + System.currentTimeMillis() );
+        String id = mAwayTeam.getName() + mHomeTeam.getName() + System.currentTimeMillis();
+        mID = UUID.nameUUIDFromBytes( id.getBytes() );
         initializeClocks();
         initializeLogs();
         pauseGame();
+        mDate = new MyDate();
     }
 
     public Game( JSONObject game )
@@ -80,11 +87,13 @@ public class Game
         mReducedMaxShotClock = 0;
         try
         {
+            mID = UUID.fromString( game.getString( GameStats.ID.toString() ) );
             mAwayTeam = new Team( game.getJSONObject( GameStats.AWAY_TEAM.toString() ) );
             mHomeTeam = new Team( game.getJSONObject( GameStats.HOME_TEAM.toString() ) );
             GameEventDeserializer serializer = new GameEventDeserializer( this );
             mGameLog = serializer.getGameLog( game );
             mPeriod = mGameLog.size();
+            mDate = new MyDate( game.getLong( GameStats.DATE.toString() ) );
         }
         catch( JSONException e )
         {
@@ -214,5 +223,43 @@ public class Game
     public UUID getId()
     {
         return mID;
+    }
+
+    public String getTitle()
+    {
+        String home = mHomeTeam.getName();
+        int homeScore = mHomeTeam.getTotalScore();
+        String away = mAwayTeam.getName();
+        int awayScore = mAwayTeam.getTotalScore();
+        return home + " " + homeScore + " - " + awayScore + " " + away;
+    }
+
+    public class MyDate extends Date
+    {
+        public MyDate( long milliseconds )
+        {
+            super( milliseconds );
+        }
+
+        public MyDate()
+        {
+            super();
+        }
+
+        @Override
+        public String toString()
+        {
+            return DateFormat.format( "EEE, MMM dd, yyyy", this ).toString();
+        }
+    }
+
+    public MyDate getDate()
+    {
+        return mDate;
+    }
+
+    public long getDateMillis()
+    {
+        return mDate.getTime();
     }
 }
