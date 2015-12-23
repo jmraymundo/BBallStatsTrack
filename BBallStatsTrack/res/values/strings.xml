@@ -8,4 +8,8 @@
 	<string name="away_team">Away Team</string>
 	<string name="home_team">Home Team</string>
 	<string name="add_new_player">Add new player</string>
+	<string name="go_next">Next</string>
+	<string name="player_number">Number</string>
+	<string name="player_full_name">Full Name</string>
+	<string name="proceed">Proceed</string>
 </resources>

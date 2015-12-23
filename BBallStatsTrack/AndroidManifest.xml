@@ -24,7 +24,8 @@
 			</intent-filter>
 		</activity>
 		<activity
-			android:name=".activities.AddNewTeamActivity"
-			android:label="@string/app_name" />
+			android:name=".activities.AddPlayersToTeamsActivity"
+			android:label="@string/app_name"
+			android:windowSoftInputMode="adjustNothing" />
 	</application>
 </manifest>
