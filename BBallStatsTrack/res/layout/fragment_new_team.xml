@@ -46,22 +46,31 @@
 			<TableRow
 				android:id="@+id/tableRow1"
 				android:layout_width="wrap_content"
-				android:layout_height="wrap_content" >
+				android:layout_height="wrap_content"
+				android:weightSum="16" >
 				<TextView
 					android:id="@+id/player_number_header"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:layout_weight="1"
 					android:gravity="center"
-					android:text="@string/player_number"
+					android:text="@string/newTeam_new_player_number"
 					android:textAppearance="?android:attr/textAppearanceMedium" />
 				<TextView
 					android:id="@+id/player_name_header"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:layout_weight="1"
+					android:layout_weight="10"
 					android:gravity="center"
-					android:text="@string/player_full_name"
+					android:text="@string/newTeam_new_player_full_name"
+					android:textAppearance="?android:attr/textAppearanceMedium" />
+				<TextView
+					android:id="@+id/player_name_action"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_weight="5"
+					android:gravity="center"
+					android:text="@string/newTeam_new_player_action"
 					android:textAppearance="?android:attr/textAppearanceMedium" />
 			</TableRow>
 		</TableLayout>

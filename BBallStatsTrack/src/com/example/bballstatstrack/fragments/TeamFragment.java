@@ -2,28 +2,39 @@ package com.example.bballstatstrack.fragments;
 
 import com.example.bballstatstrack.R;
 
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.SparseArray;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView.ScaleType;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.TableRow.LayoutParams;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class TeamFragment extends Fragment
 {
@@ -31,7 +42,7 @@ public class TeamFragment extends Fragment
 
     EditText mTeamNameEditText;
 
-    SparseArray< String > mPlayerList;
+    SparseArray< String > mPlayerList = new SparseArray< String >();
 
     TableLayout mPlayerTable;
 
@@ -60,7 +71,6 @@ public class TeamFragment extends Fragment
             view = super.onCreateView( inflater, container, savedInstanceState );
         }
         setupView( view );
-        setupKeyboardHiding( view );
         return view;
     }
 
@@ -90,14 +100,43 @@ public class TeamFragment extends Fragment
                 showNewPlayerDialog();
             }
         } );
+        setupKeyboardHiding( view );
+        View activityView = getActivity().findViewById( R.id.newTeamContainer );
+        setupKeyboardHiding( activityView );
     }
 
     private void showNewPlayerDialog()
     {
+        AlertDialog dialog = buildDialog();
+        dialog.getWindow().setSoftInputMode( WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE );
+        dialog.show();
+        dialog.setCanceledOnTouchOutside( false );
+        setPositiveButtonAction( dialog );
+        setPlayerNumberEditTextListeners( dialog );
+    }
+
+    private void setPlayerNumberEditTextListeners( final AlertDialog dialog )
+    {
+        EditText playerNumberText = ( EditText ) dialog.findViewById( R.id.player_number_editText );
+        playerNumberText.addTextChangedListener( new PlayerNumberWatcher() );
+    }
+
+    private void setPositiveButtonAction( final AlertDialog dialog )
+    {
+        dialog.getButton( DialogInterface.BUTTON_POSITIVE ).setOnClickListener( new OnClickListener()
+        {
+            @Override
+            public void onClick( View v )
+            {
+                addNewPlayerFromDialog( dialog );
+            }
+        } );
+    }
+
+    private AlertDialog buildDialog()
+    {
         Builder builder = new AlertDialog.Builder( getActivity() );
         View dialogView = getActivity().getLayoutInflater().inflate( R.layout.dialog_new_player, null );
-        EditText playerNumberText = ( EditText ) dialogView.findViewById( R.id.player_number_editText );
-        playerNumberText.addTextChangedListener( new PlayerNumberWatcher() );
         builder.setView( dialogView );
         builder.setTitle( R.string.add_new_player );
         builder.setPositiveButton( android.R.string.ok, new DialogInterface.OnClickListener()
@@ -105,17 +144,7 @@ public class TeamFragment extends Fragment
             @Override
             public void onClick( DialogInterface dialog, int which )
             {
-                EditText playerNumberText = ( EditText ) ( ( AlertDialog ) dialog )
-                        .findViewById( R.id.player_number_editText );
-                EditText playerNameText = ( EditText ) ( ( AlertDialog ) dialog )
-                        .findViewById( R.id.player_name_editText );
-
-                int playerNumber = Integer.parseInt( playerNumberText.getText().toString() );
-                String playerName = playerNameText.getText().toString();
-
-                mPlayerList.put( playerNumber, playerName );
-
-                updateTableView();
+                // Will be overridden
             }
         } );
         builder.setNegativeButton( android.R.string.cancel, new DialogInterface.OnClickListener()
@@ -126,8 +155,8 @@ public class TeamFragment extends Fragment
                 dialog.cancel();
             }
         } );
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        final AlertDialog dialog = builder.create();
+        return dialog;
     }
 
     private class PlayerNumberWatcher implements TextWatcher
@@ -186,57 +215,129 @@ public class TeamFragment extends Fragment
     {
         TableRow row = new TableRow( getActivity() );
         row.setId( rowNumber );
-        row.setLayoutParams(
-                new TableRow.LayoutParams( TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT ) );
-        TextView leftEditText = createEditText( getActivity() );
-        leftEditText.setText( String.valueOf( mPlayerList.keyAt( rowNumber ) ) );
-        TextView rightEditText = createEditText( getActivity() );
-        rightEditText.setText( mPlayerList.valueAt( rowNumber ) );
-        row.addView( leftEditText, 0 );
-        row.addView( rightEditText, 1 );
+        row.setLayoutParams( new LayoutParams( LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT ) );
+        row.setWeightSum( 16 );
+        TextView leftEditText = createEditText( getActivity(), 1, String.valueOf( mPlayerList.keyAt( rowNumber ) ) );
+        TextView rightEditText = createEditText( getActivity(), 10, mPlayerList.valueAt( rowNumber ) );
+        ImageButton deleteButton = createDeleteButton( rowNumber );
+        row.addView( leftEditText );
+        row.addView( rightEditText );
+        row.addView( deleteButton );
         return row;
     }
 
-    private TextView createEditText( Context context )
+    private TextView createEditText( Context context, float weight, String text )
     {
         TextView editText = new TextView( context );
-        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams( ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f );
+        LayoutParams layoutParams = new LayoutParams( LayoutParams.WRAP_CONTENT, getPixelHeight(), weight );
         editText.setLayoutParams( layoutParams );
         editText.setBackgroundResource( R.drawable.cell_border );
+        editText.setText( text );
         return editText;
     }
 
-    public void setupKeyboardHiding( View v )
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @SuppressWarnings("deprecation")
+    private ImageButton createDeleteButton( final int rowNumber )
     {
-        if( v instanceof EditText )
+        ImageButton button = new ImageButton( getActivity() );
+        button.setLayoutParams( new LayoutParams( LayoutParams.WRAP_CONTENT, getPixelHeight(), 5 ) );
+        button.setBackgroundResource( R.drawable.cell_border );
+        Resources resource = getResources();
+        Drawable drawable;
+        if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP )
+        {
+            drawable = resource.getDrawable( android.R.drawable.ic_delete, getActivity().getTheme() );
+        }
+        else
+        {
+            drawable = resource.getDrawable( android.R.drawable.ic_delete );
+        }
+        button.setImageDrawable( drawable );
+        button.setScaleType( ScaleType.FIT_CENTER );
+        button.setOnClickListener( new OnClickListener()
+        {
+            @Override
+            public void onClick( View v )
+            {
+                int number = mPlayerList.keyAt( rowNumber );
+                String name = mPlayerList.valueAt( rowNumber );
+                mPlayerList.removeAt( rowNumber );
+                Toast.makeText( getActivity(), "Player No. " + number + " " + name + " removed.", Toast.LENGTH_SHORT )
+                        .show();
+                updateTableView();
+            }
+        } );
+        return button;
+    }
+
+    private int getPixelHeight()
+    {
+        Resources resources = getResources();
+        return ( int ) TypedValue.applyDimension( TypedValue.COMPLEX_UNIT_DIP, 30, resources.getDisplayMetrics() );
+    }
+
+    public void setupKeyboardHiding( View view )
+    {
+        if( view instanceof EditText )
         {
             return;
         }
-        else if( v instanceof ViewGroup )
+        else if( view instanceof ViewGroup )
         {
-            int childCount = ( ( ViewGroup ) v ).getChildCount();
+            int childCount = ( ( ViewGroup ) view ).getChildCount();
             for( int i = 0; i < childCount; i++ )
             {
-                View innerView = ( ( ViewGroup ) v ).getChildAt( i );
+                View innerView = ( ( ViewGroup ) view ).getChildAt( i );
                 setupKeyboardHiding( innerView );
-                return;
             }
         }
-        v.setOnTouchListener( new OnTouchListener()
+        view.setOnTouchListener( new OnTouchListener()
         {
+            @SuppressLint("ClickableViewAccessibility")
             public boolean onTouch( View v, MotionEvent event )
             {
-                hideKeyboard( getActivity() );
+                hideKeyboard();
                 return false;
             }
         } );
     }
 
-    private void hideKeyboard( Activity activity )
+    private void hideKeyboard()
     {
+        Activity activity = getActivity();
         InputMethodManager inputMethodManager = ( InputMethodManager ) activity
                 .getSystemService( Activity.INPUT_METHOD_SERVICE );
-        inputMethodManager.hideSoftInputFromWindow( activity.getCurrentFocus().getWindowToken(), 0 );
+        View focusedView = activity.getCurrentFocus();
+        if( focusedView == null )
+        {
+            return;
+        }
+        inputMethodManager.hideSoftInputFromWindow( focusedView.getWindowToken(), 0 );
+    }
+
+    private void addNewPlayerFromDialog( DialogInterface dialog )
+    {
+        AlertDialog alertDialog = ( AlertDialog ) dialog;
+        EditText playerNumberText = ( EditText ) alertDialog.findViewById( R.id.player_number_editText );
+        EditText playerNameText = ( EditText ) alertDialog.findViewById( R.id.player_name_editText );
+        String playerNumberString = playerNumberText.getText().toString();
+        String playerNameString = playerNameText.getText().toString();
+        if( playerNumberString.isEmpty() || playerNameString.isEmpty() )
+        {
+            Toast.makeText( getActivity(), getResources().getString( R.string.player_input_error ), Toast.LENGTH_SHORT )
+                    .show();
+            return;
+        }
+        int playerNumber = Integer.parseInt( playerNumberString );
+        String playerName = playerNameString;
+        mPlayerList.put( playerNumber, playerName );
+        updateTableView();
+        dialog.dismiss();
+    }
+
+    public SparseArray< String > getPlayerList()
+    {
+        return mPlayerList;
     }
 }
