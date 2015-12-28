@@ -8,10 +8,10 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content" >
 		<TextView
-			android:id="@+id/textView1"
+			android:id="@+id/game_homeTeamName"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:text="@string/newTeam_new_player_number" />
+			android:text="@string/player_number" />
 		<EditText
 			android:id="@+id/player_number_editText"
 			android:layout_width="match_parent"
@@ -24,7 +24,7 @@
 			android:id="@+id/team_location_text"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:text="@string/newTeam_new_player_full_name" />
+			android:text="@string/player_name" />
 		<EditText
 			android:id="@+id/player_name_editText"
 			android:layout_width="match_parent"
