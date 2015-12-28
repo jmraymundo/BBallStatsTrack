@@ -1,36 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="com.example.bballstatstrack"
-	android:versionCode="1"
-	android:versionName="1.0" >
-	<instrumentation
-		android:name="android.test.InstrumentationTestRunner"
-		android:targetPackage="." />
-	<uses-sdk
-		android:minSdkVersion="14"
-		android:targetSdkVersion="23" />
-	<application
-		android:allowBackup="true"
-		android:icon="@drawable/ic_launcher"
-		android:label="@string/app_name"
-		android:theme="@style/AppTheme" >
-		<uses-library android:name="android.test.runner" />
-		<activity
-			android:name=".activities.ListGamesActivity"
-			android:label="@string/app_name" >
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
-				<category android:name="android.intent.category.LAUNCHER" />
-			</intent-filter>
-		</activity>
-		<activity
-			android:name=".activities.AddPlayersToTeamsActivity"
-			android:label="@string/app_name"
-			android:windowSoftInputMode="adjustNothing" />
-		<activity
-			android:name=".activities.GameActivity"
-			android:configChanges="orientation|keyboardHidden"
-			android:label="@string/app_name"
-			android:screenOrientation="portrait" />
-	</application>
+    package="com.example.bballstatstrack"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <instrumentation
+        android:name="android.test.InstrumentationTestRunner"
+        android:targetPackage="." />
+
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="23" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <uses-library android:name="android.test.runner" />
+
+        <activity
+            android:name=".activities.ListGamesActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.AddPlayersToTeamsActivity"
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustNothing" />
+        <activity
+            android:name=".activities.GameActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="landscape" />
+    </application>
+
 </manifest>
