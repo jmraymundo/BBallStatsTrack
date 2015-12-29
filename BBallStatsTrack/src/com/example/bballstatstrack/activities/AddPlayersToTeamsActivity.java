@@ -20,13 +20,21 @@ import android.widget.Toast;
 public class AddPlayersToTeamsActivity extends Activity
 {
 
-    protected static final String HOME_TEAM_NAMES = "HomeTeamNames";
+    protected static final String HOME_TEAM_NAME = "HomeTeamName";
+
+    protected static final String HOME_TEAM_MEMBER_NAMES = "HomeTeamMemberNames";
 
     protected static final String HOME_TEAM_NUMBERS = "HomeTeamNumbers";
 
-    protected static final String AWAY_TEAM_NAMES = "AwayTeamNames";
+    protected static final String AWAY_TEAM_NAME = "AwayTeamName";
+
+    protected static final String AWAY_TEAM_MEMBER_NAMES = "AwayTeamMemberNames";
 
     protected static final String AWAY_TEAM_NUMBERS = "AwayTeamNumbers";
+
+    private String mHomeName;
+
+    private String mAwayName;
 
     SparseArray< String > mHomeTeam;
 
@@ -149,21 +157,42 @@ public class AddPlayersToTeamsActivity extends Activity
         public void onClick( View v )
         {
             mHomeTeam = mHomeTeamFragment.getPlayerList();
+            mHomeName = mHomeTeamFragment.getTeamName();
             mAwayTeam = mAwayTeamFragment.getPlayerList();
-            if( mHomeTeam.size() < 5 || mAwayTeam.size() < 5 )
+            mAwayName = mAwayTeamFragment.getTeamName();
+            if( hasInsufficientPlayers() )
             {
                 Toast.makeText( AddPlayersToTeamsActivity.this, "Insuffecient players. Cannot proceed.",
                         Toast.LENGTH_SHORT ).show();
                 return;
             }
+            if( hasCompleteTeamNames() )
+            {
+
+                Toast.makeText( AddPlayersToTeamsActivity.this, "Team names are mandatory. Cannot proceed.",
+                        Toast.LENGTH_SHORT ).show();
+                return;
+            }
             Intent intent = new Intent( AddPlayersToTeamsActivity.this, GameActivity.class );
-            setIntentExtras( intent, mHomeTeam, HOME_TEAM_NUMBERS, HOME_TEAM_NAMES );
-            setIntentExtras( intent, mAwayTeam, AWAY_TEAM_NUMBERS, AWAY_TEAM_NAMES );
+            intent.putExtra( HOME_TEAM_NAME, mHomeName );
+            setIntentExtras( intent, mHomeTeam, HOME_TEAM_NUMBERS, HOME_TEAM_MEMBER_NAMES );
+            intent.putExtra( AWAY_TEAM_NAME, mAwayName );
+            setIntentExtras( intent, mAwayTeam, AWAY_TEAM_NUMBERS, AWAY_TEAM_MEMBER_NAMES );
             startActivity( intent );
         }
 
-        private void setIntentExtras( Intent intent, SparseArray< String > team, String extraTeamNumbers,
-                String extraTeamNames )
+        public boolean hasCompleteTeamNames()
+        {
+            return mHomeName.isEmpty() || mAwayName.isEmpty();
+        }
+
+        public boolean hasInsufficientPlayers()
+        {
+            return mHomeTeam.size() < 5 || mAwayTeam.size() < 5;
+        }
+
+        private void setIntentExtras( Intent intent, SparseArray< String > team, String extraTeamNumbersIdentifier,
+                String extraTeamNamesIdentifier )
         {
             int size = team.size();
             int[] numbers = new int[size];
@@ -173,8 +202,8 @@ public class AddPlayersToTeamsActivity extends Activity
                 numbers[i] = team.keyAt( i );
                 names[i] = team.valueAt( i );
             }
-            intent.putExtra( extraTeamNumbers, numbers );
-            intent.putExtra( extraTeamNames, names );
+            intent.putExtra( extraTeamNumbersIdentifier, numbers );
+            intent.putExtra( extraTeamNamesIdentifier, names );
         }
     }
 }
