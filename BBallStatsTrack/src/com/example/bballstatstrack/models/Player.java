@@ -268,4 +268,10 @@ public class Player
     {
         return getFTMade() + ( get2ptFGMade() * 2 ) + ( get3ptFGMade() * 3 );
     }
+
+    @Override
+    public String toString()
+    {
+        return getNumber() + " - " + getFullName();
+    }
 }
