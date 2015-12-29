@@ -51,6 +51,8 @@ public class Game
 
     private int mCurrentGameClock;
 
+    private int mEventGameClock = -1;
+
     private int mCurrentShotClock;
 
     private static final int MAX_SHOT_CLOCK = 24;
@@ -110,7 +112,18 @@ public class Game
     public void addNewEvent( GameEvent event )
     {
         event.resolve();
-        mPeriodLog.append( mCurrentGameClock, event );
+        mPeriodLog.append( mEventGameClock, event );
+        endNewEvent();
+    }
+
+    public void startNewEvent()
+    {
+        mEventGameClock = mCurrentGameClock;
+    }
+
+    public void endNewEvent()
+    {
+        mEventGameClock = -1;
     }
 
     public Team getAwayTeam()
