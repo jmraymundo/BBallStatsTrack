@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.bballstatstrack.R;
+import com.example.bballstatstrack.fragments.GameMainStatsFragment;
+import com.example.bballstatstrack.fragments.TeamInGameFragment;
 import com.example.bballstatstrack.models.Game;
 import com.example.bballstatstrack.models.Player;
 import com.example.bballstatstrack.models.Team;
+import com.example.bballstatstrack.models.utils.PlayerNumberWatcher;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -27,9 +30,15 @@ public class GameActivity extends Activity
 
     private Game mGame;
 
-    private int mGameClock;
+    private int mGameClock = -1;
 
-    private int mShotClockReset;
+    private int mShotClockReset = -1;
+
+    private GameMainStatsFragment mStatsFragment;
+
+    private TeamInGameFragment mHomeInGameFragment;
+
+    private TeamInGameFragment mAwayInGameFragment;
 
     @Override
     protected void onCreate( Bundle savedInstanceState )
@@ -41,16 +50,18 @@ public class GameActivity extends Activity
 
     private void setGameClock()
     {
-        final AlertDialog dialog = buildDialog();
-        TextView detailedQuestionView = ( TextView ) dialog.findViewById( R.id.requested_clock_text );
-        detailedQuestionView.setText( R.string.max_game_clock );
+        final AlertDialog dialog = buildDialog( R.string.max_game_clock );
         dialog.show();
         dialog.getButton( DialogInterface.BUTTON_POSITIVE ).setOnClickListener( new OnClickListener()
         {
             @Override
             public void onClick( View v )
             {
-                setClockFromDialog( dialog, mGameClock );
+                mGameClock = setClockFromDialog( dialog, 12 );
+                if( mGameClock == -1 )
+                {
+                    return;
+                }
                 setShotClockReset();
             }
         } );
@@ -58,27 +69,31 @@ public class GameActivity extends Activity
 
     private void setShotClockReset()
     {
-        final AlertDialog dialog = buildDialog();
-        TextView detailedQuestionView = ( TextView ) dialog.findViewById( R.id.requested_clock_text );
-        detailedQuestionView.setText( R.string.reset_shot_clock );
+        final AlertDialog dialog = buildDialog( R.string.reset_shot_clock );
         dialog.show();
         dialog.getButton( DialogInterface.BUTTON_POSITIVE ).setOnClickListener( new OnClickListener()
         {
             @Override
             public void onClick( View v )
             {
-                setClockFromDialog( dialog, mShotClockReset );
+                mShotClockReset = setClockFromDialog( dialog, 24 );
+                if( mShotClockReset == -1 )
+                {
+                    return;
+                }
                 startNewGame();
             }
         } );
     }
 
-    private AlertDialog buildDialog()
+    private AlertDialog buildDialog( int detailedTextID )
     {
         Builder builder = new AlertDialog.Builder( GameActivity.this );
         View dialogView = getLayoutInflater().inflate( R.layout.dialog_get_clock, null );
         builder.setView( dialogView );
         builder.setTitle( R.string.set_time_title );
+        TextView detailedQuestionView = ( TextView ) dialogView.findViewById( R.id.requested_clock_text );
+        detailedQuestionView.setText( detailedTextID );
         builder.setPositiveButton( android.R.string.ok, new DialogInterface.OnClickListener()
         {
             @Override
@@ -102,19 +117,21 @@ public class GameActivity extends Activity
         mGame = new Game( mGameClock, 5, mShotClockReset, homeTeam, awayTeam );
     }
 
-    private void setClockFromDialog( DialogInterface dialog, int clock )
+    private int setClockFromDialog( DialogInterface dialog, int max )
     {
         AlertDialog alertDialog = ( AlertDialog ) dialog;
-        EditText playerNumberText = ( EditText ) alertDialog.findViewById( R.id.requested_clock_field );
-        String playerNumberString = playerNumberText.getText().toString();
-        if( playerNumberString.isEmpty() )
+        EditText clockField = ( EditText ) alertDialog.findViewById( R.id.requested_clock_field );
+        clockField.addTextChangedListener( new PlayerNumberWatcher( 0, max ) );
+        String clockValue = clockField.getText().toString();
+        if( clockValue.isEmpty() )
         {
             Toast.makeText( GameActivity.this, getResources().getString( R.string.clock_input_error ),
                     Toast.LENGTH_SHORT ).show();
-            return;
+            return -1;
         }
-        clock = Integer.parseInt( playerNumberString );
+        int number = Integer.parseInt( clockValue );
         dialog.dismiss();
+        return number;
     }
 
     public Team getTeam( String teamNameExtra, String teamNumbersExtra, String teamPlayersExtra )
