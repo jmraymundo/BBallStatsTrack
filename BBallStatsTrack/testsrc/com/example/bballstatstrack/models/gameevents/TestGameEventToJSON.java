@@ -60,7 +60,7 @@ public class TestGameEventToJSON extends TestCase
         teamArray2.add( player4 );
         team = new Team( "Team name", teamArray );
         team2 = new Team( "Team name2", teamArray2 );
-        game = new Game( 12, 24, team, team2 );
+        game = new Game( 12, 5, 24, team, team2 );
         jsonSerializer = JSONSerializer.getInstance();
         gameEventDeserializer = new GameEventDeserializer( game );
     };
