@@ -48,16 +48,16 @@ public class TeamInGameFragment extends Fragment
             TextView number = ( TextView ) child.getChildAt( 0 );
             TextView name = ( TextView ) child.getChildAt( 1 );
             TextView score = ( TextView ) child.getChildAt( 2 );
-            Player player = mInGameList.get( i + 1 );
+            Player player = mInGameList.get( i - 1 );
             setInGamePlayerStats( player, number, name, score );
         }
     }
 
     public void setInGamePlayerStats( Player player, TextView number, TextView name, TextView score )
     {
-        number.setText( player.getNumber() );
+        number.setText( String.valueOf( player.getNumber() ) );
         name.setText( player.getFullName() );
-        score.setText( player.getTotalscore() );
+        score.setText( String.valueOf( player.getTotalscore() ) );
     }
 
     public void updateInGamePlayers( List< Player > inGameList )

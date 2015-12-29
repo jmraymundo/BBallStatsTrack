@@ -44,6 +44,13 @@ public class GameMainStatsFragment extends Fragment
     {
         mHomeName.setText( game.getHomeTeam().getName() );
         mAwayName.setText( game.getAwayTeam().getName() );
+        updateUI( game );
+    }
+
+    public void updateUI( Game game )
+    {
+        setHomeScore( game.getHomeTeam().getTotalScore() );
+        setAwayScore( game.getAwayTeam().getTotalScore() );
         setGameClock( game.getCurrentGameClock() );
         setShotClock( game.getCurrentShotClock() );
         setPeriod( game.getPeriod() );
@@ -66,19 +73,18 @@ public class GameMainStatsFragment extends Fragment
 
     public void setHomeScore( int score )
     {
-        mHomeScore.setText( score );
+        mHomeScore.setText( getLeadZeroFormattedString( score ) );
     }
 
     public void setAwayScore( int score )
     {
-        mAwayScore.setText( score );
+        mAwayScore.setText( getLeadZeroFormattedString( score ) );
     }
 
-    private String getMinSecFormattedString( int millis )
+    private String getMinSecFormattedString( int time )
     {
-        int seconds = millis / 1000;
-        int minutes = seconds % 60;
-        seconds = seconds - ( minutes * 60 );
+        int minutes = time / 60;
+        int seconds = time - ( minutes * 60 );
         return getLeadZeroFormattedString( minutes ) + ":" + getLeadZeroFormattedString( seconds );
     }
 
@@ -88,22 +94,22 @@ public class GameMainStatsFragment extends Fragment
         {
             return "0" + number;
         }
-        return "" + number;
+        return String.valueOf( number );
     }
 
     private String getPeriodString( int period )
     {
         switch( period )
         {
-            case 1:
+            case 0:
                 return "1st";
-            case 2:
+            case 1:
                 return "2nd";
-            case 3:
+            case 2:
                 return "3rd";
-            case 4:
+            case 3:
                 return "4th";
-            case 5:
+            case 4:
                 return "OT";
             default:
                 return ( period - 4 ) + " OT";

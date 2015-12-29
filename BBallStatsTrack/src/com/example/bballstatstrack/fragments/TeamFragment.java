@@ -298,6 +298,10 @@ public class TeamFragment extends Fragment
 
     public String getTeamName()
     {
+        if( mTeamNameEditText == null )
+        {
+            return new String();
+        }
         return mTeamNameEditText.getText().toString();
     }
 }
