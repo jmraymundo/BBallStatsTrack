@@ -14,10 +14,14 @@
 	<string name="newTeam_new_player_action">Actions</string>
 	<string name="proceed">Proceed</string>
 	<string name="player_input_error">Error. All fields are mandatory.</string>
+	<string name="clock_input_error">Error. Cannot be empty.</string>
 	<string name="on_back_button_title">Cancelling..</string>
 	<string name="on_back_button_message">Are you sure you want to cancel? Your progress will not be saved.</string>
 	<string name="yes">Yes</string>
 	<string name="no">No</string>
 	<string name="player_score">Score</string>
 	<string name="game_log_title">Game Log:</string>
+	<string name="set_time_title">Set time:</string>
+	<string name="max_game_clock">Max game clock per quarter? (in minutes)</string>
+	<string name="reset_shot_clock">In same ball possession situations, reset shot clock to how many seconds?</string>
 </resources>
