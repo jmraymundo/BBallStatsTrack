@@ -24,4 +24,6 @@
 	<string name="set_time_title">Set time:</string>
 	<string name="max_game_clock">Max game clock per quarter? (in minutes)</string>
 	<string name="reset_shot_clock">In same ball possession situations, reset shot clock to how many seconds?</string>
+	<string name="select_starters">Select starters of team:</string>
+	<string name="need_five_players">Error! Need five players!</string>
 </resources>
