@@ -263,4 +263,9 @@ public class Player
     {
         return mPlayingTimeSec;
     }
+
+    public int getTotalscore()
+    {
+        return getFTMade() + ( get2ptFGMade() * 2 ) + ( get3ptFGMade() * 3 );
+    }
 }
