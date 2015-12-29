@@ -1,6 +1,7 @@
 package com.example.bballstatstrack.fragments;
 
 import com.example.bballstatstrack.R;
+import com.example.bballstatstrack.models.utils.PlayerNumberWatcher;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -14,8 +15,6 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -38,8 +37,6 @@ import android.widget.Toast;
 
 public class TeamFragment extends Fragment
 {
-    String mTeamName;
-
     EditText mTeamNameEditText;
 
     SparseArray< String > mPlayerList = new SparseArray< String >();
@@ -118,7 +115,7 @@ public class TeamFragment extends Fragment
     private void setPlayerNumberEditTextListeners( final AlertDialog dialog )
     {
         EditText playerNumberText = ( EditText ) dialog.findViewById( R.id.player_number_editText );
-        playerNumberText.addTextChangedListener( new PlayerNumberWatcher() );
+        playerNumberText.addTextChangedListener( new PlayerNumberWatcher( 0, 99 ) );
     }
 
     private void setPositiveButtonAction( final AlertDialog dialog )
@@ -157,48 +154,6 @@ public class TeamFragment extends Fragment
         } );
         final AlertDialog dialog = builder.create();
         return dialog;
-    }
-
-    private class PlayerNumberWatcher implements TextWatcher
-    {
-        String mCurrent = "";
-
-        @Override
-        public void beforeTextChanged( CharSequence s, int start, int count, int after )
-        {
-            if( s == null || s.length() == 0 )
-            {
-                mCurrent = "";
-                return;
-            }
-            mCurrent = s.toString();
-        }
-
-        @Override
-        public void onTextChanged( CharSequence s, int start, int before, int count )
-        {
-            // TODO Auto-generated method stub
-        }
-
-        @Override
-        public void afterTextChanged( Editable s )
-        {
-            if( s == null || s.length() == 0 )
-            {
-                return;
-            }
-            int input = Integer.parseInt( s.toString() );
-            if( inRange( input ) )
-            {
-                return;
-            }
-            s.replace( 0, s.length(), mCurrent );
-        }
-
-        private boolean inRange( int input )
-        {
-            return 0 <= input && input <= 99;
-        }
     }
 
     public void updateTableView()
@@ -339,5 +294,10 @@ public class TeamFragment extends Fragment
     public SparseArray< String > getPlayerList()
     {
         return mPlayerList;
+    }
+
+    public String getTeamName()
+    {
+        return mTeamNameEditText.getText().toString();
     }
 }
