@@ -1,11 +1,7 @@
 package com.example.bballstatstrack.models.gameevents;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.example.bballstatstrack.models.Player;
 import com.example.bballstatstrack.models.Team;
-import com.example.bballstatstrack.models.gameevents.exceptions.GameEventException;
 
 public class FoulEvent extends GameEvent
 {
@@ -23,7 +19,6 @@ public class FoulEvent extends GameEvent
     public void resolve()
     {
         mPlayer.makeFoul();
-        mTeam.addFoul();
         if( mAppended != null )
         {
             mAppended.resolve();

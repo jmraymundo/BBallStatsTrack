@@ -1,37 +1,27 @@
 package com.example.bballstatstrack.models.gameevents.foulevents;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.example.bballstatstrack.models.Player;
 import com.example.bballstatstrack.models.Team;
 import com.example.bballstatstrack.models.gameevents.FoulEvent;
 import com.example.bballstatstrack.models.gameevents.GameEvent;
 import com.example.bballstatstrack.models.gameevents.ShootEvent;
-import com.example.bballstatstrack.models.gameevents.GameEvent.FoulType;
-import com.example.bballstatstrack.models.gameevents.GameEvent.ShootingFoulType;
-import com.example.bballstatstrack.models.gameevents.exceptions.GameEventException;
 
 public class ShootingFoulEvent extends FoulEvent
 {
-    public static final String SHOOTING_FOUL_TYPE = "shootingFoulType";
+    private static final String THREE_FREE_THROWS = "3 free throws. ";
+
+    private static final String TWO_FREE_THROWS = "2 free throws. ";
+
+    private static final String ONE_FREE_THROW = "1 free throw. ";
 
     public static final String SHOOTER = "shooter";
 
-    private ShootingFoulType mShootingFoulType;
-
     private Player mShooter;
 
-    public ShootingFoulEvent( ShootingFoulType type, Player player, Team team, Player shooter )
+    public ShootingFoulEvent( Player player, Team team, Player shooter )
     {
         super( FoulType.SHOOTING, player, team );
-        mShootingFoulType = type;
         mShooter = shooter;
-    }
-
-    public ShootingFoulType getShootingFoulType()
-    {
-        return mShootingFoulType;
     }
 
     public Player getShooter()
@@ -40,7 +30,7 @@ public class ShootingFoulEvent extends FoulEvent
     }
 
     @Override
-    public void append( GameEvent appendedEvent ) throws GameEventException
+    public void append( GameEvent appendedEvent )
     {
         if( mAppended != null )
         {
@@ -49,14 +39,12 @@ public class ShootingFoulEvent extends FoulEvent
         }
         if( appendedEvent instanceof ShootEvent )
         {
-            switch( mShootingFoulType )
+            Player player = appendedEvent.getPlayer();
+            if( mShooter != player )
             {
-                case NO_AND1:
-                    throw new GameEventException( this, mShootingFoulType );
-                case AND1:
-                    mAppended = appendedEvent;
-                    return;
+                return;
             }
+            mAppended = appendedEvent;
             return;
         }
         super.append( appendedEvent );
@@ -65,21 +53,40 @@ public class ShootingFoulEvent extends FoulEvent
     @Override
     public String toString()
     {
-        String shootCountText;
-        if( ShootingFoulType.NO_AND1 == mShootingFoulType )
-        {
-            shootCountText = "2 free throws. ";
-        }
-        else
-        {
-            shootCountText = "1 free throw. ";
-        }
-        String output = mPlayer.getFullName() + " committed a shooting foul. " + mShooter.getFullName() + " to shoot "
-                + shootCountText;
+        String output = mPlayer.getFullName() + " committed a shooting foul. ";
         if( mAppended != null )
         {
-            output = output.concat( mAppended.toString() );
+            ShotType shotType = ( ( ShootEvent ) mAppended ).getShotType();
+            ShotClass shotClass = ( ( ShootEvent ) mAppended ).getShotClass();
+            String additional = mShooter.getFullName() + " to shoot ";
+            if( shotType == ShotType.MADE )
+            {
+                additional = additional.concat( ONE_FREE_THROW );
+                output = output.concat( additional );
+                output = output.concat( mAppended.toString() );
+            }
+            else if( shotClass == ShotClass.FG_2PT )
+            {
+                additional = additional.concat( TWO_FREE_THROWS );
+                output = output.concat( additional );
+            }
+            else
+            {
+                additional = additional.concat( THREE_FREE_THROWS );
+                output = output.concat( additional );
+            }
         }
         return output.trim();
+    }
+
+    @Override
+    public void resolve()
+    {
+        if( mAppended == null )
+        {
+            return;
+        }
+        super.resolve();
+        mTeam.addFoul();
     }
 }

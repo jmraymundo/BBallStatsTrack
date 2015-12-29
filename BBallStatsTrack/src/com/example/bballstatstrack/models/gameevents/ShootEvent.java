@@ -2,12 +2,8 @@ package com.example.bballstatstrack.models.gameevents;
 
 import java.util.Locale;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.example.bballstatstrack.models.Player;
 import com.example.bballstatstrack.models.Team;
-import com.example.bballstatstrack.models.gameevents.exceptions.GameEventException;
 
 public class ShootEvent extends GameEvent
 {
@@ -71,7 +67,7 @@ public class ShootEvent extends GameEvent
     }
 
     @Override
-    public void append( GameEvent appendedEvent ) throws GameEventException
+    public void append( GameEvent appendedEvent )
     {
         if( mAppended != null )
         {
@@ -88,9 +84,8 @@ public class ShootEvent extends GameEvent
                 }
                 else if( appendedEvent instanceof BlockEvent || appendedEvent instanceof ReboundEvent )
                 {
-                    throw new GameEventException( this, mShotType );
+                    return;
                 }
-                break;
             case MISSED:
                 if( appendedEvent instanceof BlockEvent || appendedEvent instanceof ReboundEvent )
                 {

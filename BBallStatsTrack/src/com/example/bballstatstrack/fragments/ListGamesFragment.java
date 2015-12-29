@@ -3,9 +3,9 @@ package com.example.bballstatstrack.fragments;
 import java.util.ArrayList;
 
 import com.example.bballstatstrack.R;
+import com.example.bballstatstrack.activities.AddPlayersToTeamsActivity;
 import com.example.bballstatstrack.activities.GameActivity;
 import com.example.bballstatstrack.activities.GameReviewActivity;
-import com.example.bballstatstrack.activities.AddPlayersToTeamsActivity;
 import com.example.bballstatstrack.adapter.GameAdapter;
 import com.example.bballstatstrack.model.GameDirectory;
 import com.example.bballstatstrack.models.Game;

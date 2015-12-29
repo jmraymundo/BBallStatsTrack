@@ -5,7 +5,6 @@ import com.example.bballstatstrack.models.Team;
 import com.example.bballstatstrack.models.gameevents.FoulEvent;
 import com.example.bballstatstrack.models.gameevents.GameEvent;
 import com.example.bballstatstrack.models.gameevents.ShootEvent;
-import com.example.bballstatstrack.models.gameevents.exceptions.GameEventException;
 
 public class NonShootingFoulEvent extends FoulEvent
 {
@@ -26,7 +25,7 @@ public class NonShootingFoulEvent extends FoulEvent
     }
 
     @Override
-    public void append( GameEvent appendedEvent ) throws GameEventException
+    public void append( GameEvent appendedEvent )
     {
         if( mAppended != null )
         {
@@ -38,7 +37,7 @@ public class NonShootingFoulEvent extends FoulEvent
             switch( mNonShootingFoulType )
             {
                 case NON_PENALTY:
-                    throw new GameEventException( this, mNonShootingFoulType );
+                    return;
                 case PENALTY:
                     mAppended = appendedEvent;
                     return;
@@ -57,5 +56,12 @@ public class NonShootingFoulEvent extends FoulEvent
             output = output.concat( mAppended.toString() );
         }
         return output.trim();
+    }
+
+    @Override
+    public void resolve()
+    {
+        super.resolve();
+        mTeam.addFoul();
     }
 }

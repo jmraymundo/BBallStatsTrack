@@ -19,7 +19,6 @@ import com.example.bballstatstrack.models.gameevents.GameEvent.EventType;
 import com.example.bballstatstrack.models.gameevents.GameEvent.FoulType;
 import com.example.bballstatstrack.models.gameevents.GameEvent.NonShootingFoulType;
 import com.example.bballstatstrack.models.gameevents.GameEvent.ReboundType;
-import com.example.bballstatstrack.models.gameevents.GameEvent.ShootingFoulType;
 import com.example.bballstatstrack.models.gameevents.GameEvent.ShotClass;
 import com.example.bballstatstrack.models.gameevents.GameEvent.ShotType;
 import com.example.bballstatstrack.models.gameevents.GameEvent.TurnoverType;
@@ -29,7 +28,6 @@ import com.example.bballstatstrack.models.gameevents.StealEvent;
 import com.example.bballstatstrack.models.gameevents.SubstitutionEvent;
 import com.example.bballstatstrack.models.gameevents.TimeoutEvent;
 import com.example.bballstatstrack.models.gameevents.TurnoverEvent;
-import com.example.bballstatstrack.models.gameevents.exceptions.GameEventException;
 import com.example.bballstatstrack.models.gameevents.foulevents.NonShootingFoulEvent;
 import com.example.bballstatstrack.models.gameevents.foulevents.OffensiveFoulEvent;
 import com.example.bballstatstrack.models.gameevents.foulevents.ShootingFoulEvent;
@@ -45,7 +43,7 @@ public class GameEventDeserializer
         mGame = game;
     }
 
-    public GameEvent getGameEventFromJSONObject( JSONObject jsonGameEvent ) throws JSONException, GameEventException
+    public GameEvent getGameEventFromJSONObject( JSONObject jsonGameEvent ) throws JSONException
     {
         if( null == jsonGameEvent )
         {
@@ -169,12 +167,10 @@ public class GameEventDeserializer
     private GameEvent getShootingFoulEventFromJSON( JSONObject jsonGameEvent, Player player, Team team )
             throws JSONException
     {
-        ShootingFoulType shootingFoulType = ( ShootingFoulType ) jsonGameEvent
-                .get( ShootingFoulEvent.SHOOTING_FOUL_TYPE );
         int shooterNumber = jsonGameEvent.getInt( ShootingFoulEvent.SHOOTER );
         Team otherTeam = ( team.equals( mGame.getAwayTeam() ) ? mGame.getHomeTeam() : mGame.getHomeTeam() );
         Player shooter = otherTeam.getPlayers().get( shooterNumber );
-        return new ShootingFoulEvent( shootingFoulType, player, team, shooter );
+        return new ShootingFoulEvent( player, team, shooter );
     }
 
     private Team getTeamFromID( UUID teamID )
@@ -193,7 +189,7 @@ public class GameEventDeserializer
         }
     }
 
-    public GameLog getGameLog( JSONObject game ) throws JSONException, GameEventException
+    public GameLog getGameLog( JSONObject game ) throws JSONException
     {
         GameLog gameLog = new GameLog();
         JSONArray gameLogArray = game.getJSONArray( GameStats.GAME_LOG.toString() );
@@ -206,8 +202,7 @@ public class GameEventDeserializer
         return gameLog;
     }
 
-    private SparseArray< GameEvent > getPeriodLogFromJSONArray( JSONArray periodLogArray )
-            throws JSONException, GameEventException
+    private SparseArray< GameEvent > getPeriodLogFromJSONArray( JSONArray periodLogArray ) throws JSONException
     {
         SparseArray< GameEvent > periodLog = new SparseArray< GameEvent >();
         for( int periodIndex = 0; periodIndex < periodLogArray.length(); periodIndex++ )

@@ -1,11 +1,7 @@
 package com.example.bballstatstrack.models.gameevents;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.example.bballstatstrack.models.Player;
 import com.example.bballstatstrack.models.Team;
-import com.example.bballstatstrack.models.gameevents.exceptions.GameEventException;
 
 public abstract class GameEvent
 {
@@ -42,11 +38,6 @@ public abstract class GameEvent
         SHOOTING, NON_SHOOTING, OFFENSIVE;
     }
 
-    public enum ShootingFoulType
-    {
-        AND1, NO_AND1;
-    }
-
     public enum NonShootingFoulType
     {
         PENALTY, NON_PENALTY;
@@ -77,9 +68,9 @@ public abstract class GameEvent
         OFFENSIVE, DEFENSIVE, TEAM_REBOUND;
     }
 
-    public void append( GameEvent appendedEvent ) throws GameEventException
+    public void append( GameEvent appendedEvent )
     {
-        throw new GameEventException( this, appendedEvent );
+        return;
     }
 
     @Override

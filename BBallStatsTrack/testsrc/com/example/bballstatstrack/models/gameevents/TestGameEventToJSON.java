@@ -11,11 +11,9 @@ import com.example.bballstatstrack.models.Game;
 import com.example.bballstatstrack.models.Player;
 import com.example.bballstatstrack.models.Team;
 import com.example.bballstatstrack.models.gameevents.GameEvent.ReboundType;
-import com.example.bballstatstrack.models.gameevents.GameEvent.ShootingFoulType;
 import com.example.bballstatstrack.models.gameevents.GameEvent.ShotClass;
 import com.example.bballstatstrack.models.gameevents.GameEvent.ShotType;
 import com.example.bballstatstrack.models.gameevents.GameEvent.TurnoverType;
-import com.example.bballstatstrack.models.gameevents.exceptions.GameEventException;
 import com.example.bballstatstrack.models.gameevents.foulevents.ShootingFoulEvent;
 import com.example.bballstatstrack.models.utils.GameEventDeserializer;
 import com.example.bballstatstrack.models.utils.JSONSerializer;
@@ -68,10 +66,10 @@ public class TestGameEventToJSON extends TestCase
     };
 
     @Test
-    public void testGameEventToJSON() throws JSONException, GameEventException
+    public void testGameEventToJSON() throws JSONException
     {
 
-        ShootingFoulEvent event = new ShootingFoulEvent( ShootingFoulType.NO_AND1, player, team, player2 );
+        ShootingFoulEvent event = new ShootingFoulEvent( player, team, player2 );
         JSONObject jsonEvent = jsonSerializer.toJSONObject( event );
         Log.d( "POGI", jsonEvent.toString() );
         GameEvent copyEvent = gameEventDeserializer.getGameEventFromJSONObject( jsonEvent );
@@ -79,7 +77,7 @@ public class TestGameEventToJSON extends TestCase
     }
 
     @Test
-    public void testAppend() throws JSONException, GameEventException
+    public void testAppend() throws JSONException
     {
         ShootEvent event = new ShootEvent( ShotClass.FG_3PT, ShotType.MISSED, player, team );
         event.append( new BlockEvent( player2, team2 ) );
@@ -91,7 +89,7 @@ public class TestGameEventToJSON extends TestCase
     }
 
     @Test
-    public void testPeriodLog() throws JSONException, GameEventException
+    public void testPeriodLog() throws JSONException
     {
         game.startGame();
         team.addStarter( 0 );

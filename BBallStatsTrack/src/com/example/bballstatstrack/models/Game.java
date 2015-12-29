@@ -8,7 +8,8 @@ import org.json.JSONObject;
 
 import com.example.bballstatstrack.models.game.GameLog;
 import com.example.bballstatstrack.models.gameevents.GameEvent;
-import com.example.bballstatstrack.models.gameevents.exceptions.GameEventException;
+import com.example.bballstatstrack.models.gameevents.foulevents.NonShootingFoulEvent;
+import com.example.bballstatstrack.models.gameevents.foulevents.ShootingFoulEvent;
 import com.example.bballstatstrack.models.utils.GameEventDeserializer;
 
 import android.text.format.DateFormat;
@@ -65,6 +66,10 @@ public class Game
 
     private SparseArray< GameEvent > mPeriodLog;
 
+    private int mHomePeriodFouls = 0;
+
+    private int mAwayPeriodFouls = 0;
+
     private UUID mID;
 
     private MyDate mDate;
@@ -102,11 +107,6 @@ public class Game
             e.printStackTrace();
             Log.e( B_BALL_STAT_TRACK, "Attribute missing from Game JSONObject!", e );
         }
-        catch( GameEventException e )
-        {
-            e.printStackTrace();
-            Log.e( B_BALL_STAT_TRACK, "Error in appending events during GameLog reconstruction!", e );
-        }
     }
 
     public void addNewEvent( GameEvent event )
@@ -114,6 +114,35 @@ public class Game
         event.resolve();
         mPeriodLog.append( mEventGameClock, event );
         endNewEvent();
+        checkTeamFoulEvent( event );
+    }
+
+    public void checkTeamFoulEvent( GameEvent event )
+    {
+        if( event == null )
+        {
+            return;
+        }
+        if( event instanceof ShootingFoulEvent || event instanceof NonShootingFoulEvent )
+        {
+            addPeriodFoul( event.getTeam() );
+        }
+        else
+        {
+            checkTeamFoulEvent( event.getAppended() );
+        }
+    }
+
+    private void addPeriodFoul( Team team )
+    {
+        if( team.equals( mAwayTeam ) )
+        {
+            mAwayPeriodFouls++;
+        }
+        else if( team.equals( mHomeTeam ) )
+        {
+            mHomePeriodFouls++;
+        }
     }
 
     public void startNewEvent()
@@ -139,7 +168,7 @@ public class Game
     private void initializeClocks()
     {
         resetGameClock();
-        resetShotClock( true );
+        resetShotClock24();
     }
 
     private void initializeLogs()
@@ -164,6 +193,13 @@ public class Game
         mGameLog.nextPeriod();
         mPeriod = mGameLog.getCurrentPeriod();
         mPeriodLog = mGameLog.getCurrentPeriodLog();
+        resetPeriodFouls();
+    }
+
+    private void resetPeriodFouls()
+    {
+        mHomePeriodFouls = 0;
+        mAwayPeriodFouls = 0;
     }
 
     public int getPeriod()
@@ -171,16 +207,24 @@ public class Game
         return mPeriod;
     }
 
-    public void resetShotClock( boolean isMax )
+    public int getHomePeriodFouls()
     {
-        if( isMax )
-        {
-            mCurrentShotClock = MAX_SHOT_CLOCK;
-        }
-        else
-        {
-            mCurrentShotClock = mReducedMaxShotClock;
-        }
+        return mHomePeriodFouls;
+    }
+
+    public int getAwayPeriodFouls()
+    {
+        return mAwayPeriodFouls;
+    }
+
+    public void resetShotClock24()
+    {
+        mCurrentShotClock = MAX_SHOT_CLOCK;
+    }
+
+    public void resetShotClock()
+    {
+        mCurrentShotClock = mReducedMaxShotClock;
     }
 
     public void resetGameClock()

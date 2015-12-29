@@ -2,7 +2,6 @@ package com.example.bballstatstrack.models.gameevents;
 
 import com.example.bballstatstrack.models.Player;
 import com.example.bballstatstrack.models.Team;
-import com.example.bballstatstrack.models.gameevents.exceptions.GameEventException;
 import com.example.bballstatstrack.models.gameevents.foulevents.OffensiveFoulEvent;
 
 public class TurnoverEvent extends GameEvent
@@ -23,7 +22,7 @@ public class TurnoverEvent extends GameEvent
     }
 
     @Override
-    public void append( GameEvent appendedEvent ) throws GameEventException
+    public void append( GameEvent appendedEvent )
     {
         if( mAppended != null )
         {

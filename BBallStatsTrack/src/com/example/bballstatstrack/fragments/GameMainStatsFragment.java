@@ -1,6 +1,7 @@
 package com.example.bballstatstrack.fragments;
 
 import com.example.bballstatstrack.R;
+import com.example.bballstatstrack.models.Game;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -39,13 +40,13 @@ public class GameMainStatsFragment extends Fragment
         return view;
     }
 
-    public void initialize( String homeName, String awayName, int gameClock, int shotClock, int period )
+    public void initialize( Game game )
     {
-        mHomeName.setText( homeName );
-        mAwayName.setText( awayName );
-        setGameClock( gameClock );
-        setShotClock( shotClock );
-        setPeriod( period );
+        mHomeName.setText( game.getHomeTeam().getName() );
+        mAwayName.setText( game.getAwayTeam().getName() );
+        setGameClock( game.getCurrentGameClock() );
+        setShotClock( game.getCurrentShotClock() );
+        setPeriod( game.getPeriod() );
     }
 
     public void setPeriod( int period )

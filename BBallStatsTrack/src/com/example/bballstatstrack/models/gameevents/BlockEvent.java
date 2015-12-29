@@ -2,7 +2,6 @@ package com.example.bballstatstrack.models.gameevents;
 
 import com.example.bballstatstrack.models.Player;
 import com.example.bballstatstrack.models.Team;
-import com.example.bballstatstrack.models.gameevents.exceptions.GameEventException;
 
 public class BlockEvent extends GameEvent
 {
@@ -13,7 +12,7 @@ public class BlockEvent extends GameEvent
     }
 
     @Override
-    public void append( GameEvent appendedEvent ) throws GameEventException
+    public void append( GameEvent appendedEvent )
     {
         if( mAppended != null )
         {
