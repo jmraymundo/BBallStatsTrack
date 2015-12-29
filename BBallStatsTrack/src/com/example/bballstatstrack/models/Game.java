@@ -60,6 +60,8 @@ public class Game
 
     private final int mMaxGameClock;
 
+    private final int mMaxOTGameClock;
+
     private final int mReducedMaxShotClock;
 
     private GameLog mGameLog;
@@ -74,12 +76,13 @@ public class Game
 
     private MyDate mDate;
 
-    public Game( int maxGameClock, int resetShotClock, Team awayTeam, Team homeTeam )
+    public Game( int maxGameClock, int maxOTGameCock, int resetShotClock, Team homeTeam, Team awayTeam )
     {
         mMaxGameClock = maxGameClock * 60;
+        mMaxOTGameClock = maxOTGameCock * 60;
         mReducedMaxShotClock = resetShotClock;
-        mAwayTeam = awayTeam;
         mHomeTeam = homeTeam;
+        mAwayTeam = awayTeam;
         String id = mAwayTeam.getName() + mHomeTeam.getName() + System.currentTimeMillis();
         mID = UUID.nameUUIDFromBytes( id.getBytes() );
         initializeClocks();
@@ -91,6 +94,7 @@ public class Game
     public Game( JSONObject game )
     {
         mMaxGameClock = 0;
+        mMaxOTGameClock = 0;
         mReducedMaxShotClock = 0;
         try
         {
@@ -143,6 +147,19 @@ public class Game
         {
             mHomePeriodFouls++;
         }
+    }
+
+    public boolean isPenalty( Team team )
+    {
+        if( team.equals( mAwayTeam ) )
+        {
+            return( mAwayPeriodFouls >= 5 );
+        }
+        else if( team.equals( mHomeTeam ) )
+        {
+            return( mHomePeriodFouls >= 5 );
+        }
+        return false;
     }
 
     public void startNewEvent()
