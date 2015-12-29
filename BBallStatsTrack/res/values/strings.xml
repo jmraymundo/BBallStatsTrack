@@ -19,4 +19,5 @@
 	<string name="yes">Yes</string>
 	<string name="no">No</string>
 	<string name="player_score">Score</string>
+	<string name="game_log_title">Game Log:</string>
 </resources>
