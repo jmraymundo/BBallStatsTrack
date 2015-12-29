@@ -178,6 +178,7 @@ public class AddPlayersToTeamsActivity extends Activity
             setIntentExtras( intent, mHomeTeam, HOME_TEAM_NUMBERS, HOME_TEAM_MEMBER_NAMES );
             intent.putExtra( AWAY_TEAM_NAME, mAwayName );
             setIntentExtras( intent, mAwayTeam, AWAY_TEAM_NUMBERS, AWAY_TEAM_MEMBER_NAMES );
+            finish();
             startActivity( intent );
         }
 
