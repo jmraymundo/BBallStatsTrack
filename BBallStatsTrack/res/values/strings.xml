@@ -9,7 +9,7 @@
 	<string name="home_team">Home Team</string>
 	<string name="add_new_player">Add new player</string>
 	<string name="go_next">Next</string>
-	<string name="player_number">Number</string>
+	<string name="player_number">#</string>
 	<string name="player_name">Name</string>
 	<string name="newTeam_new_player_action">Actions</string>
 	<string name="proceed">Proceed</string>
