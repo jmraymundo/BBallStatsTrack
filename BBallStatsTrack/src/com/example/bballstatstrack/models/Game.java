@@ -46,7 +46,7 @@ public class Game
 
     private Team mHasBallPossession;
 
-    private boolean isGameOngoing;
+    private boolean mGameOngoing = false;
 
     private int mPeriod = 0;
 
@@ -115,6 +115,11 @@ public class Game
 
     public void addNewEvent( GameEvent event )
     {
+        if( event.isChild() )
+        {
+            addNewEvent( event.getParent() );
+            return;
+        }
         event.resolve();
         mPeriodLog.append( mEventGameClock, event );
         endNewEvent();
@@ -251,17 +256,29 @@ public class Game
 
     public void pauseGame()
     {
-        isGameOngoing = false;
+        mGameOngoing = false;
     }
 
-    public void startGame()
+    public void unpauseGame()
     {
-        isGameOngoing = true;
+        mGameOngoing = true;
     }
 
     public Team getTeamWithPossession()
     {
         return mHasBallPossession;
+    }
+
+    public void setTeamWithPossession( Team team )
+    {
+        if( team.equals( mAwayTeam ) )
+        {
+            mHasBallPossession = mAwayTeam;
+        }
+        else if( team.equals( mHomeTeam ) )
+        {
+            mHasBallPossession = mHomeTeam;
+        }
     }
 
     public void swapBallPossession()
@@ -278,15 +295,27 @@ public class Game
 
     public void updateTime()
     {
-        mAwayTeam.updatePlayingTime();
-        mHomeTeam.updatePlayingTime();
-        mCurrentGameClock--;
-        mCurrentShotClock--;
+        if( isClocksValid() && isGameOngoing() )
+        {
+            mAwayTeam.updatePlayingTime();
+            mHomeTeam.updatePlayingTime();
+            mCurrentGameClock--;
+            mCurrentShotClock--;
+        }
+        else
+        {
+            pauseGame();
+        }
+    }
+
+    private boolean isClocksValid()
+    {
+        return mCurrentGameClock > 0 && mCurrentShotClock > 0;
     }
 
     public boolean isGameOngoing()
     {
-        return isGameOngoing;
+        return mGameOngoing;
     }
 
     public GameLog getGameLog()
