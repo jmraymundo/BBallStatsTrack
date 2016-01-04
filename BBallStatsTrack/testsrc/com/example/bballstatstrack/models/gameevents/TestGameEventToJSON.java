@@ -91,7 +91,7 @@ public class TestGameEventToJSON extends TestCase
     @Test
     public void testPeriodLog() throws JSONException
     {
-        game.startGame();
+        game.unpauseGame();
         team.addStarter( 0 );
         team.addStarter( 2 );
         team2.addStarter( 1 );
