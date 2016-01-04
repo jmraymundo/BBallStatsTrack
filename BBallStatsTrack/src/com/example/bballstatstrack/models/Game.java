@@ -360,4 +360,21 @@ public class Game
     {
         return mDate.getTime();
     }
+
+    public Team getTeamWithoutPossession()
+    {
+        Team team = getTeamWithPossession();
+        if( mHomeTeam.equals( team ) )
+        {
+            return mAwayTeam;
+        }
+        else if( mAwayTeam.equals( team ) )
+        {
+            return mHomeTeam;
+        }
+        else
+        {
+            return null;
+        }
+    }
 }
