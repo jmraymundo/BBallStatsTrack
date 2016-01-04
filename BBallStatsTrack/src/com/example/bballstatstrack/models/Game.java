@@ -115,11 +115,6 @@ public class Game
 
     public void addNewEvent( GameEvent event )
     {
-        if( event.isChild() )
-        {
-            addNewEvent( event.getParent() );
-            return;
-        }
         event.resolve();
         mPeriodLog.append( mEventGameClock, event );
         endNewEvent();
