@@ -2,8 +2,14 @@ package com.example.bballstatstrack.fragments;
 
 import com.example.bballstatstrack.R;
 import com.example.bballstatstrack.models.Game;
+import com.example.bballstatstrack.models.Team;
 
 import android.app.Fragment;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,11 +55,48 @@ public class GameMainStatsFragment extends Fragment
 
     public void updateUI( Game game )
     {
+        setBallPossession( game );
         setHomeScore( game.getHomeTeam().getTotalScore() );
         setAwayScore( game.getAwayTeam().getTotalScore() );
         setGameClock( game.getCurrentGameClock() );
         setShotClock( game.getCurrentShotClock() );
         setPeriod( game.getPeriod() );
+    }
+
+    private void setBallPossession( Game game )
+    {
+        Team inPossession = game.getTeamWithPossession();
+        Team home = game.getHomeTeam();
+        Team away = game.getAwayTeam();
+        if( inPossession == null )
+        {
+            return;
+        }
+        if( inPossession.equals( home ) )
+        {
+            mHomeName.setCompoundDrawablesWithIntrinsicBounds( null, null,
+                    getResizedBasketball( mHomeName.getHeight() ), null );
+            mAwayName.setCompoundDrawablesWithIntrinsicBounds( 0, 0, 0, 0 );
+        }
+        else if( inPossession.equals( away ) )
+        {
+            mHomeName.setCompoundDrawablesWithIntrinsicBounds( 0, 0, 0, 0 );
+            mAwayName.setCompoundDrawablesWithIntrinsicBounds( null, null,
+                    getResizedBasketball( mAwayName.getHeight() ), null );
+        }
+        else
+        {
+            mHomeName.setCompoundDrawablesWithIntrinsicBounds( 0, 0, 0, 0 );
+            mAwayName.setCompoundDrawablesWithIntrinsicBounds( 0, 0, 0, 0 );
+        }
+    }
+
+    private Drawable getResizedBasketball( int textViewHeight )
+    {
+        Resources resources = getResources();
+        Bitmap bitmap = BitmapFactory.decodeResource( resources, R.drawable.basketball );
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap( bitmap, textViewHeight, textViewHeight, true );
+        return new BitmapDrawable( resources, scaledBitmap );
     }
 
     public void setPeriod( int period )
