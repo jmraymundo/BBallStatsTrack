@@ -37,6 +37,10 @@ public class TeamInGameFragment extends Fragment
 
     public void updateUI()
     {
+        if( mTableLayout == null )
+        {
+            return;
+        }
         TableRow child;
         for( int i = 0; i < mTableLayout.getChildCount(); i++ )
         {
