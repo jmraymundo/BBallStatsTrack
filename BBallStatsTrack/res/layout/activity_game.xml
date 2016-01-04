@@ -1,101 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/parentContainer"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
-
-    <TableLayout
-        android:id="@+id/gameStatsContainer"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="9" >
-
-        <LinearLayout
-            android:id="@+id/gameMainStats"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/gameDetailedStats"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:weightSum="3" >
-
-            <LinearLayout
-                android:id="@+id/homeTeamInGameContainer"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical" >
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/gameLogContainer"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical" >
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/awayTeamInGameContainer"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical" >
-            </LinearLayout>
-        </LinearLayout>
-    </TableLayout>
-
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <TableRow>
-
-            <Button
-                android:id="@+id/pauseResumeTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:text="Button1" />
-
-            <Button
-                android:id="@+id/timeoutSubstitution"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:text="Button2" />
-
-            <Button
-                android:id="@+id/foul"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:text="Button3" />
-
-            <Button
-                android:id="@+id/turnover"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:text="Button4" />
-
-            <Button
-                android:id="@+id/shotRelated"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:text="Button5" />
-        </TableRow>
-    </TableLayout>
-
+	android:id="@+id/parentContainer"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical" >
+	<TableLayout
+		android:id="@+id/gameStatsContainer"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:layout_weight="9" >
+		<LinearLayout
+			android:id="@+id/gameMainStats"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:orientation="vertical" >
+		</LinearLayout>
+		<LinearLayout
+			android:id="@+id/gameDetailedStats"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:weightSum="3" >
+			<LinearLayout
+				android:id="@+id/homeTeamInGameContainer"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:orientation="vertical" >
+			</LinearLayout>
+			<LinearLayout
+				android:id="@+id/gameLogContainer"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:orientation="vertical" >
+			</LinearLayout>
+			<LinearLayout
+				android:id="@+id/awayTeamInGameContainer"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:orientation="vertical" >
+			</LinearLayout>
+		</LinearLayout>
+	</TableLayout>
+	<TableLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content" >
+		<TableRow>
+			<Button
+				android:id="@+id/timeRelatedButton"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center"
+				android:layout_weight="1"
+				android:text="@string/time_button_text" />
+			<Button
+				android:id="@+id/coachCommandsButton"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center"
+				android:layout_weight="1"
+				android:text="@string/coach_button_text" />
+			<Button
+				android:id="@+id/foulButton"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center"
+				android:layout_weight="1"
+				android:text="@string/foul_button_text" />
+			<Button
+				android:id="@+id/turnoverButton"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center"
+				android:layout_weight="1"
+				android:text="@string/turnover_button_text" />
+			<Button
+				android:id="@+id/shootRelatedButton"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center"
+				android:layout_weight="1"
+				android:text="@string/shoot_button_text" />
+		</TableRow>
+	</TableLayout>
 </LinearLayout>
