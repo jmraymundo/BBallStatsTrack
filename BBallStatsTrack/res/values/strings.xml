@@ -22,8 +22,24 @@
 	<string name="player_score">Score</string>
 	<string name="game_log_title">Game Log:</string>
 	<string name="set_time_title">Set time:</string>
-	<string name="max_game_clock">Max game clock per quarter? (in minutes)</string>
-	<string name="reset_shot_clock">In same ball possession situations, reset shot clock to how many seconds?</string>
+	<string name="set_max_game_clock_title">Max game clock per quarter? (in minutes)</string>
+	<string name="set_reset_shot_clock_title">In same ball possession situations, reset shot clock to how many seconds?</string>
 	<string name="select_starters">Select starters of team:</string>
 	<string name="need_five_players">Error! Need five players!</string>
+	<string name="jump_ball_title">Who has the starting ball possession?</string>
+	<string name="time_button_text">Time</string>
+	<string name="coach_button_text">Coach</string>
+	<string name="foul_button_text">Foul</string>
+	<string name="turnover_button_text">Turnover</string>
+	<string name="shoot_button_text">Shoot</string>
+	<string name="reset_shot_clock_text">Reset Shot Clock</string>
+	<string name="reset_game_clock_text">Reset Game Clock</string>
+	<string name="pause_time_text">Pause Time</string>
+	<string name="resume_time_text">Resume Time</string>
+	<string name="general_dialog_question">What do you want to do?</string>
+	<string name="turnover_player_question">Who committed the turnover?</string>
+	<string name="turnover_type_question">What kind of turnover is committed?</string>
+	<string name="turnover_type_steal">Stolen by defending player</string>
+	<string name="turnover_type_offensive">Offensive foul</string>
+	<string name="turnover_type_other">Another violation</string>
 </resources>
