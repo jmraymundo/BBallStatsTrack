@@ -42,4 +42,5 @@
 	<string name="turnover_type_steal">Stolen by defending player</string>
 	<string name="turnover_type_offensive">Offensive foul</string>
 	<string name="turnover_type_other">Another violation</string>
+	<string name="steal_player_question">Who stole the ball?</string>
 </resources>

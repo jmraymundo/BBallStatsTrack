@@ -2,6 +2,8 @@ package com.example.bballstatstrack.activities;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import com.example.bballstatstrack.R;
 import com.example.bballstatstrack.fragments.GameMainStatsFragment;
@@ -9,6 +11,11 @@ import com.example.bballstatstrack.fragments.TeamInGameFragment;
 import com.example.bballstatstrack.models.Game;
 import com.example.bballstatstrack.models.Player;
 import com.example.bballstatstrack.models.Team;
+import com.example.bballstatstrack.models.gameevents.GameEvent;
+import com.example.bballstatstrack.models.gameevents.GameEvent.TurnoverType;
+import com.example.bballstatstrack.models.gameevents.StealEvent;
+import com.example.bballstatstrack.models.gameevents.TurnoverEvent;
+import com.example.bballstatstrack.models.gameevents.foulevents.OffensiveFoulEvent;
 import com.example.bballstatstrack.models.utils.PlayerNumberWatcher;
 
 import android.app.Activity;
@@ -18,6 +25,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,7 +33,9 @@ import android.util.SparseArray;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,18 +59,63 @@ public class GameActivity extends Activity
 
     private Team mAwayTeam;
 
+    private Timer mTimer;
+
+    private Button mTimeButton;
+
+    private Button mCoachButton;
+
+    private Button mFoulButton;
+
+    private Button mTurnoverButton;
+
+    private Button mShootButton;
+
+    private final class CancelGameEventListener implements OnCancelListener
+    {
+        @Override
+        public void onCancel( DialogInterface dialog )
+        {
+            mGame.endNewEvent();
+        }
+    }
+
+    private class UpdateTimeTask extends TimerTask
+    {
+        Game mGame;
+
+        public UpdateTimeTask( Game game )
+        {
+            mGame = game;
+        }
+
+        @Override
+        public void run()
+        {
+            mGame.updateTime();
+            runOnUiThread( new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    updateUI();
+                }
+            } );
+        }
+    }
+
     public void getAwayStarters()
     {
         mAwayTeam = getTeam( AddPlayersToTeamsActivity.AWAY_TEAM_NAME, AddPlayersToTeamsActivity.AWAY_TEAM_NUMBERS,
                 AddPlayersToTeamsActivity.AWAY_TEAM_MEMBER_NAMES );
-        selectStartingFiveAway();
+        selectStartingFive( mAwayTeam );
     }
 
     public void getHomeStarters()
     {
         mHomeTeam = getTeam( AddPlayersToTeamsActivity.HOME_TEAM_NAME, AddPlayersToTeamsActivity.HOME_TEAM_NUMBERS,
                 AddPlayersToTeamsActivity.HOME_TEAM_MEMBER_NAMES );
-        selectStartingFiveHome();
+        selectStartingFive( mHomeTeam );
     }
 
     public Team getTeam( String teamNameExtra, String teamNumbersExtra, String teamPlayersExtra )
@@ -78,12 +133,12 @@ public class GameActivity extends Activity
         return new Team( homeName, homePlayerList );
     }
 
-    public void selectStartingFiveAway()
+    public void selectStartingFive( Team team )
     {
         Builder builder = new Builder( GameActivity.this );
         String title = getResources().getString( R.string.select_starters ) + " ";
-        builder.setTitle( title.concat( mAwayTeam.getName() ) );
-        final SparseArray< Player > players = mAwayTeam.getPlayers();
+        builder.setTitle( title.concat( team.getName() ) );
+        final SparseArray< Player > players = team.getPlayers();
         int size = players.size();
         String[] playersArray = new String[size];
         for( int i = 0; i < size; i++ )
@@ -117,49 +172,7 @@ public class GameActivity extends Activity
         AlertDialog dialog = builder.create();
         dialog.show();
         dialog.getButton( AlertDialog.BUTTON_POSITIVE )
-                .setOnClickListener( new TeamStartersConfirmationListener( mAwayTeam, dialog, selected ) );
-    }
-
-    public void selectStartingFiveHome()
-    {
-        Builder builder = new Builder( GameActivity.this );
-        String title = getResources().getString( R.string.select_starters ) + " ";
-        builder.setTitle( title.concat( mHomeTeam.getName() ) );
-        final SparseArray< Player > players = mHomeTeam.getPlayers();
-        int size = players.size();
-        String[] playersArray = new String[size];
-        for( int i = 0; i < size; i++ )
-        {
-            playersArray[i] = players.valueAt( i ).toString();
-        }
-        final List< Integer > selected = new ArrayList< Integer >();
-        builder.setMultiChoiceItems( playersArray, null, new OnMultiChoiceClickListener()
-        {
-            @Override
-            public void onClick( DialogInterface dialog, int which, boolean isChecked )
-            {
-                if( isChecked )
-                {
-                    selected.add( Integer.valueOf( players.keyAt( which ) ) );
-                }
-                else
-                {
-                    selected.remove( Integer.valueOf( players.keyAt( which ) ) );
-                }
-            }
-        } );
-        builder.setPositiveButton( getResources().getString( R.string.proceed ), new DialogInterface.OnClickListener()
-        {
-            @Override
-            public void onClick( DialogInterface dialog, int which )
-            {
-                // Will be overridden
-            }
-        } );
-        AlertDialog dialog = builder.create();
-        dialog.show();
-        dialog.getButton( AlertDialog.BUTTON_POSITIVE )
-                .setOnClickListener( new TeamStartersConfirmationListener( mHomeTeam, dialog, selected ) );
+                .setOnClickListener( new TeamStartersConfirmationListener( team, dialog, selected ) );
     }
 
     public void setStarters( Team team, List< Integer > selected )
@@ -177,11 +190,48 @@ public class GameActivity extends Activity
         mHomeInGameFragment = new TeamInGameFragment( mGame.getHomeTeam().getInGamePlayers() );
         mAwayInGameFragment = new TeamInGameFragment( mGame.getAwayTeam().getInGamePlayers() );
         initializeTeamInGameViews();
+        initializeTimer();
+        showJumpballDialog();
     }
 
-    private AlertDialog buildDialog( int detailedTextID )
+    private void initializeTimer()
     {
-        Builder builder = new AlertDialog.Builder( GameActivity.this );
+        mTimer = new Timer();
+        TimerTask updateTimeTask = new UpdateTimeTask( mGame );
+        mTimer.schedule( updateTimeTask, 0, 1000 );
+    }
+
+    private void showJumpballDialog()
+    {
+        Builder builder = new Builder( GameActivity.this );
+        builder.setTitle( R.string.jump_ball_title );
+        builder.setNegativeButton( mHomeTeam.getName(), new JumpBallDeciderListener( mHomeTeam ) );
+        builder.setPositiveButton( mAwayTeam.getName(), new JumpBallDeciderListener( mAwayTeam ) );
+        AlertDialog jumpballDialog = builder.create();
+        jumpballDialog.show();
+    }
+
+    private class JumpBallDeciderListener implements DialogInterface.OnClickListener
+    {
+        Team mTeam;
+
+        public JumpBallDeciderListener( Team team )
+        {
+            mTeam = team;
+        }
+
+        @Override
+        public void onClick( DialogInterface dialog, int which )
+        {
+            mGame.setTeamWithPossession( mTeam );
+            mGame.unpauseGame();
+        }
+
+    }
+
+    private AlertDialog buildClockDialog( int detailedTextID )
+    {
+        Builder builder = new Builder( GameActivity.this );
         View dialogView = getLayoutInflater().inflate( R.layout.dialog_get_clock, null );
         builder.setView( dialogView );
         builder.setTitle( R.string.set_time_title );
@@ -199,6 +249,13 @@ public class GameActivity extends Activity
         dialog.getWindow().setSoftInputMode( WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE );
         dialog.setCanceledOnTouchOutside( false );
         return dialog;
+    }
+
+    public void updateUI()
+    {
+        mStatsFragment.updateUI( mGame );
+        mHomeInGameFragment.updateUI();
+        mAwayInGameFragment.updateUI();
     }
 
     private void initializeMainStatsFragmentView()
@@ -235,9 +292,9 @@ public class GameActivity extends Activity
         return number;
     }
 
-    private void setGameClock()
+    private void showMaxGameClockDialog()
     {
-        final AlertDialog dialog = buildDialog( R.string.max_game_clock );
+        final AlertDialog dialog = buildClockDialog( R.string.set_max_game_clock_title );
         dialog.show();
         dialog.getButton( DialogInterface.BUTTON_POSITIVE ).setOnClickListener( new OnClickListener()
         {
@@ -249,14 +306,14 @@ public class GameActivity extends Activity
                 {
                     return;
                 }
-                setShotClockReset();
+                showMaxShotClockResetDialog();
             }
         } );
     }
 
-    private void setShotClockReset()
+    private void showMaxShotClockResetDialog()
     {
-        final AlertDialog dialog = buildDialog( R.string.reset_shot_clock );
+        final AlertDialog dialog = buildClockDialog( R.string.set_reset_shot_clock_title );
         dialog.show();
         dialog.getButton( DialogInterface.BUTTON_POSITIVE ).setOnClickListener( new OnClickListener()
         {
@@ -285,9 +342,305 @@ public class GameActivity extends Activity
     protected void onCreate( Bundle savedInstanceState )
     {
         super.onCreate( savedInstanceState );
-        setGameClock();
+        showMaxGameClockDialog();
         setContentView( R.layout.activity_game );
+        mTimeButton = ( Button ) findViewById( R.id.timeRelatedButton );
+        mCoachButton = ( Button ) findViewById( R.id.coachCommandsButton );
+        mFoulButton = ( Button ) findViewById( R.id.foulButton );
+        mTurnoverButton = ( Button ) findViewById( R.id.turnoverButton );
+        mShootButton = ( Button ) findViewById( R.id.shootRelatedButton );
         initializeMainStatsFragmentView();
+        setupButtonListeners();
+    }
+
+    private void setupButtonListeners()
+    {
+        mTimeButton.setOnClickListener( new OnClickListener()
+        {
+            @Override
+            public void onClick( View v )
+            {
+                showTimeButtonDialogs();
+            }
+        } );
+        mCoachButton.setOnClickListener( new OnClickListener()
+        {
+            @Override
+            public void onClick( View v )
+            {
+                // TODO Auto-generated method stub
+
+            }
+        } );
+        mFoulButton.setOnClickListener( new OnClickListener()
+        {
+            @Override
+            public void onClick( View v )
+            {
+                // TODO Auto-generated method stub
+
+            }
+        } );
+        mTurnoverButton.setOnClickListener( new OnClickListener()
+        {
+            @Override
+            public void onClick( View v )
+            {
+                showTurnoverEventDialog();
+            }
+        } );
+        mShootButton.setOnClickListener( new OnClickListener()
+        {
+            @Override
+            public void onClick( View v )
+            {
+                // TODO Auto-generated method stub
+
+            }
+        } );
+    }
+
+    protected void showTimeButtonDialogs()
+    {
+        final AlertDialog dialog = createDialogFromLayout( R.layout.dialog_time_button );
+        dialog.show();
+        Button resetGameClockButton = ( Button ) dialog.findViewById( R.id.reset_game_clock_button );
+        resetGameClockButton.setOnClickListener( new OnClickListener()
+        {
+            @Override
+            public void onClick( View v )
+            {
+                showResetGameClockDialog();
+                dialog.dismiss();
+            }
+        } );
+        Button resetShotClockButton = ( Button ) dialog.findViewById( R.id.reset_shot_clock_button );
+        resetShotClockButton.setOnClickListener( new OnClickListener()
+        {
+            @Override
+            public void onClick( View v )
+            {
+                showResetShotClockDialog();
+                dialog.dismiss();
+            }
+        } );
+        Button pauseResumeButton = ( Button ) dialog.findViewById( R.id.pauseResume_time_button );
+        pauseResumeButton.setOnClickListener( new OnClickListener()
+        {
+            @Override
+            public void onClick( View v )
+            {
+                pauseResumeGame();
+                dialog.dismiss();
+            }
+        } );
+        if( mGame.isGameOngoing() )
+        {
+            resetGameClockButton.setEnabled( false );
+            resetShotClockButton.setEnabled( false );
+            pauseResumeButton.setText( R.string.pause_time_text );
+        }
+        else
+        {
+            resetGameClockButton.setEnabled( true );
+            resetShotClockButton.setEnabled( true );
+            pauseResumeButton.setText( R.string.resume_time_text );
+        }
+    }
+
+    private void showResetGameClockDialog()
+    {
+    }
+
+    private void showResetShotClockDialog()
+    {
+    }
+
+    private void pauseResumeGame()
+    {
+        if( mGame.isGameOngoing() )
+        {
+            mGame.pauseGame();
+        }
+        else
+        {
+            mGame.unpauseGame();
+        }
+    }
+
+    private void showTurnoverEventDialog()
+    {
+        mGame.startNewEvent();
+        Builder builder = new Builder( GameActivity.this );
+        LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_container, null );
+        builder.setView( parentView );
+        TextView question = ( TextView ) parentView.findViewById( R.id.dialog_container_question_textview );
+        question.setText( R.string.turnover_player_question );
+        Team team = mGame.getTeamWithPossession();
+        AlertDialog dialog = builder.create();
+        for( Player player : team.getInGamePlayers() )
+        {
+            Button button = new Button( GameActivity.this );
+            button.setText( player.toString() );
+            button.setOnClickListener( new TurnoverListener( dialog, team, player ) );
+            parentView.addView( button );
+        }
+        dialog.setOnCancelListener( new CancelGameEventListener() );
+        dialog.show();
+    }
+
+    private class TurnoverListener extends GameEventListener
+    {
+        public TurnoverListener( AlertDialog parentDialog, Team team, Player player )
+        {
+            super( parentDialog, team, player );
+        }
+
+        @Override
+        public void onClick( View v )
+        {
+            super.onClick( v );
+            showTurnoverTypeDialog( mGameEventTeam, mGameEventPlayer );
+        }
+    }
+
+    private class TurnoverTypeListener extends GameEventListener
+    {
+        public TurnoverTypeListener( AlertDialog parentDialog, Team team, Player player )
+        {
+            super( parentDialog, team, player );
+        }
+
+        @Override
+        public void onClick( View v )
+        {
+            super.onClick( v );
+            TurnoverType type = ( TurnoverType ) v.getTag();
+            TurnoverEvent event = new TurnoverEvent( type, mGameEventPlayer, mGameEventTeam );
+            if( type.equals( TurnoverType.STEAL ) )
+            {
+                showStealEventDialog( event );
+                return;
+            }
+            else if( type.equals( TurnoverType.OFFENSIVE_FOUL ) )
+            {
+                OffensiveFoulEvent foulEvent = new OffensiveFoulEvent( mGameEventPlayer, mGameEventTeam );
+                event.append( foulEvent );
+            }
+            mGame.addNewEvent( event );
+            return;
+        }
+    }
+
+    private class GameEventListener implements OnClickListener
+    {
+        protected Team mGameEventTeam;
+
+        protected Player mGameEventPlayer;
+
+        protected AlertDialog mParentDialog;
+
+        public GameEventListener( AlertDialog parentDialog, Team team, Player player )
+        {
+            mParentDialog = parentDialog;
+            mGameEventTeam = team;
+            mGameEventPlayer = player;
+        }
+
+        @Override
+        public void onClick( View v )
+        {
+            mParentDialog.dismiss();
+        }
+    }
+
+    public AlertDialog createDialogFromLayout( int resourceId )
+    {
+        Builder builder = new Builder( GameActivity.this );
+        builder.setView( getLayoutInflater().inflate( resourceId, null ) );
+        return builder.create();
+    }
+
+    public void showStealEventDialog( GameEvent parent )
+    {
+        Builder builder = new Builder( GameActivity.this );
+        LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_container, null );
+        builder.setView( parentView );
+        TextView question = ( TextView ) parentView.findViewById( R.id.dialog_container_question_textview );
+        question.setText( R.string.steal_player_question );
+        Team team = mGame.getTeamWithoutPossession();
+        AlertDialog dialog = builder.create();
+        for( Player player : team.getInGamePlayers() )
+        {
+            Button button = new Button( GameActivity.this );
+            button.setText( player.toString() );
+            button.setTag( parent );
+            button.setOnClickListener( new StealListener( dialog, team, player ) );
+            parentView.addView( button );
+        }
+        dialog.setOnCancelListener( new CancelGameEventListener() );
+        dialog.show();
+    }
+
+    private class StealListener extends GameEventListener
+    {
+        public StealListener( AlertDialog parentDialog, Team team, Player player )
+        {
+            super( parentDialog, team, player );
+        }
+
+        @Override
+        public void onClick( View v )
+        {
+            super.onClick( v );
+            StealEvent event = new StealEvent( mGameEventPlayer, mGameEventTeam );
+            GameEvent parent = ( GameEvent ) v.getTag();
+            parent.append( event );
+            mGame.addNewEvent( event );
+        }
+    }
+
+    public void showTurnoverTypeDialog( Team team, Player player )
+    {
+        Builder builder = new Builder( GameActivity.this );
+        LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_container, null );
+        builder.setView( parentView );
+        TextView question = ( TextView ) parentView.findViewById( R.id.dialog_container_question_textview );
+        question.setText( R.string.turnover_type_question );
+        AlertDialog dialog = builder.create();
+        for( TurnoverType type : TurnoverType.values() )
+        {
+            Button button = new Button( GameActivity.this );
+            button.setTag( type );
+            button.setText( getStringResIDFromEnum( type ) );
+            button.setOnClickListener( new TurnoverTypeListener( dialog, team, player ) );
+            parentView.addView( button );
+        }
+        dialog.setOnCancelListener( new CancelGameEventListener() );
+        dialog.show();
+    }
+
+    private int getStringResIDFromEnum( TurnoverType type )
+    {
+        switch( type )
+        {
+            case OTHER:
+            {
+                return R.string.turnover_type_other;
+            }
+            case OFFENSIVE_FOUL:
+            {
+                return R.string.turnover_type_offensive;
+            }
+            case STEAL:
+            {
+                return R.string.turnover_type_steal;
+            }
+            default:
+            {
+                return -1;
+            }
+        }
     }
 
     private final class TeamStartersConfirmationListener implements OnClickListener
