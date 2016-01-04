@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import com.example.bballstatstrack.models.game.GameLog;
 import com.example.bballstatstrack.models.gameevents.GameEvent;
+import com.example.bballstatstrack.models.gameevents.TurnoverEvent;
 import com.example.bballstatstrack.models.gameevents.foulevents.NonShootingFoulEvent;
 import com.example.bballstatstrack.models.gameevents.foulevents.ShootingFoulEvent;
 import com.example.bballstatstrack.models.utils.GameEventDeserializer;
@@ -119,6 +120,19 @@ public class Game
         mPeriodLog.append( mEventGameClock, event );
         endNewEvent();
         checkTeamFoulEvent( event );
+        checkTurnoverEvent( event );
+    }
+
+    private void checkTurnoverEvent( GameEvent event )
+    {
+        if( event == null )
+        {
+            return;
+        }
+        if( event instanceof TurnoverEvent )
+        {
+            swapBallPossession();
+        }
     }
 
     public void checkTeamFoulEvent( GameEvent event )
