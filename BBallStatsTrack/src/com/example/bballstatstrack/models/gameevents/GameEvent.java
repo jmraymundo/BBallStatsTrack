@@ -97,4 +97,9 @@ public abstract class GameEvent
     {
         return mTeam;
     }
+
+    public boolean isChild()
+    {
+        return mParent == null;
+    }
 }
