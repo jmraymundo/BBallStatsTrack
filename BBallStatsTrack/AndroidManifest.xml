@@ -3,12 +3,13 @@
 	package="com.example.bballstatstrack"
 	android:versionCode="1"
 	android:versionName="1.0" >
-	<instrumentation
-		android:name="android.test.InstrumentationTestRunner"
-		android:targetPackage="." />
 	<uses-sdk
 		android:minSdkVersion="14"
 		android:targetSdkVersion="23" />
+	<instrumentation
+		android:name="android.test.InstrumentationTestRunner"
+		android:targetPackage="com.example.bballstatstrack" >
+	</instrumentation>
 	<application
 		android:allowBackup="true"
 		android:icon="@drawable/ic_launcher"
