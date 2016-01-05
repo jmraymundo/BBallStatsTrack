@@ -53,4 +53,6 @@
 	<string name="foul_fouled_question">Who was fouled?</string>
 	<string name="free_throw_penalty">Penalty situation! Bonus 2 free throws.</string>
 	<string name="free_throw_question">Did he made the free throw?</string>
+	<string name="substitution_dialog_question">Who would you like to substitute?</string>
+	<string name="substitution_dialog_replacement_question">Who would you like to insert into the game?</string>
 </resources>
