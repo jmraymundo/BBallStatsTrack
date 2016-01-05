@@ -18,10 +18,13 @@ public class ShootingFoulEvent extends FoulEvent
 
     private Player mShooter;
 
-    public ShootingFoulEvent( Player player, Team team, Player shooter )
+    private int mFTCount;
+
+    public ShootingFoulEvent( Player player, Team team, Player shooter, int ftCount )
     {
         super( FoulType.SHOOTING, player, team );
         mShooter = shooter;
+        mFTCount = ftCount;
     }
 
     public Player getShooter()
@@ -29,25 +32,9 @@ public class ShootingFoulEvent extends FoulEvent
         return mShooter;
     }
 
-    @Override
-    public void append( GameEvent appendedEvent )
+    public int getFTCount()
     {
-        if( mAppended != null )
-        {
-            mAppended.append( appendedEvent );
-            return;
-        }
-        if( appendedEvent instanceof ShootEvent )
-        {
-            Player player = appendedEvent.getPlayer();
-            if( mShooter != player )
-            {
-                return;
-            }
-            mAppended = appendedEvent;
-            return;
-        }
-        super.append( appendedEvent );
+        return mFTCount;
     }
 
     @Override
@@ -56,25 +43,22 @@ public class ShootingFoulEvent extends FoulEvent
         String output = mPlayer.getFullName() + " committed a shooting foul. ";
         if( mAppended != null )
         {
-            ShotType shotType = ( ( ShootEvent ) mAppended ).getShotType();
-            ShotClass shotClass = ( ( ShootEvent ) mAppended ).getShotClass();
             String additional = mShooter.getFullName() + " to shoot ";
-            if( shotType == ShotType.MADE )
+            switch( mFTCount )
             {
-                additional = additional.concat( ONE_FREE_THROW );
-                output = output.concat( additional );
-                output = output.concat( mAppended.toString() );
+                case 1:
+                    additional = additional.concat( ONE_FREE_THROW );
+                    break;
+                case 2:
+                    additional = additional.concat( TWO_FREE_THROWS );
+                    break;
+                case 3:
+                    additional = additional.concat( THREE_FREE_THROWS );
+                    break;
+                default:
+                    break;
             }
-            else if( shotClass == ShotClass.FG_2PT )
-            {
-                additional = additional.concat( TWO_FREE_THROWS );
-                output = output.concat( additional );
-            }
-            else
-            {
-                additional = additional.concat( THREE_FREE_THROWS );
-                output = output.concat( additional );
-            }
+            output = output.concat( additional );
         }
         return output.trim();
     }
@@ -82,10 +66,6 @@ public class ShootingFoulEvent extends FoulEvent
     @Override
     public void resolve()
     {
-        if( mAppended == null )
-        {
-            return;
-        }
         super.resolve();
         mTeam.addFoul();
     }
