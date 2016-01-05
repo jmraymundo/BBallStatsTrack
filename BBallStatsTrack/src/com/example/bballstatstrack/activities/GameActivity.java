@@ -23,7 +23,6 @@ import com.example.bballstatstrack.models.utils.PlayerNumberWatcher;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
@@ -358,7 +357,7 @@ public class GameActivity extends Activity
             public void onClick( View v )
             {
                 TimeoutEvent event = new TimeoutEvent( mGame.getTeamWithPossession() );
-                mGame.addNewEvent( event );
+                addNewEvent( event );
                 dialog.dismiss();
             }
         } );
@@ -425,6 +424,35 @@ public class GameActivity extends Activity
 
     private void showResetGameClockDialog()
     {
+        Builder builder = new Builder( GameActivity.this );
+        builder.setTitle( R.string.generic_confirmation_question );
+        builder.setPositiveButton( android.R.string.yes, new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick( DialogInterface dialog, int which )
+            {
+                mGame.resetShotClock24();
+            }
+        } );
+        builder.setNegativeButton( android.R.string.no, new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick( DialogInterface dialog, int which )
+            {
+                // do nothing
+            }
+        } );
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+        Button noButton = dialog.getButton( DialogInterface.BUTTON_NEGATIVE );
+        noButton.setOnClickListener( new OnClickListener()
+        {
+            @Override
+            public void onClick( View v )
+            {
+                dialog.dismiss();
+            }
+        } );
     }
 
     private void showResetShotClockDialog()
@@ -454,7 +482,7 @@ public class GameActivity extends Activity
 
     private void showSubsitutionDialog()
     {
-
+        updateInGamePlayersUI();
     }
 
     private void showTimeButtonDialog()
@@ -567,6 +595,12 @@ public class GameActivity extends Activity
         mGameLogFragment.updateUI();
     }
 
+    public void addNewEvent( GameEvent event )
+    {
+        mGame.addNewEvent( event );
+        updateGameLogUI();
+    }
+
     private final class CancelGameEventListener implements OnCancelListener
     {
         @Override
@@ -630,7 +664,7 @@ public class GameActivity extends Activity
             StealEvent event = new StealEvent( mGameEventPlayer, mGameEventTeam );
             GameEvent parent = ( GameEvent ) v.getTag();
             parent.append( event );
-            mGame.addNewEvent( event );
+            addNewEvent( parent );
         }
     }
 
@@ -711,7 +745,7 @@ public class GameActivity extends Activity
                 OffensiveFoulEvent foulEvent = new OffensiveFoulEvent( mGameEventPlayer, mGameEventTeam );
                 event.append( foulEvent );
             }
-            mGame.addNewEvent( event );
+            addNewEvent( event );
             return;
         }
     }
