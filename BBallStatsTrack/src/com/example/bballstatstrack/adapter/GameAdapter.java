@@ -30,7 +30,7 @@ public class GameAdapter extends ArrayAdapter< Game >
             convertView = mActivity.getLayoutInflater().inflate( R.layout.list_games, null );
         }
 
-        // configure the view for this Crime
+        // configure the view for this Game
         Game game = getItem( position );
 
         TextView titleTextView = ( TextView ) convertView.findViewById( R.id.game_list_item_titleTextView );

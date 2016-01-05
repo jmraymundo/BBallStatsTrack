@@ -6,7 +6,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import com.example.bballstatstrack.R;
-import com.example.bballstatstrack.fragments.GameMainStatsFragment;
+import com.example.bballstatstrack.fragments.GameLogFragment;
+import com.example.bballstatstrack.fragments.GameScoreBoardFragment;
 import com.example.bballstatstrack.fragments.TeamInGameFragment;
 import com.example.bballstatstrack.models.Game;
 import com.example.bballstatstrack.models.Player;
@@ -49,11 +50,13 @@ public class GameActivity extends Activity
 
     private int mShotClockReset = -1;
 
-    private GameMainStatsFragment mStatsFragment = new GameMainStatsFragment();
+    private GameScoreBoardFragment mScoreBoardFragment = new GameScoreBoardFragment();
 
     private TeamInGameFragment mHomeInGameFragment;
 
     private TeamInGameFragment mAwayInGameFragment;
+
+    private GameLogFragment mGameLogFragment;
 
     private Team mHomeTeam;
 
@@ -70,6 +73,31 @@ public class GameActivity extends Activity
     private Button mTurnoverButton;
 
     private Button mShootButton;
+
+    @Override
+    public void onBackPressed()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder( GameActivity.this );
+        builder.setTitle( R.string.on_back_button_title );
+        builder.setMessage( R.string.on_back_button_message );
+        builder.setPositiveButton( R.string.yes, new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick( DialogInterface dialog, int which )
+            {
+                finish();
+            }
+        } );
+        builder.setNegativeButton( R.string.no, new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick( DialogInterface dialog, int which )
+            {
+                dialog.dismiss();
+            }
+        } );
+        builder.show();
+    }
 
     @Override
     protected void onCreate( Bundle savedInstanceState )
@@ -171,7 +199,7 @@ public class GameActivity extends Activity
     {
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace( R.id.gameMainStats, mStatsFragment );
+        transaction.replace( R.id.scoreBoardContainer, mScoreBoardFragment );
         transaction.commit();
     }
 
@@ -180,6 +208,7 @@ public class GameActivity extends Activity
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace( R.id.homeTeamInGameContainer, mHomeInGameFragment );
+        transaction.replace( R.id.gameLogContainer, mGameLogFragment );
         transaction.replace( R.id.awayTeamInGameContainer, mAwayInGameFragment );
         transaction.commit();
     }
@@ -402,59 +431,7 @@ public class GameActivity extends Activity
         dialog.show();
     }
 
-    private void showTurnoverEventDialog()
-    {
-        mGame.startNewEvent();
-        Builder builder = new Builder( GameActivity.this );
-        LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_container, null );
-        builder.setView( parentView );
-        TextView question = ( TextView ) parentView.findViewById( R.id.dialog_container_question_textview );
-        question.setText( R.string.turnover_player_question );
-        Team team = mGame.getTeamWithPossession();
-        AlertDialog dialog = builder.create();
-        for( Player player : team.getInGamePlayers() )
-        {
-            Button button = new Button( GameActivity.this );
-            button.setText( player.toString() );
-            button.setOnClickListener( new TurnoverListener( dialog, team, player ) );
-            parentView.addView( button );
-        }
-        dialog.setOnCancelListener( new CancelGameEventListener() );
-        dialog.show();
-    }
-
-    private void showTurnoverTypeDialog( Team team, Player player )
-    {
-        Builder builder = new Builder( GameActivity.this );
-        LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_container, null );
-        builder.setView( parentView );
-        TextView question = ( TextView ) parentView.findViewById( R.id.dialog_container_question_textview );
-        question.setText( R.string.turnover_type_question );
-        AlertDialog dialog = builder.create();
-        for( TurnoverType type : TurnoverType.values() )
-        {
-            Button button = new Button( GameActivity.this );
-            button.setTag( type );
-            button.setText( getStringResIDFromEnum( type ) );
-            button.setOnClickListener( new TurnoverTypeListener( dialog, team, player ) );
-            parentView.addView( button );
-        }
-        dialog.setOnCancelListener( new CancelGameEventListener() );
-        dialog.show();
-    }
-
-    private void startNewGame()
-    {
-        mGame = new Game( mGameClock, 5, mShotClockReset, mHomeTeam, mAwayTeam );
-        mStatsFragment.initialize( mGame );
-        mHomeInGameFragment = new TeamInGameFragment( mGame.getHomeTeam().getInGamePlayers() );
-        mAwayInGameFragment = new TeamInGameFragment( mGame.getAwayTeam().getInGamePlayers() );
-        initializeTeamInGameViews();
-        initializeTimer();
-        showJumpballDialog();
-    }
-
-    protected void showTimeButtonDialogs()
+    private void showTimeButtonDialogs()
     {
         final AlertDialog dialog = createDialogFromLayout( R.layout.dialog_time_button );
         dialog.show();
@@ -502,11 +479,74 @@ public class GameActivity extends Activity
         }
     }
 
-    private void updateUI()
+    private void showTurnoverEventDialog()
     {
-        mStatsFragment.updateUI( mGame );
+        mGame.startNewEvent();
+        Builder builder = new Builder( GameActivity.this );
+        LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_container, null );
+        builder.setView( parentView );
+        TextView question = ( TextView ) parentView.findViewById( R.id.dialog_container_question_textview );
+        question.setText( R.string.turnover_player_question );
+        Team team = mGame.getTeamWithPossession();
+        AlertDialog dialog = builder.create();
+        for( Player player : team.getInGamePlayers() )
+        {
+            Button button = new Button( GameActivity.this );
+            button.setText( player.toString() );
+            button.setOnClickListener( new TurnoverListener( dialog, team, player ) );
+            parentView.addView( button );
+        }
+        dialog.setOnCancelListener( new CancelGameEventListener() );
+        dialog.show();
+    }
+
+    private void showTurnoverTypeDialog( Team team, Player player )
+    {
+        Builder builder = new Builder( GameActivity.this );
+        LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_container, null );
+        builder.setView( parentView );
+        TextView question = ( TextView ) parentView.findViewById( R.id.dialog_container_question_textview );
+        question.setText( R.string.turnover_type_question );
+        AlertDialog dialog = builder.create();
+        for( TurnoverType type : TurnoverType.values() )
+        {
+            Button button = new Button( GameActivity.this );
+            button.setTag( type );
+            button.setText( getStringResIDFromEnum( type ) );
+            button.setOnClickListener( new TurnoverTypeListener( dialog, team, player ) );
+            parentView.addView( button );
+        }
+        dialog.setOnCancelListener( new CancelGameEventListener() );
+        dialog.show();
+    }
+
+    private void startNewGame()
+    {
+        mGame = new Game( mGameClock, 5, mShotClockReset, mHomeTeam, mAwayTeam );
+        mScoreBoardFragment.initialize( mGame );
+        mHomeInGameFragment = new TeamInGameFragment( mGame.getHomeTeam().getInGamePlayers() );
+        mAwayInGameFragment = new TeamInGameFragment( mGame.getAwayTeam().getInGamePlayers() );
+        mGameLogFragment = new GameLogFragment( mGame.getGameLog() );
+        initializeTeamInGameViews();
+        initializeTimer();
+        showJumpballDialog();
+    }
+
+    private void updateScoreBoardUI()
+    {
+        mScoreBoardFragment.updateUI( mGame );
+    }
+
+    private void updateInGamePlayersUI()
+    {
         mHomeInGameFragment.updateUI();
         mAwayInGameFragment.updateUI();
+        updateGameLogUI();
+    }
+
+    private void updateGameLogUI()
+    {
+        mGameLogFragment.updateUI();
     }
 
     private final class CancelGameEventListener implements OnCancelListener
@@ -676,7 +716,7 @@ public class GameActivity extends Activity
                 @Override
                 public void run()
                 {
-                    updateUI();
+                    updateScoreBoardUI();
                 }
             } );
         }

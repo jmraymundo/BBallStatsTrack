@@ -132,7 +132,7 @@ public class AddPlayersToTeamsActivity extends Activity
             @Override
             public void onClick( DialogInterface dialog, int which )
             {
-                cancelActivity();
+                finish();
             }
         } );
         builder.setNegativeButton( R.string.no, new DialogInterface.OnClickListener()
@@ -144,11 +144,6 @@ public class AddPlayersToTeamsActivity extends Activity
             }
         } );
         builder.show();
-    }
-
-    protected void cancelActivity()
-    {
-        super.onBackPressed();
     }
 
     private class ProceedButtonListener implements OnClickListener
