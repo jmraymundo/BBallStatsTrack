@@ -15,6 +15,7 @@ import com.example.bballstatstrack.models.Team;
 import com.example.bballstatstrack.models.gameevents.GameEvent;
 import com.example.bballstatstrack.models.gameevents.GameEvent.TurnoverType;
 import com.example.bballstatstrack.models.gameevents.StealEvent;
+import com.example.bballstatstrack.models.gameevents.TimeoutEvent;
 import com.example.bballstatstrack.models.gameevents.TurnoverEvent;
 import com.example.bballstatstrack.models.gameevents.foulevents.OffensiveFoulEvent;
 import com.example.bballstatstrack.models.utils.PlayerNumberWatcher;
@@ -163,15 +164,15 @@ public class GameActivity extends Activity
         {
             case OTHER:
             {
-                return R.string.turnover_type_other;
+                return R.string.turnover_type_dialog_other_text;
             }
             case OFFENSIVE_FOUL:
             {
-                return R.string.turnover_type_offensive;
+                return R.string.turnover_type_dialog_offensivefoul_text;
             }
             case STEAL:
             {
-                return R.string.turnover_type_steal;
+                return R.string.turnover_type_dialog_steal_text;
             }
             default:
             {
@@ -306,7 +307,7 @@ public class GameActivity extends Activity
             @Override
             public void onClick( View v )
             {
-                showTimeButtonDialogs();
+                showTimeButtonDialog();
             }
         } );
         mCoachButton.setOnClickListener( new OnClickListener()
@@ -314,8 +315,7 @@ public class GameActivity extends Activity
             @Override
             public void onClick( View v )
             {
-                // TODO Auto-generated method stub
-
+                showCoachButtonDialog();
             }
         } );
         mFoulButton.setOnClickListener( new OnClickListener()
@@ -346,12 +346,33 @@ public class GameActivity extends Activity
         } );
     }
 
-    private void showFragment( int containerID, Fragment fragment )
+    private void showCoachButtonDialog()
     {
-        FragmentManager manager = getFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace( containerID, fragment );
-        transaction.commit();
+        mGame.startNewEvent();
+        final AlertDialog dialog = createDialogFromLayout( R.layout.dialog_coach_button );
+        dialog.show();
+        Button timeOutButton = ( Button ) dialog.findViewById( R.id.time_out_button );
+        timeOutButton.setOnClickListener( new OnClickListener()
+        {
+            @Override
+            public void onClick( View v )
+            {
+                TimeoutEvent event = new TimeoutEvent( mGame.getTeamWithPossession() );
+                mGame.addNewEvent( event );
+                dialog.dismiss();
+            }
+        } );
+        Button substitutionButton = ( Button ) dialog.findViewById( R.id.substitution_button );
+        substitutionButton.setOnClickListener( new OnClickListener()
+        {
+            @Override
+            public void onClick( View v )
+            {
+                showSubsitutionDialog();
+                dialog.dismiss();
+            }
+        } );
+        substitutionButton.setEnabled( !mGame.isGameOngoing() );
     }
 
     private void showJumpballDialog()
@@ -431,7 +452,12 @@ public class GameActivity extends Activity
         dialog.show();
     }
 
-    private void showTimeButtonDialogs()
+    private void showSubsitutionDialog()
+    {
+
+    }
+
+    private void showTimeButtonDialog()
     {
         final AlertDialog dialog = createDialogFromLayout( R.layout.dialog_time_button );
         dialog.show();
@@ -465,18 +491,10 @@ public class GameActivity extends Activity
                 dialog.dismiss();
             }
         } );
-        if( mGame.isGameOngoing() )
-        {
-            resetGameClockButton.setEnabled( false );
-            resetShotClockButton.setEnabled( false );
-            pauseResumeButton.setText( R.string.pause_time_text );
-        }
-        else
-        {
-            resetGameClockButton.setEnabled( true );
-            resetShotClockButton.setEnabled( true );
-            pauseResumeButton.setText( R.string.resume_time_text );
-        }
+        boolean gameOngoing = mGame.isGameOngoing();
+        resetGameClockButton.setEnabled( !gameOngoing );
+        resetShotClockButton.setEnabled( !gameOngoing );
+        pauseResumeButton.setText( gameOngoing ? R.string.time_dialog_pause_text : R.string.time_dialog_resume_text );
     }
 
     private void showTurnoverEventDialog()
