@@ -612,7 +612,7 @@ public class GameActivity extends Activity
                 dialog.dismiss();
             }
         } );
-        nextPeriodButton.setEnabled( mGame.getCurrentGameClock() != 0 );
+        nextPeriodButton.setEnabled( mGame.getCurrentGameClock() == 0 );
         boolean gameOngoing = mGame.isGameOngoing();
         resetGameClockButton.setEnabled( !gameOngoing );
         resetShotClockButton.setEnabled( !gameOngoing );
