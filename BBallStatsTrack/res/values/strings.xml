@@ -32,15 +32,17 @@
 	<string name="foul_button_text">Foul</string>
 	<string name="turnover_button_text">Turnover</string>
 	<string name="shoot_button_text">Shoot</string>
-	<string name="reset_shot_clock_text">Reset Shot Clock</string>
-	<string name="reset_game_clock_text">Reset Game Clock</string>
-	<string name="pause_time_text">Pause Time</string>
-	<string name="resume_time_text">Resume Time</string>
+	<string name="time_dialog_reset_shot_clock_text">Reset Shot Clock</string>
+	<string name="time_dialog_reset_game_clock_text">Reset Game Clock</string>
+	<string name="time_dialog_pause_text">Pause Time</string>
+	<string name="time_dialog_resume_text">Resume Time</string>
 	<string name="general_dialog_question">What do you want to do?</string>
 	<string name="turnover_player_question">Who committed the turnover?</string>
 	<string name="turnover_type_question">What kind of turnover is committed?</string>
-	<string name="turnover_type_steal">Stolen by defending player</string>
-	<string name="turnover_type_offensive">Offensive foul</string>
-	<string name="turnover_type_other">Another violation</string>
+	<string name="turnover_type_dialog_steal_text">Stolen by defending player</string>
+	<string name="turnover_type_dialog_offensivefoul_text">Offensive foul</string>
+	<string name="turnover_type_dialog_other_text">Another violation</string>
 	<string name="steal_player_question">Who stole the ball?</string>
+	<string name="coach_dialog_timeout_text">Time Out</string>
+	<string name="coach_dialog_substitution_text">Substitution</string>
 </resources>
