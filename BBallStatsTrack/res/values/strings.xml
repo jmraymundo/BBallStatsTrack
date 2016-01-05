@@ -17,6 +17,7 @@
 	<string name="clock_input_error">Error. Cannot be empty.</string>
 	<string name="on_back_button_title">Cancelling..</string>
 	<string name="on_back_button_message">Are you sure you want to cancel? Your progress will not be saved.</string>
+	<string name="generic_confirmation_question">Are you sure?</string>
 	<string name="yes">Yes</string>
 	<string name="no">No</string>
 	<string name="player_score">Score</string>
@@ -36,7 +37,7 @@
 	<string name="time_dialog_reset_game_clock_text">Reset Game Clock</string>
 	<string name="time_dialog_pause_text">Pause Time</string>
 	<string name="time_dialog_resume_text">Resume Time</string>
-	<string name="general_dialog_question">What do you want to do?</string>
+	<string name="generic_dialog_question">What do you want to do?</string>
 	<string name="turnover_player_question">Who committed the turnover?</string>
 	<string name="turnover_type_question">What kind of turnover is committed?</string>
 	<string name="turnover_type_dialog_steal_text">Stolen by defending player</string>

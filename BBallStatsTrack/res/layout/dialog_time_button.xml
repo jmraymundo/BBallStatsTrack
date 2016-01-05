@@ -7,7 +7,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:gravity="center"
-		android:text="@string/general_dialog_question" />
+		android:text="@string/generic_dialog_question" />
 	<Button
 		android:id="@+id/reset_shot_clock_button"
 		android:layout_width="match_parent"

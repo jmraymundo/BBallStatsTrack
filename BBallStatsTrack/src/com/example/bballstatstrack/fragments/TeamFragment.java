@@ -47,7 +47,7 @@ public class TeamFragment extends Fragment
 
     boolean isHomeTeam;
 
-    private TextView mLocation;
+    private TextView mGameSide;
 
     public TeamFragment( boolean isHome )
     {
@@ -73,14 +73,14 @@ public class TeamFragment extends Fragment
 
     public void setupView( View view )
     {
-        mLocation = ( TextView ) view.findViewById( R.id.team_location_text );
+        mGameSide = ( TextView ) view.findViewById( R.id.team_location_text );
         if( isHomeTeam )
         {
-            mLocation.setText( R.string.home_team );
+            mGameSide.setText( R.string.home_team );
         }
         else
         {
-            mLocation.setText( R.string.away_team );
+            mGameSide.setText( R.string.away_team );
         }
         mPlayerTable = ( TableLayout ) view.findViewById( R.id.playerListTable );
         if( mPlayerList.size() > 0 )
@@ -88,6 +88,7 @@ public class TeamFragment extends Fragment
             updateTableView();
         }
         mTeamNameEditText = ( EditText ) view.findViewById( R.id.team_name_editText );
+        mTeamNameEditText.setMaxLines( 1 );
         mAddPlayerButton = ( Button ) view.findViewById( R.id.addNewPlayerButton );
         mAddPlayerButton.setOnClickListener( new OnClickListener()
         {
