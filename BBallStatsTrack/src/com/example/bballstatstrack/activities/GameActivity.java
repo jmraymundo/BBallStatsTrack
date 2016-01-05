@@ -85,6 +85,7 @@ public class GameActivity extends Activity
             @Override
             public void onClick( DialogInterface dialog, int which )
             {
+                mTimer.cancel();
                 finish();
             }
         } );
@@ -374,14 +375,14 @@ public class GameActivity extends Activity
         substitutionButton.setEnabled( !mGame.isGameOngoing() );
     }
 
-    private void showJumpballDialog()
+    private void showBallPossessionDeciderDialog()
     {
         Builder builder = new Builder( GameActivity.this );
-        builder.setTitle( R.string.jump_ball_title );
-        builder.setNegativeButton( mHomeTeam.getName(), new JumpBallDeciderListener( mHomeTeam ) );
-        builder.setPositiveButton( mAwayTeam.getName(), new JumpBallDeciderListener( mAwayTeam ) );
-        AlertDialog jumpballDialog = builder.create();
-        jumpballDialog.show();
+        builder.setTitle( R.string.new_period_possession_question );
+        builder.setNegativeButton( mHomeTeam.getName(), new BallPossessionDeciderListener( mHomeTeam ) );
+        builder.setPositiveButton( mAwayTeam.getName(), new BallPossessionDeciderListener( mAwayTeam ) );
+        AlertDialog ballPossessionDialog = builder.create();
+        ballPossessionDialog.show();
     }
 
     private void showMaxGameClockDialog()
@@ -425,7 +426,40 @@ public class GameActivity extends Activity
     private void showResetGameClockDialog()
     {
         Builder builder = new Builder( GameActivity.this );
-        builder.setTitle( R.string.generic_confirmation_question );
+        builder.setTitle( R.string.reset_game_clock_confirmation_question );
+        builder.setPositiveButton( android.R.string.yes, new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick( DialogInterface dialog, int which )
+            {
+                mGame.resetGameClock();
+            }
+        } );
+        builder.setNegativeButton( android.R.string.no, new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick( DialogInterface dialog, int which )
+            {
+                // do nothing
+            }
+        } );
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+        Button noButton = dialog.getButton( DialogInterface.BUTTON_NEGATIVE );
+        noButton.setOnClickListener( new OnClickListener()
+        {
+            @Override
+            public void onClick( View v )
+            {
+                dialog.dismiss();
+            }
+        } );
+    }
+
+    private void showResetShotClockDialog()
+    {
+        Builder builder = new Builder( GameActivity.this );
+        builder.setTitle( R.string.reset_shot_clock_confirmation_question );
         builder.setPositiveButton( android.R.string.yes, new DialogInterface.OnClickListener()
         {
             @Override
@@ -453,10 +487,6 @@ public class GameActivity extends Activity
                 dialog.dismiss();
             }
         } );
-    }
-
-    private void showResetShotClockDialog()
-    {
     }
 
     private void showStealEventDialog( GameEvent parent )
@@ -575,12 +605,15 @@ public class GameActivity extends Activity
         mGameLogFragment = new GameLogFragment( mGame.getGameLog() );
         initializeTeamInGameViews();
         initializeTimer();
-        showJumpballDialog();
+        showBallPossessionDeciderDialog();
     }
 
     private void updateScoreBoardUI()
     {
-        mScoreBoardFragment.updateUI( mGame );
+        if( mScoreBoardFragment.isVisible() )
+        {
+            mScoreBoardFragment.updateUI( mGame );
+        }
     }
 
     private void updateInGamePlayersUI()
@@ -632,11 +665,11 @@ public class GameActivity extends Activity
         }
     }
 
-    private class JumpBallDeciderListener implements DialogInterface.OnClickListener
+    private class BallPossessionDeciderListener implements DialogInterface.OnClickListener
     {
         Team mTeamWithPossession;
 
-        public JumpBallDeciderListener( Team team )
+        public BallPossessionDeciderListener( Team team )
         {
             mTeamWithPossession = team;
         }
