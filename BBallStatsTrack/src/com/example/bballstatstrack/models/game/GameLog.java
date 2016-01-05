@@ -1,7 +1,6 @@
 package com.example.bballstatstrack.models.game;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import com.example.bballstatstrack.models.gameevents.GameEvent;
 import com.example.bballstatstrack.models.utils.StringUtils;
@@ -34,15 +33,17 @@ public class GameLog extends SparseArray< SparseArray< GameEvent > >
         put( mCurrentPeriod, new SparseArray< GameEvent >() );
     }
 
-    public List< String > toStringList()
+    public ArrayList< String > toStringList()
     {
-        List< String > output = new ArrayList< String >();
+        ArrayList< String > output = new ArrayList< String >();
         for( int index = 0; index < size(); index++ )
         {
             SparseArray< GameEvent > periodLog = valueAt( index );
             for( int innerIndex = 0; innerIndex < periodLog.size(); innerIndex++ )
             {
-                output.add( periodLog.valueAt( innerIndex ).toString() );
+                String time = StringUtils.getMinSecFormattedString( periodLog.keyAt( innerIndex ) );
+                String event = periodLog.valueAt( innerIndex ).toString();
+                output.add( time + " : " + event );
             }
             output.add( "Start of " + StringUtils.getPeriodString( index ) );
         }

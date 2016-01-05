@@ -10,14 +10,16 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 public class GameLogFragment extends Fragment
 {
-    GameLog mGameLog;
+    private GameLog mGameLog;
 
-    LinearLayout mView;
+    private ListView mView;
+
+    private ArrayAdapter< String > myAdapter;
 
     public GameLogFragment( GameLog gameLog )
     {
@@ -27,21 +29,17 @@ public class GameLogFragment extends Fragment
     @Override
     public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
     {
-        View v = inflater.inflate( R.layout.fragment_game_log, null );
-        mView = ( LinearLayout ) v.findViewById( R.id.fragment_game_log_container );
-        return v;
+        mView = ( ListView ) inflater.inflate( R.layout.fragment_game_log, null );
+        myAdapter = new ArrayAdapter< String >( getActivity(), R.layout.adapter_gamelog_list_item,
+                mGameLog.toStringList() );
+        mView.setAdapter( myAdapter );
+        return mView;
     }
 
     public void updateUI()
     {
-        mView.removeAllViews();
-        List< String > stringLog = mGameLog.toStringList();
-        for( String gameEvent : stringLog )
-        {
-            TextView textView = new TextView( getActivity() );
-            textView.setText( gameEvent );
-            textView.setMaxLines( 1 );
-            mView.addView( textView );
-        }
+        myAdapter.clear();
+        myAdapter.addAll( mGameLog.toStringList() );
+        myAdapter.notifyDataSetChanged();
     }
 }

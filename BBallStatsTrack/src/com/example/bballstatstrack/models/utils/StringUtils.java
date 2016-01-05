@@ -7,13 +7,13 @@ public class StringUtils
         switch( period )
         {
             case 0:
-                return "1st";
+                return "1st Quarter";
             case 1:
-                return "2nd";
+                return "2nd Quarter";
             case 2:
-                return "3rd";
+                return "3rd Quarter";
             case 3:
-                return "4th";
+                return "4th Quarter";
             case 4:
                 return "OT";
             default:
