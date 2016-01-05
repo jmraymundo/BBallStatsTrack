@@ -221,7 +221,7 @@ public class GameActivity extends Activity
         mTimer.schedule( updateTimeTask, 0, 1000 );
     }
 
-    private void pauseResumeGame()
+    private void pauseUnpauseGame()
     {
         if( mGame.isGameOngoing() )
         {
@@ -519,6 +519,17 @@ public class GameActivity extends Activity
     {
         final AlertDialog dialog = createDialogFromLayout( R.layout.dialog_time_button );
         dialog.show();
+        Button nextPeriodButton = ( Button ) dialog.findViewById( R.id.next_period_button );
+        nextPeriodButton.setOnClickListener( new OnClickListener()
+        {
+            @Override
+            public void onClick( View v )
+            {
+                mGame.nextPeriod();
+                showBallPossessionDeciderDialog();
+                dialog.dismiss();
+            }
+        } );
         Button resetGameClockButton = ( Button ) dialog.findViewById( R.id.reset_game_clock_button );
         resetGameClockButton.setOnClickListener( new OnClickListener()
         {
@@ -545,10 +556,11 @@ public class GameActivity extends Activity
             @Override
             public void onClick( View v )
             {
-                pauseResumeGame();
+                pauseUnpauseGame();
                 dialog.dismiss();
             }
         } );
+        nextPeriodButton.setEnabled( mGame.getCurrentGameClock() != 0 );
         boolean gameOngoing = mGame.isGameOngoing();
         resetGameClockButton.setEnabled( !gameOngoing );
         resetShotClockButton.setEnabled( !gameOngoing );

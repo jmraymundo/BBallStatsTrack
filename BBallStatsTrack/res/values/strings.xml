@@ -35,6 +35,7 @@
 	<string name="foul_button_text">Foul</string>
 	<string name="turnover_button_text">Turnover</string>
 	<string name="shoot_button_text">Shoot</string>
+	<string name="time_dialog_next_period_text">Start Next Period</string>
 	<string name="time_dialog_reset_shot_clock_text">Reset Shot Clock</string>
 	<string name="time_dialog_reset_game_clock_text">Reset Game Clock</string>
 	<string name="time_dialog_pause_text">Pause Time</string>
