@@ -51,4 +51,5 @@
 	<string name="coach_dialog_substitution_text">Substitution</string>
 	<string name="foul_player_question">Who committed the foul?</string>
 	<string name="foul_fouled_question">Who was fouled?</string>
+	<string name="free_throw_penalty">Penalty situation! Bonus 2 free throws.</string>
 </resources>
