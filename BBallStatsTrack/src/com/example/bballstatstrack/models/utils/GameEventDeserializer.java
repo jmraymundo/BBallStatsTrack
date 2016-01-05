@@ -168,9 +168,10 @@ public class GameEventDeserializer
             throws JSONException
     {
         int shooterNumber = jsonGameEvent.getInt( ShootingFoulEvent.SHOOTER );
+        int ftCount = jsonGameEvent.getInt( ShootingFoulEvent.FT_COUNT );
         Team otherTeam = ( team.equals( mGame.getAwayTeam() ) ? mGame.getHomeTeam() : mGame.getHomeTeam() );
         Player shooter = otherTeam.getPlayers().get( shooterNumber );
-        return new ShootingFoulEvent( player, team, shooter );
+        return new ShootingFoulEvent( player, team, shooter, ftCount );
     }
 
     private Team getTeamFromID( UUID teamID )

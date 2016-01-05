@@ -3,8 +3,6 @@ package com.example.bballstatstrack.models.gameevents.foulevents;
 import com.example.bballstatstrack.models.Player;
 import com.example.bballstatstrack.models.Team;
 import com.example.bballstatstrack.models.gameevents.FoulEvent;
-import com.example.bballstatstrack.models.gameevents.GameEvent;
-import com.example.bballstatstrack.models.gameevents.ShootEvent;
 
 public class ShootingFoulEvent extends FoulEvent
 {
@@ -15,6 +13,8 @@ public class ShootingFoulEvent extends FoulEvent
     private static final String ONE_FREE_THROW = "1 free throw. ";
 
     public static final String SHOOTER = "shooter";
+
+    public static final String FT_COUNT = "free_throw_count";
 
     private Player mShooter;
 

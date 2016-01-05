@@ -69,7 +69,7 @@ public class TestGameEventToJSON extends TestCase
     public void testGameEventToJSON() throws JSONException
     {
 
-        ShootingFoulEvent event = new ShootingFoulEvent( player, team, player2 );
+        ShootingFoulEvent event = new ShootingFoulEvent( player, team, player2, 2 );
         JSONObject jsonEvent = jsonSerializer.toJSONObject( event );
         Log.d( "POGI", jsonEvent.toString() );
         GameEvent copyEvent = gameEventDeserializer.getGameEventFromJSONObject( jsonEvent );

@@ -240,6 +240,7 @@ public class JSONSerializer
         JSONObject jsonObject = toJSONObject( baseEvent );
         Player shooter = shootingFoulEvent.getShooter();
         jsonObject.put( ShootingFoulEvent.SHOOTER, shooter.getNumber() );
+        jsonObject.put( ShootingFoulEvent.FT_COUNT, shootingFoulEvent.getFTCount() );
         return jsonObject;
     }
 
