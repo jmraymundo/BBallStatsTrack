@@ -69,7 +69,6 @@ public class Game
         mID = UUID.nameUUIDFromBytes( id.getBytes() );
         initializeClocks();
         initializeLogs();
-        pauseGame();
         mDate = new MyDate();
     }
 
@@ -235,6 +234,7 @@ public class Game
         mGameLog.nextPeriod();
         mPeriod = mGameLog.getCurrentPeriod();
         mPeriodLog = mGameLog.getCurrentPeriodLog();
+        initializeClocks();
         resetPeriodFouls();
     }
 
@@ -334,6 +334,7 @@ public class Game
 
     private void initializeClocks()
     {
+        pauseGame();
         resetGameClock();
         resetShotClock24();
     }
