@@ -17,6 +17,8 @@
 	<string name="clock_input_error">Error. Cannot be empty.</string>
 	<string name="on_back_button_title">Cancelling..</string>
 	<string name="on_back_button_message">Are you sure you want to cancel? Your progress will not be saved.</string>
+	<string name="reset_shot_clock_confirmation_question">Are you sure you want to reset the shot clock?</string>
+	<string name="reset_game_clock_confirmation_question">Are you sure you want to reset the game clock?</string>
 	<string name="generic_confirmation_question">Are you sure?</string>
 	<string name="yes">Yes</string>
 	<string name="no">No</string>
@@ -27,7 +29,7 @@
 	<string name="set_reset_shot_clock_title">In same ball possession situations, reset shot clock to how many seconds?</string>
 	<string name="select_starters">Select starters of team:</string>
 	<string name="need_five_players">Error! Need five players!</string>
-	<string name="jump_ball_title">Who has the starting ball possession?</string>
+	<string name="new_period_possession_question">Who has the ball possession?</string>
 	<string name="time_button_text">Time</string>
 	<string name="coach_button_text">Coach</string>
 	<string name="foul_button_text">Foul</string>
