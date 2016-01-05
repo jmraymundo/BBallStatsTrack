@@ -49,4 +49,6 @@
 	<string name="steal_player_question">Who stole the ball?</string>
 	<string name="coach_dialog_timeout_text">Time Out</string>
 	<string name="coach_dialog_substitution_text">Substitution</string>
+	<string name="foul_player_question">Who committed the foul?</string>
+	<string name="foul_fouled_question">Who was fouled?</string>
 </resources>

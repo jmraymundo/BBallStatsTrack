@@ -12,12 +12,16 @@ import com.example.bballstatstrack.fragments.TeamInGameFragment;
 import com.example.bballstatstrack.models.Game;
 import com.example.bballstatstrack.models.Player;
 import com.example.bballstatstrack.models.Team;
+import com.example.bballstatstrack.models.gameevents.FoulEvent;
 import com.example.bballstatstrack.models.gameevents.GameEvent;
+import com.example.bballstatstrack.models.gameevents.GameEvent.NonShootingFoulType;
 import com.example.bballstatstrack.models.gameevents.GameEvent.TurnoverType;
 import com.example.bballstatstrack.models.gameevents.StealEvent;
 import com.example.bballstatstrack.models.gameevents.TimeoutEvent;
 import com.example.bballstatstrack.models.gameevents.TurnoverEvent;
+import com.example.bballstatstrack.models.gameevents.foulevents.NonShootingFoulEvent;
 import com.example.bballstatstrack.models.gameevents.foulevents.OffensiveFoulEvent;
+import com.example.bballstatstrack.models.gameevents.foulevents.ShootingFoulEvent;
 import com.example.bballstatstrack.models.utils.PlayerNumberWatcher;
 
 import android.app.Activity;
@@ -113,6 +117,12 @@ public class GameActivity extends Activity
         mShootButton = ( Button ) findViewById( R.id.shootRelatedButton );
         initializeMainStatsFragmentView();
         setupButtonListeners();
+    }
+
+    private void addNewEvent( GameEvent event )
+    {
+        mGame.addNewEvent( event );
+        updateGameLogUI();
     }
 
     private AlertDialog buildClockDialog( int detailedTextID )
@@ -323,8 +333,7 @@ public class GameActivity extends Activity
             @Override
             public void onClick( View v )
             {
-                // TODO Auto-generated method stub
-
+                showFoulButtonDialog();
             }
         } );
         mTurnoverButton.setOnClickListener( new OnClickListener()
@@ -344,6 +353,16 @@ public class GameActivity extends Activity
 
             }
         } );
+    }
+
+    private void showBallPossessionDeciderDialog()
+    {
+        Builder builder = new Builder( GameActivity.this );
+        builder.setTitle( R.string.new_period_possession_question );
+        builder.setNegativeButton( mHomeTeam.getName(), new BallPossessionDeciderListener( mHomeTeam ) );
+        builder.setPositiveButton( mAwayTeam.getName(), new BallPossessionDeciderListener( mAwayTeam ) );
+        AlertDialog ballPossessionDialog = builder.create();
+        ballPossessionDialog.show();
     }
 
     private void showCoachButtonDialog()
@@ -375,14 +394,47 @@ public class GameActivity extends Activity
         substitutionButton.setEnabled( !mGame.isGameOngoing() );
     }
 
-    private void showBallPossessionDeciderDialog()
+    private void showFoulButtonDialog()
+    {
+        mGame.startNewEvent();
+        Builder builder = new Builder( GameActivity.this );
+        LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_container, null );
+        builder.setView( parentView );
+        TextView question = ( TextView ) parentView.findViewById( R.id.dialog_container_question_textview );
+        question.setText( R.string.foul_player_question );
+        Team team = mGame.getTeamWithoutPossession();
+        AlertDialog dialog = builder.create();
+        for( Player player : team.getInGamePlayers() )
+        {
+            Button button = new Button( GameActivity.this );
+            button.setText( player.toString() );
+            button.setOnClickListener( new NonShootingFoulListener( dialog, team, player ) );
+            parentView.addView( button );
+        }
+        dialog.setOnCancelListener( new CancelGameEventListener() );
+        dialog.show();
+    }
+
+    private void showFreeThrowDialog( GameEvent parentEvent )
     {
         Builder builder = new Builder( GameActivity.this );
-        builder.setTitle( R.string.new_period_possession_question );
-        builder.setNegativeButton( mHomeTeam.getName(), new BallPossessionDeciderListener( mHomeTeam ) );
-        builder.setPositiveButton( mAwayTeam.getName(), new BallPossessionDeciderListener( mAwayTeam ) );
-        AlertDialog ballPossessionDialog = builder.create();
-        ballPossessionDialog.show();
+        LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_container, null );
+        builder.setView( parentView );
+        TextView question = ( TextView ) parentView.findViewById( R.id.dialog_container_question_textview );
+        question.setText( R.string.foul_fouled_question );
+        Team team = mGame.getTeamWithPossession();
+        AlertDialog dialog = builder.create();
+        for( Player player : team.getInGamePlayers() )
+        {
+            Button button = new Button( GameActivity.this );
+            button.setText( player.toString() );
+            button.setTag( parentEvent );
+            button.setOnClickListener( new FreeThrowListener( dialog, team, player ) );
+            parentView.addView( button );
+        }
+        dialog.setOnCancelListener( new CancelGameEventListener() );
+        dialog.show();
+
     }
 
     private void showMaxGameClockDialog()
@@ -620,12 +672,9 @@ public class GameActivity extends Activity
         showBallPossessionDeciderDialog();
     }
 
-    private void updateScoreBoardUI()
+    private void updateGameLogUI()
     {
-        if( mScoreBoardFragment.isVisible() )
-        {
-            mScoreBoardFragment.updateUI( mGame );
-        }
+        mGameLogFragment.updateUI();
     }
 
     private void updateInGamePlayersUI()
@@ -635,15 +684,30 @@ public class GameActivity extends Activity
         updateGameLogUI();
     }
 
-    private void updateGameLogUI()
+    private void updateScoreBoardUI()
     {
-        mGameLogFragment.updateUI();
+        if( mScoreBoardFragment.isVisible() )
+        {
+            mScoreBoardFragment.updateUI( mGame );
+        }
     }
 
-    public void addNewEvent( GameEvent event )
+    private class BallPossessionDeciderListener implements DialogInterface.OnClickListener
     {
-        mGame.addNewEvent( event );
-        updateGameLogUI();
+        Team mTeamWithPossession;
+
+        public BallPossessionDeciderListener( Team team )
+        {
+            mTeamWithPossession = team;
+        }
+
+        @Override
+        public void onClick( DialogInterface dialog, int which )
+        {
+            mGame.setTeamWithPossession( mTeamWithPossession );
+            mGame.unpauseGame();
+        }
+
     }
 
     private final class CancelGameEventListener implements OnCancelListener
@@ -652,6 +716,29 @@ public class GameActivity extends Activity
         public void onCancel( DialogInterface dialog )
         {
             mGame.endNewEvent();
+        }
+    }
+
+    private class FreeThrowListener extends GameEventListener
+    {
+        public FreeThrowListener( AlertDialog parentDialog, Team team, Player player )
+        {
+            super( parentDialog, team, player );
+        }
+
+        @Override
+        public void onClick( View v )
+        {
+            super.onClick( v );
+            FoulEvent event = ( FoulEvent ) v.getTag();
+            if( event instanceof NonShootingFoulEvent )
+            {
+
+            }
+            else if( event instanceof ShootingFoulEvent )
+            {
+
+            }
         }
     }
 
@@ -677,22 +764,29 @@ public class GameActivity extends Activity
         }
     }
 
-    private class BallPossessionDeciderListener implements DialogInterface.OnClickListener
+    private class NonShootingFoulListener extends GameEventListener
     {
-        Team mTeamWithPossession;
-
-        public BallPossessionDeciderListener( Team team )
+        public NonShootingFoulListener( AlertDialog parentDialog, Team team, Player player )
         {
-            mTeamWithPossession = team;
+            super( parentDialog, team, player );
         }
 
         @Override
-        public void onClick( DialogInterface dialog, int which )
+        public void onClick( View v )
         {
-            mGame.setTeamWithPossession( mTeamWithPossession );
-            mGame.unpauseGame();
+            super.onClick( v );
+            boolean isPenalty = mGame.isPenalty( mGameEventTeam );
+            NonShootingFoulType type = isPenalty ? NonShootingFoulType.PENALTY : NonShootingFoulType.NON_PENALTY;
+            NonShootingFoulEvent event = new NonShootingFoulEvent( type, mGameEventPlayer, mGameEventTeam );
+            if( isPenalty )
+            {
+                showFreeThrowDialog( event );
+            }
+            else
+            {
+                addNewEvent( event );
+            }
         }
-
     }
 
     private class StealListener extends GameEventListener
