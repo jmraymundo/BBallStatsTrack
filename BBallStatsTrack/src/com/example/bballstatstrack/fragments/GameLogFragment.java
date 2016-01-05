@@ -27,8 +27,9 @@ public class GameLogFragment extends Fragment
     @Override
     public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
     {
-        mView = ( LinearLayout ) inflater.inflate( R.layout.fragment_game_log, null );
-        return mView;
+        View v = inflater.inflate( R.layout.fragment_game_log, null );
+        mView = ( LinearLayout ) v.findViewById( R.id.fragment_game_log_container );
+        return v;
     }
 
     public void updateUI()
@@ -39,6 +40,7 @@ public class GameLogFragment extends Fragment
         {
             TextView textView = new TextView( getActivity() );
             textView.setText( gameEvent );
+            textView.setMaxLines( 1 );
             mView.addView( textView );
         }
     }

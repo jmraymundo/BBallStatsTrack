@@ -39,12 +39,12 @@ public class GameLog extends SparseArray< SparseArray< GameEvent > >
         List< String > output = new ArrayList< String >();
         for( int index = 0; index < size(); index++ )
         {
-            output.add( StringUtils.getPeriodString( index ) );
             SparseArray< GameEvent > periodLog = valueAt( index );
             for( int innerIndex = 0; innerIndex < periodLog.size(); innerIndex++ )
             {
                 output.add( periodLog.valueAt( innerIndex ).toString() );
             }
+            output.add( "Start of " + StringUtils.getPeriodString( index ) );
         }
         return output;
     }
