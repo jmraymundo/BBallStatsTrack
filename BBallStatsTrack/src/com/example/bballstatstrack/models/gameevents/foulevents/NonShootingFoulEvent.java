@@ -40,7 +40,6 @@ public class NonShootingFoulEvent extends FoulEvent
                     return;
                 case PENALTY:
                     mAppended = appendedEvent;
-                    return;
             }
             return;
         }
