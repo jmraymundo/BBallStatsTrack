@@ -1,5 +1,9 @@
 package com.example.bballstatstrack.models.utils;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 public class StringUtils
 {
     public static String getPeriodString( int period )
@@ -35,5 +39,16 @@ public class StringUtils
             return "0" + number;
         }
         return String.valueOf( number );
+    }
+
+    public static String getStringDate( Date date )
+    {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime( date );
+        int year = calendar.get( Calendar.YEAR ) % 100; // last 2 digits only
+        int month = calendar.get( Calendar.MONTH );
+        int day = calendar.get( Calendar.DAY_OF_MONTH );
+        return getLeadZeroFormattedString( year ) + getLeadZeroFormattedString( month )
+                + getLeadZeroFormattedString( day );
     }
 }

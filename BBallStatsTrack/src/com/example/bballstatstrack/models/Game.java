@@ -12,6 +12,7 @@ import com.example.bballstatstrack.models.gameevents.TurnoverEvent;
 import com.example.bballstatstrack.models.gameevents.foulevents.NonShootingFoulEvent;
 import com.example.bballstatstrack.models.gameevents.foulevents.ShootingFoulEvent;
 import com.example.bballstatstrack.models.utils.GameEventDeserializer;
+import com.example.bballstatstrack.models.utils.StringUtils;
 
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -21,25 +22,7 @@ public class Game
 {
     private static final String B_BALL_STAT_TRACK = "BBallStatTrack";
 
-    public enum GameStats
-    {
-
-        ID( "id" ), AWAY_TEAM( "awayTeam" ), HOME_TEAM( "homeTeam" ), GAME_LOG( "gameLog" ), PERIOD_LOG(
-                "periodLog" ), DATE( "date" );
-
-        private final String mConstant;
-
-        private GameStats( String constant )
-        {
-            mConstant = constant;
-        }
-
-        @Override
-        public String toString()
-        {
-            return mConstant;
-        }
-    }
+    private static final int MAX_SHOT_CLOCK = 24;
 
     private Team mAwayTeam;
 
@@ -56,8 +39,6 @@ public class Game
     private int mEventGameClock = -1;
 
     private int mCurrentShotClock;
-
-    private static final int MAX_SHOT_CLOCK = 24;
 
     private final int mMaxGameClock;
 
@@ -123,19 +104,7 @@ public class Game
         checkTurnoverEvent( event );
     }
 
-    private void checkTurnoverEvent( GameEvent event )
-    {
-        if( event == null )
-        {
-            return;
-        }
-        if( event instanceof TurnoverEvent )
-        {
-            swapBallPossession();
-        }
-    }
-
-    public void checkTeamFoulEvent( GameEvent event )
+    private void checkTeamFoulEvent( GameEvent event )
     {
         if( event == null )
         {
@@ -151,16 +120,101 @@ public class Game
         }
     }
 
-    private void addPeriodFoul( Team team )
+    public void endNewEvent()
     {
-        if( team.equals( mAwayTeam ) )
+        mEventGameClock = -1;
+    }
+
+    public int getAwayPeriodFouls()
+    {
+        return mAwayPeriodFouls;
+    }
+
+    public Team getAwayTeam()
+    {
+        return mAwayTeam;
+    }
+
+    public int getCurrentGameClock()
+    {
+        return mCurrentGameClock;
+    }
+
+    public int getCurrentShotClock()
+    {
+        return mCurrentShotClock;
+    }
+
+    public MyDate getDate()
+    {
+        return mDate;
+    }
+
+    public long getDateMillis()
+    {
+        return mDate.getTime();
+    }
+
+    public GameLog getGameLog()
+    {
+        return mGameLog;
+    }
+
+    public int getHomePeriodFouls()
+    {
+        return mHomePeriodFouls;
+    }
+
+    public Team getHomeTeam()
+    {
+        return mHomeTeam;
+    }
+
+    public UUID getId()
+    {
+        return mID;
+    }
+
+    public int getPeriod()
+    {
+        return mPeriod;
+    }
+
+    public Team getTeamWithoutPossession()
+    {
+        Team team = getTeamWithPossession();
+        if( mHomeTeam.equals( team ) )
         {
-            mAwayPeriodFouls++;
+            return mAwayTeam;
         }
-        else if( team.equals( mHomeTeam ) )
+        else if( mAwayTeam.equals( team ) )
         {
-            mHomePeriodFouls++;
+            return mHomeTeam;
         }
+        else
+        {
+            return null;
+        }
+    }
+
+    public Team getTeamWithPossession()
+    {
+        return mHasBallPossession;
+    }
+
+    public String getTitle()
+    {
+        String home = mHomeTeam.getName();
+        int homeScore = mHomeTeam.getTotalScore();
+        String away = mAwayTeam.getName();
+        int awayScore = mAwayTeam.getTotalScore();
+        String date = StringUtils.getStringDate( mDate );
+        return home + " " + homeScore + " - " + awayScore + " " + away + " on " + date;
+    }
+
+    public boolean isGameOngoing()
+    {
+        return mGameOngoing;
     }
 
     public boolean isPenalty( Team team )
@@ -176,49 +230,6 @@ public class Game
         return false;
     }
 
-    public void startNewEvent()
-    {
-        mEventGameClock = mCurrentGameClock;
-    }
-
-    public void endNewEvent()
-    {
-        mEventGameClock = -1;
-    }
-
-    public Team getAwayTeam()
-    {
-        return mAwayTeam;
-    }
-
-    public Team getHomeTeam()
-    {
-        return mHomeTeam;
-    }
-
-    private void initializeClocks()
-    {
-        resetGameClock();
-        resetShotClock24();
-    }
-
-    private void initializeLogs()
-    {
-        mGameLog = new GameLog();
-        mPeriodLog = mGameLog.getCurrentPeriodLog();
-        mPeriod = mGameLog.getCurrentPeriod();
-    }
-
-    public int getCurrentGameClock()
-    {
-        return mCurrentGameClock;
-    }
-
-    public int getCurrentShotClock()
-    {
-        return mCurrentShotClock;
-    }
-
     public void nextPeriod()
     {
         mGameLog.nextPeriod();
@@ -227,35 +238,9 @@ public class Game
         resetPeriodFouls();
     }
 
-    private void resetPeriodFouls()
+    public void pauseGame()
     {
-        mHomePeriodFouls = 0;
-        mAwayPeriodFouls = 0;
-    }
-
-    public int getPeriod()
-    {
-        return mPeriod;
-    }
-
-    public int getHomePeriodFouls()
-    {
-        return mHomePeriodFouls;
-    }
-
-    public int getAwayPeriodFouls()
-    {
-        return mAwayPeriodFouls;
-    }
-
-    public void resetShotClock24()
-    {
-        mCurrentShotClock = MAX_SHOT_CLOCK;
-    }
-
-    public void resetShotClock()
-    {
-        mCurrentShotClock = mReducedMaxShotClock;
+        mGameOngoing = false;
     }
 
     public void resetGameClock()
@@ -263,19 +248,14 @@ public class Game
         mCurrentGameClock = mMaxGameClock;
     }
 
-    public void pauseGame()
+    public void resetShotClock()
     {
-        mGameOngoing = false;
+        mCurrentShotClock = mReducedMaxShotClock;
     }
 
-    public void unpauseGame()
+    public void resetShotClock24()
     {
-        mGameOngoing = true;
-    }
-
-    public Team getTeamWithPossession()
-    {
-        return mHasBallPossession;
+        mCurrentShotClock = MAX_SHOT_CLOCK;
     }
 
     public void setTeamWithPossession( Team team )
@@ -290,6 +270,11 @@ public class Game
         }
     }
 
+    public void startNewEvent()
+    {
+        mEventGameClock = mCurrentGameClock;
+    }
+
     public void swapBallPossession()
     {
         if( mHasBallPossession.equals( mHomeTeam ) )
@@ -300,6 +285,11 @@ public class Game
         {
             mHasBallPossession = mHomeTeam;
         }
+    }
+
+    public void unpauseGame()
+    {
+        mGameOngoing = true;
     }
 
     public void updateTime()
@@ -317,78 +307,91 @@ public class Game
         }
     }
 
+    private void addPeriodFoul( Team team )
+    {
+        if( team.equals( mAwayTeam ) )
+        {
+            mAwayPeriodFouls++;
+        }
+        else if( team.equals( mHomeTeam ) )
+        {
+            mHomePeriodFouls++;
+        }
+    }
+
+    private void checkTurnoverEvent( GameEvent event )
+    {
+        if( event == null )
+        {
+            return;
+        }
+        if( event instanceof TurnoverEvent )
+        {
+            swapBallPossession();
+            resetShotClock24();
+        }
+    }
+
+    private void initializeClocks()
+    {
+        resetGameClock();
+        resetShotClock24();
+    }
+
+    private void initializeLogs()
+    {
+        mGameLog = new GameLog();
+        mPeriodLog = mGameLog.getCurrentPeriodLog();
+        mPeriod = mGameLog.getCurrentPeriod();
+    }
+
     private boolean isClocksValid()
     {
         return mCurrentGameClock > 0 && mCurrentShotClock > 0;
     }
 
-    public boolean isGameOngoing()
+    private void resetPeriodFouls()
     {
-        return mGameOngoing;
+        mHomePeriodFouls = 0;
+        mAwayPeriodFouls = 0;
     }
 
-    public GameLog getGameLog()
+    public enum GameStats
     {
-        return mGameLog;
-    }
 
-    public UUID getId()
-    {
-        return mID;
-    }
+        ID( "id" ), AWAY_TEAM( "awayTeam" ), HOME_TEAM( "homeTeam" ), GAME_LOG( "gameLog" ), PERIOD_LOG(
+                "periodLog" ), DATE( "date" );
 
-    public String getTitle()
-    {
-        String home = mHomeTeam.getName();
-        int homeScore = mHomeTeam.getTotalScore();
-        String away = mAwayTeam.getName();
-        int awayScore = mAwayTeam.getTotalScore();
-        return home + " " + homeScore + " - " + awayScore + " " + away;
+        private final String mConstant;
+
+        private GameStats( String constant )
+        {
+            mConstant = constant;
+        }
+
+        @Override
+        public String toString()
+        {
+            return mConstant;
+        }
     }
 
     public class MyDate extends Date
     {
-        public MyDate( long milliseconds )
-        {
-            super( milliseconds );
-        }
-
         public MyDate()
         {
             super();
+        }
+
+        public MyDate( long milliseconds )
+        {
+            super( milliseconds );
         }
 
         @Override
         public String toString()
         {
             return DateFormat.format( "EEE, MMM dd, yyyy", this ).toString();
-        }
-    }
-
-    public MyDate getDate()
-    {
-        return mDate;
-    }
-
-    public long getDateMillis()
-    {
-        return mDate.getTime();
-    }
-
-    public Team getTeamWithoutPossession()
-    {
-        Team team = getTeamWithPossession();
-        if( mHomeTeam.equals( team ) )
-        {
-            return mAwayTeam;
-        }
-        else if( mAwayTeam.equals( team ) )
-        {
-            return mHomeTeam;
-        }
-        else
-        {
-            return null;
         }
     }
 }
