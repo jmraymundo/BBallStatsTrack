@@ -336,7 +336,6 @@ public class Game
                 checkReboundEvent( event );
             }
         }
-        return;
     }
 
     private void checkTeamFoulEvent( GameEvent event )
@@ -357,6 +356,7 @@ public class Game
 
     private void checkTeamReboundEvent( GameEvent event )
     {
+        pauseGame();
         if( getTeamWithPossession().equals( event.getTeam() ) )
         {
             resetMidShotClock();
