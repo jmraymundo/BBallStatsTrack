@@ -68,7 +68,7 @@ public class Team
             mTotalFouls = team.getInt( TeamStats.TOTAL_FOULS.toString() );
             mTeamRebound = team.getInt( TeamStats.TEAM_REBOUNDS.toString() );
             mTimeOuts = team.getInt( TeamStats.TIMEOUTS.toString() );
-            mID = ( UUID ) team.get( TeamStats.TEAM_ID.toString() );
+            mID = UUID.fromString( team.getString( TeamStats.TEAM_ID.toString() ) );
         }
         catch( JSONException e )
         {

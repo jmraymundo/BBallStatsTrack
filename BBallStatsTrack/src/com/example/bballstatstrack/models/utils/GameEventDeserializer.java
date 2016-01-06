@@ -49,14 +49,14 @@ public class GameEventDeserializer
         {
             return null;
         }
-        EventType eventType = ( EventType ) jsonGameEvent.get( GameEvent.EVENT_TYPE );
+        EventType eventType = EventType.valueOf( jsonGameEvent.getString( GameEvent.EVENT_TYPE ) );
         JSONObject jsonAppended = null;
         if( !jsonGameEvent.isNull( GameEvent.APPENDED ) )
         {
             jsonAppended = jsonGameEvent.getJSONObject( GameEvent.APPENDED );
         }
         GameEvent event;
-        UUID teamID = ( UUID ) jsonGameEvent.get( GameEvent.TEAM_ID );
+        UUID teamID = UUID.fromString( jsonGameEvent.getString( GameEvent.TEAM_ID ) );
         Team team = getTeamFromID( teamID );
         int playerNumber = jsonGameEvent.getInt( GameEvent.PLAYER_NUMBER );
         Player player = team.getPlayers().get( playerNumber );
@@ -125,7 +125,7 @@ public class GameEventDeserializer
     private GameEvent getTurnoverEventFromJSON( JSONObject jsonGameEvent, Player player, Team team )
             throws JSONException
     {
-        TurnoverType turnoverType = ( TurnoverType ) jsonGameEvent.get( TurnoverEvent.TURNOVER_TYPE );
+        TurnoverType turnoverType = TurnoverType.valueOf( jsonGameEvent.getString( TurnoverEvent.TURNOVER_TYPE ) );
         return new TurnoverEvent( turnoverType, player, team );
     }
 
@@ -136,27 +136,27 @@ public class GameEventDeserializer
 
     private GameEvent getReboundEventFromJSON( JSONObject jsonGameEvent, Player player, Team team ) throws JSONException
     {
-        ReboundType reboundType = ( ReboundType ) jsonGameEvent.get( ReboundEvent.REBOUND_TYPE );
+        ReboundType reboundType = ReboundType.valueOf( jsonGameEvent.getString( ReboundEvent.REBOUND_TYPE ) );
         return new ReboundEvent( reboundType, player, team );
     }
 
     private GameEvent getShootEventFromJSON( JSONObject jsonGameEvent, Player player, Team team ) throws JSONException
     {
-        ShotClass shotClass = ( ShotClass ) jsonGameEvent.get( ShootEvent.SHOT_CLASS );
-        ShotType shotType = ( ShotType ) jsonGameEvent.get( ShootEvent.SHOT_TYPE );
+        ShotClass shotClass = ShotClass.valueOf( jsonGameEvent.getString( ShootEvent.SHOT_CLASS ) );
+        ShotType shotType = ShotType.valueOf( jsonGameEvent.getString( ShootEvent.SHOT_TYPE ) );
         return new ShootEvent( shotClass, shotType, player, team );
     }
 
     private GameEvent getFoulEventFromJSON( JSONObject jsonGameEvent, Player player, Team team ) throws JSONException
     {
-        FoulType foulType = ( FoulType ) jsonGameEvent.get( FoulEvent.FOUL_TYPE );
+        FoulType foulType = FoulType.valueOf( jsonGameEvent.getString( FoulEvent.FOUL_TYPE ) );
         switch( foulType )
         {
             case SHOOTING:
                 return getShootingFoulEventFromJSON( jsonGameEvent, player, team );
             case NON_SHOOTING:
-                NonShootingFoulType nonShootingFoulType = ( NonShootingFoulType ) jsonGameEvent
-                        .get( NonShootingFoulEvent.NON_SHOOTING_FOUL_TYPE );
+                NonShootingFoulType nonShootingFoulType = NonShootingFoulType
+                        .valueOf( jsonGameEvent.getString( NonShootingFoulEvent.NON_SHOOTING_FOUL_TYPE ) );
                 return new NonShootingFoulEvent( nonShootingFoulType, player, team );
             case OFFENSIVE:
                 return new OffensiveFoulEvent( player, team );

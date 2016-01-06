@@ -148,7 +148,10 @@ public class JSONSerializer
         Team team = gameEvent.getTeam();
         GameEvent appended = gameEvent.getAppended();
         jsonObject.put( GameEvent.EVENT_TYPE, event );
-        jsonObject.put( GameEvent.PLAYER_NUMBER, player.getNumber() );
+        if( player != null )
+        {
+            jsonObject.put( GameEvent.PLAYER_NUMBER, player.getNumber() );
+        }
         jsonObject.put( GameEvent.TEAM_ID, team.getID() );
         if( appended != null )
         {
