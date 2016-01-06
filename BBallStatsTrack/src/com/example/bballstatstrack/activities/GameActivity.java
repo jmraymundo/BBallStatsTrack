@@ -157,15 +157,15 @@ public class GameActivity extends Activity
 
     private void fetchAwayStarters()
     {
-        mAwayTeam = getTeam( AddPlayersToTeamsActivity.AWAY_TEAM_NAME, AddPlayersToTeamsActivity.AWAY_TEAM_NUMBERS,
-                AddPlayersToTeamsActivity.AWAY_TEAM_MEMBER_NAMES );
+        mAwayTeam = getTeamFromIntent( AddPlayersToTeamsActivity.AWAY_TEAM_NAME,
+                AddPlayersToTeamsActivity.AWAY_TEAM_NUMBERS, AddPlayersToTeamsActivity.AWAY_TEAM_MEMBER_NAMES );
         selectStartingFive( mAwayTeam );
     }
 
     private void fetchHomeStarters()
     {
-        mHomeTeam = getTeam( AddPlayersToTeamsActivity.HOME_TEAM_NAME, AddPlayersToTeamsActivity.HOME_TEAM_NUMBERS,
-                AddPlayersToTeamsActivity.HOME_TEAM_MEMBER_NAMES );
+        mHomeTeam = getTeamFromIntent( AddPlayersToTeamsActivity.HOME_TEAM_NAME,
+                AddPlayersToTeamsActivity.HOME_TEAM_NUMBERS, AddPlayersToTeamsActivity.HOME_TEAM_MEMBER_NAMES );
         selectStartingFive( mHomeTeam );
     }
 
@@ -175,15 +175,15 @@ public class GameActivity extends Activity
         {
             case OTHER:
             {
-                return R.string.turnover_type_dialog_other_text;
+                return R.string.turnover_dialog_type_other_text;
             }
             case OFFENSIVE_FOUL:
             {
-                return R.string.turnover_type_dialog_offensivefoul_text;
+                return R.string.turnover_dialog_type_offensivefoul_text;
             }
             case STEAL:
             {
-                return R.string.turnover_type_dialog_steal_text;
+                return R.string.turnover_dialog_type_steal_text;
             }
             default:
             {
@@ -192,7 +192,7 @@ public class GameActivity extends Activity
         }
     }
 
-    private Team getTeam( String teamNameExtra, String teamNumbersExtra, String teamPlayersExtra )
+    private Team getTeamFromIntent( String teamNameExtra, String teamNumbersExtra, String teamPlayersExtra )
     {
         Intent intent = getIntent();
         String homeName = intent.getStringExtra( teamNameExtra );
@@ -336,7 +336,7 @@ public class GameActivity extends Activity
             @Override
             public void onClick( View v )
             {
-                showTurnoverEventDialog();
+                showTurnoverButtonDialog();
             }
         } );
         mShootButton.setOnClickListener( new OnClickListener()
@@ -344,10 +344,30 @@ public class GameActivity extends Activity
             @Override
             public void onClick( View v )
             {
-                // TODO Auto-generated method stub
-
+                showShootButtonDialog();
             }
         } );
+    }
+
+    private void showShootButtonDialog()
+    {
+        mGame.startNewEvent();
+        Builder builder = new Builder( GameActivity.this );
+        LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_container, null );
+        builder.setView( parentView );
+        TextView question = ( TextView ) parentView.findViewById( R.id.dialog_container_question_textview );
+        question.setText( R.string.turnover_dialog_player_question );
+        Team team = mGame.getTeamWithPossession();
+        AlertDialog dialog = builder.create();
+        for( Player player : team.getInGamePlayers() )
+        {
+            Button button = new Button( GameActivity.this );
+            button.setText( player.toString() );
+            button.setOnClickListener( new TurnoverListener( dialog, team, player ) );
+            parentView.addView( button );
+        }
+        dialog.setOnCancelListener( new CancelGameEventUnpauseListener() );
+        dialog.show();
     }
 
     private void showBallPossessionDeciderDialog()
@@ -362,7 +382,7 @@ public class GameActivity extends Activity
 
     private void showCoachButtonDialog()
     {
-        newGamePauseEvent();
+        mGame.startNewEvent();
         final AlertDialog dialog = createDialogFromLayout( R.layout.dialog_coach_button );
         dialog.show();
         Button timeOutButton = ( Button ) dialog.findViewById( R.id.time_out_button );
@@ -371,6 +391,7 @@ public class GameActivity extends Activity
             @Override
             public void onClick( View v )
             {
+                mGame.pauseGame();
                 TimeoutEvent event = new TimeoutEvent( mGame.getTeamWithPossession() );
                 addNewEvent( event );
                 dialog.dismiss();
@@ -397,7 +418,7 @@ public class GameActivity extends Activity
         LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_container, null );
         builder.setView( parentView );
         TextView question = ( TextView ) parentView.findViewById( R.id.dialog_container_question_textview );
-        question.setText( R.string.foul_player_question );
+        question.setText( R.string.foul_dialog_player_question );
         Team team = mGame.getTeamWithoutPossession();
         AlertDialog dialog = builder.create();
         for( Player player : team.getInGamePlayers() )
@@ -424,7 +445,7 @@ public class GameActivity extends Activity
             return;
         }
         Builder builder = new Builder( GameActivity.this );
-        builder.setTitle( R.string.free_throw_question );
+        builder.setTitle( R.string.free_throw_dialog_question );
         builder.setPositiveButton( R.string.yes, new EmptyDialogInterfaceOnClickListener() );
         builder.setNegativeButton( R.string.no, new EmptyDialogInterfaceOnClickListener() );
         final AlertDialog dialog = builder.show();
@@ -432,6 +453,26 @@ public class GameActivity extends Activity
                 .setOnClickListener( new FreeThrowEventListener( dialog, team, player, ftCount, true ) );
         dialog.getButton( DialogInterface.BUTTON_NEGATIVE )
                 .setOnClickListener( new FreeThrowEventListener( dialog, team, player, ftCount, false ) );
+    }
+
+    private class SubstitutionDialogListener implements OnClickListener
+    {
+        private final Team mSelectedTeam;
+
+        private AlertDialog mParentDialog;
+
+        private SubstitutionDialogListener( AlertDialog parentDialog, Team team )
+        {
+            mSelectedTeam = team;
+            mParentDialog = parentDialog;
+        }
+
+        @Override
+        public void onClick( View v )
+        {
+            showSubstitutionOutDialog( mSelectedTeam );
+            mParentDialog.dismiss();
+        }
     }
 
     private class FreeThrowEventListener extends GameEventListener
@@ -463,12 +504,12 @@ public class GameActivity extends Activity
         Builder builder = new Builder( GameActivity.this );
         if( parentEvent instanceof NonShootingFoulEvent )
         {
-            builder.setTitle( R.string.free_throw_penalty );
+            builder.setTitle( R.string.free_throw_dialog_penalty );
         }
         LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_container, null );
         builder.setView( parentView );
         TextView question = ( TextView ) parentView.findViewById( R.id.dialog_container_question_textview );
-        question.setText( R.string.foul_fouled_question );
+        question.setText( R.string.foul_dialog_fouled_question );
         Team team = mGame.getTeamWithPossession();
         AlertDialog dialog = builder.create();
         for( Player player : team.getInGamePlayers() )
@@ -594,7 +635,7 @@ public class GameActivity extends Activity
         LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_container, null );
         builder.setView( parentView );
         TextView question = ( TextView ) parentView.findViewById( R.id.dialog_container_question_textview );
-        question.setText( R.string.steal_player_question );
+        question.setText( R.string.steal_dialog_player_question );
         Team team = mGame.getTeamWithoutPossession();
         AlertDialog dialog = builder.create();
         for( Player player : team.getInGamePlayers() )
@@ -611,7 +652,19 @@ public class GameActivity extends Activity
 
     private void showSubstitutionDialog()
     {
-
+        Builder builder = new Builder( GameActivity.this );
+        LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_substitution_button,
+                null );
+        builder.setView( parentView );
+        AlertDialog dialog = builder.show();
+        final Team homeTeam = mGame.getHomeTeam();
+        Button homeTeamButton = ( Button ) parentView.findViewById( R.id.substitution_dialog_home_button );
+        homeTeamButton.setText( homeTeam.getName() );
+        homeTeamButton.setOnClickListener( new SubstitutionDialogListener( dialog, homeTeam ) );
+        final Team awayTeam = mGame.getAwayTeam();
+        Button awayTeamButton = ( Button ) parentView.findViewById( R.id.substitution_dialog_away_button );
+        awayTeamButton.setText( awayTeam.getName() );
+        awayTeamButton.setOnClickListener( new SubstitutionDialogListener( dialog, awayTeam ) );
     }
 
     private void showSubstitutionOutDialog( Team team )
@@ -620,7 +673,7 @@ public class GameActivity extends Activity
         LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_container, null );
         builder.setView( parentView );
         TextView question = ( TextView ) parentView.findViewById( R.id.dialog_container_question_textview );
-        question.setText( R.string.substitution_dialog_question );
+        question.setText( R.string.substitution_dialog_player_out_question );
         AlertDialog dialog = builder.create();
         for( Player player : team.getInGamePlayers() )
         {
@@ -709,7 +762,7 @@ public class GameActivity extends Activity
         LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_container, null );
         builder.setView( parentView );
         TextView question = ( TextView ) parentView.findViewById( R.id.dialog_container_question_textview );
-        question.setText( R.string.substitution_dialog_question );
+        question.setText( R.string.substitution_dialog_player_out_question );
         AlertDialog dialog = builder.create();
         List< Player > inGamePlayers = team.getInGamePlayers();
         SparseArray< Player > allPlayers = team.getPlayers();
@@ -749,14 +802,14 @@ public class GameActivity extends Activity
 
     }
 
-    private void showTurnoverEventDialog()
+    private void showTurnoverButtonDialog()
     {
         newGamePauseEvent();
         Builder builder = new Builder( GameActivity.this );
         LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_container, null );
         builder.setView( parentView );
         TextView question = ( TextView ) parentView.findViewById( R.id.dialog_container_question_textview );
-        question.setText( R.string.turnover_player_question );
+        question.setText( R.string.turnover_dialog_player_question );
         Team team = mGame.getTeamWithPossession();
         AlertDialog dialog = builder.create();
         for( Player player : team.getInGamePlayers() )
@@ -776,7 +829,7 @@ public class GameActivity extends Activity
         LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_container, null );
         builder.setView( parentView );
         TextView question = ( TextView ) parentView.findViewById( R.id.dialog_container_question_textview );
-        question.setText( R.string.turnover_type_question );
+        question.setText( R.string.turnover_dialog_type_question );
         AlertDialog dialog = builder.create();
         for( TurnoverType type : TurnoverType.values() )
         {
