@@ -118,12 +118,6 @@ public class GameActivity extends Activity
         builder.show();
     }
 
-    private void endActivity()
-    {
-        mTimer.cancel();
-        finish();
-    }
-
     @Override
     protected void onCreate( Bundle savedInstanceState )
     {
@@ -179,6 +173,12 @@ public class GameActivity extends Activity
         builder.setNegativeButton( R.string.no, new EmptyDialogInterfaceOnClickListener() );
         final AlertDialog dialog = builder.show();
         return dialog;
+    }
+
+    private void endActivity()
+    {
+        mTimer.cancel();
+        finish();
     }
 
     private void fetchAwayStarters()
@@ -306,31 +306,6 @@ public class GameActivity extends Activity
                 .setOnClickListener( new TeamStartersConfirmationListener( team, dialog, selected ) );
     }
 
-    private int setClockFromDialog( DialogInterface dialog, int max )
-    {
-        AlertDialog alertDialog = ( AlertDialog ) dialog;
-        EditText clockField = ( EditText ) alertDialog.findViewById( R.id.requested_clock_field );
-        clockField.addTextChangedListener( new PlayerNumberWatcher( 0, max ) );
-        String clockValue = clockField.getText().toString();
-        if( clockValue.isEmpty() )
-        {
-            Toast.makeText( GameActivity.this, getResources().getString( R.string.clock_input_error ),
-                    Toast.LENGTH_SHORT ).show();
-            return -1;
-        }
-        int number = Integer.parseInt( clockValue );
-        dialog.dismiss();
-        return number;
-    }
-
-    private void setStarters( Team team, List< Integer > selected )
-    {
-        for( Integer number : selected )
-        {
-            team.addStarter( number.intValue() );
-        }
-    }
-
     private void setButtonListeners()
     {
         mTimeButton.setOnClickListener( new OnClickListener()
@@ -373,6 +348,31 @@ public class GameActivity extends Activity
                 showShootButtonDialog();
             }
         } );
+    }
+
+    private int setClockFromDialog( DialogInterface dialog, int max )
+    {
+        AlertDialog alertDialog = ( AlertDialog ) dialog;
+        EditText clockField = ( EditText ) alertDialog.findViewById( R.id.requested_clock_field );
+        clockField.addTextChangedListener( new PlayerNumberWatcher( 0, max ) );
+        String clockValue = clockField.getText().toString();
+        if( clockValue.isEmpty() )
+        {
+            Toast.makeText( GameActivity.this, getResources().getString( R.string.clock_input_error ),
+                    Toast.LENGTH_SHORT ).show();
+            return -1;
+        }
+        int number = Integer.parseInt( clockValue );
+        dialog.dismiss();
+        return number;
+    }
+
+    private void setStarters( Team team, List< Integer > selected )
+    {
+        for( Integer number : selected )
+        {
+            team.addStarter( number.intValue() );
+        }
     }
 
     private void showAssistCheckDialog( final GameEvent parent )
@@ -683,6 +683,21 @@ public class GameActivity extends Activity
         } );
     }
 
+    private void showSaveGameDialog()
+    {
+        AlertDialog dialog = createYesNoDialogWithTitle( R.string.save_dialog_confirmation_question );
+        dialog.show();
+        dialog.getButton( DialogInterface.BUTTON_POSITIVE ).setOnClickListener( new OnClickListener()
+        {
+            @Override
+            public void onClick( View v )
+            {
+                GameDirectory.get( GameActivity.this ).addGame( mGame );
+                endActivity();
+            }
+        } );
+    }
+
     private void showShootButtonDialog()
     {
         mGame.startNewEvent();
@@ -943,21 +958,6 @@ public class GameActivity extends Activity
         {
             mScoreBoardFragment.updateUI( mGame );
         }
-    }
-
-    private void showSaveGameDialog()
-    {
-        AlertDialog dialog = createYesNoDialogWithTitle( R.string.save_dialog_confirmation_question );
-        dialog.show();
-        dialog.getButton( DialogInterface.BUTTON_POSITIVE ).setOnClickListener( new OnClickListener()
-        {
-            @Override
-            public void onClick( View v )
-            {
-                GameDirectory.get( GameActivity.this ).addGame( mGame );
-                endActivity();
-            }
-        } );
     }
 
     public class ReboundEventListener extends GameEventListener
