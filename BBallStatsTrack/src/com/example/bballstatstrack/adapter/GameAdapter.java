@@ -24,20 +24,29 @@ public class GameAdapter extends ArrayAdapter< Game >
     @Override
     public View getView( int position, View convertView, ViewGroup parent )
     {
-        // if we weren't given a view, inflate one
         if( null == convertView )
         {
             convertView = mActivity.getLayoutInflater().inflate( R.layout.list_games, null );
         }
-
-        // configure the view for this Game
         Game game = getItem( position );
-
-        TextView titleTextView = ( TextView ) convertView.findViewById( R.id.game_list_item_titleTextView );
-        titleTextView.setText( game.getTitle() );
-        TextView dateTextView = ( TextView ) convertView.findViewById( R.id.game_list_item_dateTextView );
-        dateTextView.setText( game.getDate().toString() );
+        ViewHolder holder = ( ViewHolder ) convertView.getTag();
+        if( holder == null )
+        {
+            holder = new ViewHolder();
+            holder.titleTextView = ( TextView ) convertView.findViewById( R.id.game_list_item_titleTextView );
+            holder.dateTextView = ( TextView ) convertView.findViewById( R.id.game_list_item_dateTextView );
+            convertView.setTag( holder );
+        }
+        holder.titleTextView.setText( game.getTitle() );
+        holder.dateTextView.setText( game.getDate().toString() );
 
         return convertView;
+    }
+
+    private class ViewHolder
+    {
+        TextView titleTextView;
+
+        TextView dateTextView;
     }
 }
