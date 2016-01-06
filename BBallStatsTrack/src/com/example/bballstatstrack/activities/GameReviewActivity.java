@@ -1,6 +1,8 @@
 package com.example.bballstatstrack.activities;
 
-public class GameReviewActivity
+import android.app.Activity;
+
+public class GameReviewActivity extends Activity
 {
 
 }
