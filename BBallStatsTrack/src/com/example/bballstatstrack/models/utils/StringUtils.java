@@ -6,6 +6,30 @@ import java.util.GregorianCalendar;
 
 public class StringUtils
 {
+    public static int getIntSecondsFromMinSecFormattedString( String input )
+    {
+        String[] elements = input.split( ":" );
+        int seconds = Integer.parseInt( elements[1] );
+        int minutes = Integer.parseInt( elements[0] );
+        return seconds + ( minutes * 60 );
+    }
+
+    public static String getLeadZeroFormattedString( int number )
+    {
+        if( number < 10 )
+        {
+            return "0" + number;
+        }
+        return String.valueOf( number );
+    }
+
+    public static String getMinSecFormattedString( int time )
+    {
+        int minutes = time / 60;
+        int seconds = time - ( minutes * 60 );
+        return getLeadZeroFormattedString( minutes ) + ":" + getLeadZeroFormattedString( seconds );
+    }
+
     public static String getPeriodString( int period )
     {
         switch( period )
@@ -23,22 +47,6 @@ public class StringUtils
             default:
                 return ( period - 4 ) + " OT";
         }
-    }
-
-    public static String getMinSecFormattedString( int time )
-    {
-        int minutes = time / 60;
-        int seconds = time - ( minutes * 60 );
-        return getLeadZeroFormattedString( minutes ) + ":" + getLeadZeroFormattedString( seconds );
-    }
-
-    public static String getLeadZeroFormattedString( int number )
-    {
-        if( number < 10 )
-        {
-            return "0" + number;
-        }
-        return String.valueOf( number );
     }
 
     public static String getStringDate( Date date )
