@@ -207,6 +207,16 @@ public class Game
         return mGameOngoing;
     }
 
+    public boolean isPeriodOngoing()
+    {
+        return mCurrentGameClock > 0;
+    }
+
+    public boolean isPossessionOngoing()
+    {
+        return mCurrentShotClock > 0;
+    }
+
     public boolean isPenalty( Team team )
     {
         if( team.equals( mAwayTeam ) )
@@ -268,7 +278,7 @@ public class Game
 
     public void updateTime()
     {
-        if( isClocksValid() && isGameOngoing() )
+        if( isPeriodOngoing() && isPossessionOngoing() && isGameOngoing() )
         {
             mAwayTeam.updatePlayingTime();
             mHomeTeam.updatePlayingTime();
@@ -391,11 +401,6 @@ public class Game
         mGameLog = new GameLog();
         mPeriodLog = mGameLog.getCurrentPeriodLog();
         mPeriod = mGameLog.getCurrentPeriod();
-    }
-
-    private boolean isClocksValid()
-    {
-        return mCurrentGameClock > 0 && mCurrentShotClock > 0;
     }
 
     private boolean isShotMade( GameEvent event )
