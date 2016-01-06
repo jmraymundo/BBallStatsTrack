@@ -103,10 +103,10 @@ public class Game
     {
         event.resolve();
         mPeriodLog.append( mEventGameClock, event );
-        endNewEvent();
         checkTeamFoulEvent( event );
         checkTurnoverEvent( event );
         checkShootEvent( event );
+        endNewEvent();
 
     }
 
@@ -251,7 +251,16 @@ public class Game
 
     public void resetShotClock24()
     {
-        mCurrentShotClock = MAX_SHOT_CLOCK;
+        int timeDifference;
+        if( mEventGameClock == -1 )
+        {
+            timeDifference = 0;
+        }
+        else
+        {
+            timeDifference = mEventGameClock - mCurrentGameClock;
+        }
+        mCurrentShotClock = MAX_SHOT_CLOCK - timeDifference;
     }
 
     public void setTeamWithPossession( Team team )
