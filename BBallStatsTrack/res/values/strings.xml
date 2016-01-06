@@ -29,7 +29,7 @@
 	<string name="set_reset_shot_clock_title">In same ball possession situations, reset shot clock to how many seconds?</string>
 	<string name="select_starters">Select starters of team:</string>
 	<string name="need_five_players">Error! Need five players!</string>
-	<string name="new_period_possession_question">Who has the ball possession?</string>
+	<string name="ball_possession_question">Who has the ball possession?</string>
 	<string name="time_button_text">Time</string>
 	<string name="coach_button_text">Coach</string>
 	<string name="foul_button_text">Foul</string>
@@ -51,6 +51,7 @@
 	<string name="coach_dialog_substitution_text">Substitution</string>
 	<string name="foul_dialog_player_question">Who committed the foul?</string>
 	<string name="foul_dialog_fouled_question">Who was fouled?</string>
+	<string name="foul_dialog_type_question">What kind of foul was committed?</string>
 	<string name="free_throw_dialog_penalty">Penalty situation! Bonus 2 free throws.</string>
 	<string name="free_throw_dialog_question">Did he made the free throw?</string>
 	<string name="substitution_dialog_question">Which team made a substitution?</string>
@@ -58,6 +59,13 @@
 	<string name="substitution_dialog_player_in_question">Who would you like to insert into the game?</string>
 	<string name="shoot_dialog_player_question">Who took the shot?</string>
 	<string name="shoot_dialog_class_question">What kind of shot the player took?</string>
+	<string name="shoot_dialog_class_2pt">2pt shot</string>
+	<string name="shoot_dialog_class_3pt">3pt shot</string>
 	<string name="shoot_dialog_type_question">Did the shot go in?</string>
 	<string name="shoot_dialog_miss_type_question">What happened after the shot missed?</string>
+	<string name="shoot_dialog_miss_type_block">Ball was blocked</string>
+	<string name="shoot_dialog_miss_type_rebound">Ball was rebounded</string>
+	<string name="shoot_dialog_miss_type_outOfBounds">Ball went out of bounds</string>
+	<string name="block_dialog_player_question">Who blocked the shot?</string>
+	<string name="rebound_dialog_player_question">Who made the rebound?</string>
 </resources>
