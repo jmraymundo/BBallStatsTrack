@@ -101,22 +101,7 @@ public class Game
         endNewEvent();
         checkTeamFoulEvent( event );
         checkTurnoverEvent( event );
-    }
 
-    private void checkTeamFoulEvent( GameEvent event )
-    {
-        if( event == null )
-        {
-            return;
-        }
-        if( event instanceof ShootingFoulEvent || event instanceof NonShootingFoulEvent )
-        {
-            addPeriodFoul( event.getTeam() );
-        }
-        else
-        {
-            checkTeamFoulEvent( event.getAppended() );
-        }
     }
 
     public void endNewEvent()
@@ -316,6 +301,22 @@ public class Game
         else if( team.equals( mHomeTeam ) )
         {
             mHomePeriodFouls++;
+        }
+    }
+
+    private void checkTeamFoulEvent( GameEvent event )
+    {
+        if( event == null )
+        {
+            return;
+        }
+        if( event instanceof ShootingFoulEvent || event instanceof NonShootingFoulEvent )
+        {
+            addPeriodFoul( event.getTeam() );
+        }
+        else
+        {
+            checkTeamFoulEvent( event.getAppended() );
         }
     }
 
