@@ -198,8 +198,7 @@ public class Game
         int homeScore = mHomeTeam.getTotalScore();
         String away = mAwayTeam.getName();
         int awayScore = mAwayTeam.getTotalScore();
-        String date = StringUtils.getStringDate( mDate );
-        return home + " " + homeScore + " - " + awayScore + " " + away + " on " + date;
+        return home + " VS " + away + " [Final Score: " + homeScore + "-" + awayScore + "]";
     }
 
     public boolean isGameOngoing()
@@ -246,7 +245,14 @@ public class Game
 
     public void resetGameClock()
     {
-        mCurrentGameClock = mMaxGameClock;
+        if( mPeriod < 4 )
+        {
+            mCurrentGameClock = mMaxGameClock;
+        }
+        else
+        {
+            mCurrentGameClock = mMaxOTGameClock;
+        }
     }
 
     public void resetShotClock24()

@@ -9,6 +9,7 @@ import com.example.bballstatstrack.R;
 import com.example.bballstatstrack.fragments.GameLogFragment;
 import com.example.bballstatstrack.fragments.GameScoreBoardFragment;
 import com.example.bballstatstrack.fragments.TeamInGameFragment;
+import com.example.bballstatstrack.model.GameDirectory;
 import com.example.bballstatstrack.models.Game;
 import com.example.bballstatstrack.models.Player;
 import com.example.bballstatstrack.models.Team;
@@ -103,8 +104,7 @@ public class GameActivity extends Activity
             @Override
             public void onClick( DialogInterface dialog, int which )
             {
-                mTimer.cancel();
-                finish();
+                endActivity();
             }
         } );
         builder.setNegativeButton( R.string.no, new DialogInterface.OnClickListener()
@@ -116,6 +116,12 @@ public class GameActivity extends Activity
             }
         } );
         builder.show();
+    }
+
+    private void endActivity()
+    {
+        mTimer.cancel();
+        finish();
     }
 
     @Override
@@ -130,7 +136,7 @@ public class GameActivity extends Activity
         mTurnoverButton = ( Button ) findViewById( R.id.turnoverButton );
         mShootButton = ( Button ) findViewById( R.id.shootRelatedButton );
         initializeMainStatsFragmentView();
-        setupButtonListeners();
+        setButtonListeners();
     }
 
     private void addNewEvent( GameEvent event )
@@ -325,7 +331,7 @@ public class GameActivity extends Activity
         }
     }
 
-    private void setupButtonListeners()
+    private void setButtonListeners()
     {
         mTimeButton.setOnClickListener( new OnClickListener()
         {
@@ -371,8 +377,7 @@ public class GameActivity extends Activity
 
     private void showAssistCheckDialog( final GameEvent parent )
     {
-        final AlertDialog dialog = createYesNoDialogWithTitle( R.string.shoot_dialog_assist_check_question );
-        dialog.show();
+        AlertDialog dialog = createYesNoDialogWithTitle( R.string.shoot_dialog_assist_check_question );
         dialog.getButton( DialogInterface.BUTTON_POSITIVE )
                 .setOnClickListener( new AssistCheckDialogListener( dialog, parent, true ) );
         dialog.getButton( DialogInterface.BUTTON_NEGATIVE )
@@ -412,8 +417,7 @@ public class GameActivity extends Activity
 
     private void showBlockCheckDialog( final GameEvent parent )
     {
-        final AlertDialog dialog = createYesNoDialogWithTitle( R.string.shoot_dialog_block_check_question );
-        dialog.show();
+        AlertDialog dialog = createYesNoDialogWithTitle( R.string.shoot_dialog_block_check_question );
         dialog.getButton( DialogInterface.BUTTON_POSITIVE )
                 .setOnClickListener( new BlockCheckDialogListener( dialog, parent, true ) );
         dialog.getButton( DialogInterface.BUTTON_NEGATIVE )
@@ -499,7 +503,7 @@ public class GameActivity extends Activity
         {
             return;
         }
-        final AlertDialog dialog = createYesNoDialogWithTitle( R.string.free_throw_dialog_question );
+        AlertDialog dialog = createYesNoDialogWithTitle( R.string.free_throw_dialog_question );
         dialog.getButton( DialogInterface.BUTTON_POSITIVE )
                 .setOnClickListener( new FreeThrowEventListener( dialog, team, player, ftCount, true ) );
         dialog.getButton( DialogInterface.BUTTON_NEGATIVE )
@@ -808,6 +812,16 @@ public class GameActivity extends Activity
     {
         final AlertDialog dialog = createDialogFromLayout( R.layout.dialog_time_button );
         dialog.show();
+        Button saveGameButton = ( Button ) dialog.findViewById( R.id.save_game_button );
+        saveGameButton.setOnClickListener( new OnClickListener()
+        {
+            @Override
+            public void onClick( View v )
+            {
+                showSaveGameDialog();
+                dialog.dismiss();
+            }
+        } );
         Button nextPeriodButton = ( Button ) dialog.findViewById( R.id.next_period_button );
         nextPeriodButton.setOnClickListener( new OnClickListener()
         {
@@ -849,7 +863,9 @@ public class GameActivity extends Activity
                 dialog.dismiss();
             }
         } );
-        nextPeriodButton.setEnabled( mGame.getCurrentGameClock() == 0 );
+        boolean isPeriodOngoing = mGame.isPeriodOngoing();
+        saveGameButton.setEnabled( !isPeriodOngoing );
+        nextPeriodButton.setEnabled( !isPeriodOngoing );
         boolean gameOngoing = mGame.isGameOngoing();
         resetGameClockButton.setEnabled( !gameOngoing );
         resetShotClockButton.setEnabled( !gameOngoing );
@@ -927,6 +943,21 @@ public class GameActivity extends Activity
         {
             mScoreBoardFragment.updateUI( mGame );
         }
+    }
+
+    private void showSaveGameDialog()
+    {
+        AlertDialog dialog = createYesNoDialogWithTitle( R.string.save_dialog_confirmation_question );
+        dialog.show();
+        dialog.getButton( DialogInterface.BUTTON_POSITIVE ).setOnClickListener( new OnClickListener()
+        {
+            @Override
+            public void onClick( View v )
+            {
+                GameDirectory.get( GameActivity.this ).addGame( mGame );
+                endActivity();
+            }
+        } );
     }
 
     public class ReboundEventListener extends GameEventListener
@@ -1293,6 +1324,7 @@ public class GameActivity extends Activity
             GameEvent parent = ( GameEvent ) v.getTag();
             parent.append( event );
             addNewEvent( parent );
+            mGame.unpauseGame();
         }
     }
 
