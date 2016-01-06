@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical" >
+	<TextView
+		android:id="@+id/shoot_dialog_miss_type_question"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:text="@string/shoot_dialog_miss_type_question" />
+	<Button
+		android:id="@+id/shoot_dialog_miss_type_block"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:text="@string/shoot_dialog_miss_type_block" />
+	<Button
+		android:id="@+id/shoot_dialog_miss_type_rebound"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:text="@string/shoot_dialog_miss_type_rebound" />
+	<Button
+		android:id="@+id/shoot_dialog_miss_type_outOfBounds"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:text="@string/shoot_dialog_miss_type_outOfBounds" />
+</LinearLayout>
