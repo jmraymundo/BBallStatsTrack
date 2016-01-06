@@ -68,4 +68,6 @@
 	<string name="assist_dialog_player_question">Who assisted the shot?</string>
 	<string name="rebound_dialog_player_question">Who made the rebound?</string>
 	<string name="rebound_dialog_team_rebound">Ball went out of bounds.</string>
+	<string name="time_dialog_save_game_text">Save game</string>
+	<string name="save_dialog_confirmation_question">Are you sure you want to save now? You will not be able to track this game again.</string>
 </resources>

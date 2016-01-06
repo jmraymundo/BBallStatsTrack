@@ -9,6 +9,12 @@
 		android:gravity="center"
 		android:text="@string/generic_dialog_question" />
 	<Button
+		android:id="@+id/save_game_button"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:text="@string/time_dialog_save_game_text" />
+	<Button
 		android:id="@+id/next_period_button"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
