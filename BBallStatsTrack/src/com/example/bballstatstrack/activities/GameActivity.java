@@ -82,6 +82,12 @@ public class GameActivity extends Activity
 
     private Button mShootButton;
 
+    public void newGamePauseEvent()
+    {
+        mGame.pauseGame();
+        mGame.startNewEvent();
+    }
+
     @Override
     public void onBackPressed()
     {
@@ -349,31 +355,10 @@ public class GameActivity extends Activity
         } );
     }
 
-    private void showShootButtonDialog()
-    {
-        mGame.startNewEvent();
-        Builder builder = new Builder( GameActivity.this );
-        LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_container, null );
-        builder.setView( parentView );
-        TextView question = ( TextView ) parentView.findViewById( R.id.dialog_container_question_textview );
-        question.setText( R.string.turnover_dialog_player_question );
-        Team team = mGame.getTeamWithPossession();
-        AlertDialog dialog = builder.create();
-        for( Player player : team.getInGamePlayers() )
-        {
-            Button button = new Button( GameActivity.this );
-            button.setText( player.toString() );
-            button.setOnClickListener( new TurnoverListener( dialog, team, player ) );
-            parentView.addView( button );
-        }
-        dialog.setOnCancelListener( new CancelGameEventUnpauseListener() );
-        dialog.show();
-    }
-
     private void showBallPossessionDeciderDialog()
     {
         Builder builder = new Builder( GameActivity.this );
-        builder.setTitle( R.string.new_period_possession_question );
+        builder.setTitle( R.string.ball_possession_question );
         builder.setNegativeButton( mHomeTeam.getName(), new BallPossessionDeciderListener( mHomeTeam ) );
         builder.setPositiveButton( mAwayTeam.getName(), new BallPossessionDeciderListener( mAwayTeam ) );
         AlertDialog ballPossessionDialog = builder.create();
@@ -432,71 +417,27 @@ public class GameActivity extends Activity
         dialog.show();
     }
 
-    public void newGamePauseEvent()
-    {
-        mGame.pauseGame();
-        mGame.startNewEvent();
-    }
-
     private void showFreeThrowEventDialog( int ftCount, Team team, Player player )
     {
         if( ftCount == 0 )
         {
             return;
         }
-        Builder builder = new Builder( GameActivity.this );
-        builder.setTitle( R.string.free_throw_dialog_question );
-        builder.setPositiveButton( R.string.yes, new EmptyDialogInterfaceOnClickListener() );
-        builder.setNegativeButton( R.string.no, new EmptyDialogInterfaceOnClickListener() );
-        final AlertDialog dialog = builder.show();
+        final AlertDialog dialog = getYesNoDialogWithTitle( R.string.free_throw_dialog_question );
         dialog.getButton( DialogInterface.BUTTON_POSITIVE )
                 .setOnClickListener( new FreeThrowEventListener( dialog, team, player, ftCount, true ) );
         dialog.getButton( DialogInterface.BUTTON_NEGATIVE )
                 .setOnClickListener( new FreeThrowEventListener( dialog, team, player, ftCount, false ) );
     }
 
-    private class SubstitutionDialogListener implements OnClickListener
+    private AlertDialog getYesNoDialogWithTitle( int stringResourceID )
     {
-        private final Team mSelectedTeam;
-
-        private AlertDialog mParentDialog;
-
-        private SubstitutionDialogListener( AlertDialog parentDialog, Team team )
-        {
-            mSelectedTeam = team;
-            mParentDialog = parentDialog;
-        }
-
-        @Override
-        public void onClick( View v )
-        {
-            showSubstitutionOutDialog( mSelectedTeam );
-            mParentDialog.dismiss();
-        }
-    }
-
-    private class FreeThrowEventListener extends GameEventListener
-    {
-        private int mFTCount;
-
-        private boolean mFTMade;
-
-        public FreeThrowEventListener( AlertDialog parentDialog, Team team, Player player, int ftCount, boolean ftMade )
-        {
-            super( parentDialog, team, player );
-            mFTCount = ftCount;
-            mFTMade = ftMade;
-        }
-
-        @Override
-        public void onClick( View v )
-        {
-            super.onClick( v );
-            ShootEvent event = new ShootEvent( ShotClass.FT, mFTMade ? ShotType.MADE : ShotType.MISSED,
-                    mGameEventPlayer, mGameEventTeam );
-            addNewEvent( event );
-            showFreeThrowEventDialog( mFTCount - 1, mGameEventTeam, mGameEventPlayer );
-        }
+        Builder builder = new Builder( GameActivity.this );
+        builder.setTitle( stringResourceID );
+        builder.setPositiveButton( R.string.yes, new EmptyDialogInterfaceOnClickListener() );
+        builder.setNegativeButton( R.string.no, new EmptyDialogInterfaceOnClickListener() );
+        final AlertDialog dialog = builder.show();
+        return dialog;
     }
 
     private void showFreeThrowShooterDialog( GameEvent parentEvent )
@@ -629,6 +570,103 @@ public class GameActivity extends Activity
         } );
     }
 
+    private void showShootButtonDialog()
+    {
+        mGame.startNewEvent();
+        Builder builder = new Builder( GameActivity.this );
+        LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_container, null );
+        builder.setView( parentView );
+        TextView question = ( TextView ) parentView.findViewById( R.id.dialog_container_question_textview );
+        question.setText( R.string.shoot_dialog_player_question );
+        Team team = mGame.getTeamWithPossession();
+        AlertDialog dialog = builder.create();
+        for( Player player : team.getInGamePlayers() )
+        {
+            Button button = new Button( GameActivity.this );
+            button.setText( player.toString() );
+            button.setOnClickListener( new ShootButtonDialogListener( dialog, team, player ) );
+            parentView.addView( button );
+        }
+        dialog.setOnCancelListener( new CancelGameEventUnpauseListener() );
+        dialog.show();
+    }
+
+    private void showShotClassDialog( Team team, Player player )
+    {
+        final AlertDialog dialog = createDialogFromLayout( R.layout.dialog_shoot_class );
+        dialog.show();
+        Button pts2 = ( Button ) dialog.findViewById( R.id.shoot_dialog_class_2pt );
+        pts2.setOnClickListener( new ShotClassDialogListener( dialog, team, player ) );
+        pts2.setTag( ShotClass.FG_2PT );
+        Button pts3 = ( Button ) dialog.findViewById( R.id.shoot_dialog_class_3pt );
+        pts3.setOnClickListener( new ShotClassDialogListener( dialog, team, player ) );
+        pts3.setTag( ShotClass.FG_3PT );
+    }
+
+    private void showShotTypeDialog( Team team, Player player, ShotClass shotCLass )
+    {
+        AlertDialog dialog = getYesNoDialogWithTitle( R.string.shoot_dialog_type_question );
+        dialog.getButton( DialogInterface.BUTTON_POSITIVE )
+                .setOnClickListener( new ShootEventListener( dialog, team, player, shotCLass, true ) );
+        dialog.getButton( DialogInterface.BUTTON_NEGATIVE )
+                .setOnClickListener( new ShootEventListener( dialog, team, player, shotCLass, false ) );
+    }
+
+    private class ShootEventListener extends GameEventListener
+    {
+        boolean mShotMade;
+
+        ShotClass mShotClass;
+
+        public ShootEventListener( AlertDialog parentDialog, Team team, Player player, ShotClass shotCLass,
+                boolean shotMade )
+        {
+            super( parentDialog, team, player );
+            mShotClass = shotCLass;
+            mShotMade = shotMade;
+        }
+
+        @Override
+        public void onClick( View v )
+        {
+            super.onClick( v );
+            ShootEvent event;
+            if( mShotMade )
+            {
+                event = new ShootEvent( mShotClass, ShotType.MADE, getPlayer(), getTeam() );
+                addNewEvent( event );
+            }
+            else
+            {
+                event = new ShootEvent( mShotClass, ShotType.MISSED, getPlayer(), getTeam() );
+                showMissedShotDialog( event );
+            }
+        }
+    }
+
+    private void showMissedShotDialog( final GameEvent parentEvent )
+    {
+        final AlertDialog dialog = createDialogFromLayout( R.layout.dialog_missed_shot );
+        dialog.show();
+        Button blockButton = ( Button ) dialog.findViewById( R.id.shoot_dialog_miss_type_block );
+        blockButton.setOnClickListener( new OnClickListener()
+        {
+            @Override
+            public void onClick( View v )
+            {
+                showBlockDialog( parentEvent );
+                dialog.dismiss();
+            }
+        } );
+        Button reboundButton = ( Button ) dialog.findViewById( R.id.shoot_dialog_miss_type_rebound );
+        Button outOfBoundsButton = ( Button ) dialog.findViewById( R.id.shoot_dialog_miss_type_outOfBounds );
+    }
+
+    private void showBlockDialog( GameEvent parentEvent )
+    {
+
+    }
+
     private void showStealEventDialog( GameEvent parent )
     {
         Builder builder = new Builder( GameActivity.this );
@@ -667,6 +705,32 @@ public class GameActivity extends Activity
         awayTeamButton.setOnClickListener( new SubstitutionDialogListener( dialog, awayTeam ) );
     }
 
+    private void showSubstitutionInDialog( Team team, Player playerOut )
+    {
+        Builder builder = new Builder( GameActivity.this );
+        LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_container, null );
+        builder.setView( parentView );
+        TextView question = ( TextView ) parentView.findViewById( R.id.dialog_container_question_textview );
+        question.setText( R.string.substitution_dialog_player_out_question );
+        AlertDialog dialog = builder.create();
+        List< Player > inGamePlayers = team.getInGamePlayers();
+        SparseArray< Player > allPlayers = team.getPlayers();
+        for( int index = 0; index < allPlayers.size(); index++ )
+        {
+            Player playerIn = allPlayers.valueAt( index );
+            if( inGamePlayers.contains( playerIn ) )
+            {
+                continue;
+            }
+            Button button = new Button( GameActivity.this );
+            button.setText( playerIn.toString() );
+            button.setOnClickListener( new SubstitutionInListener( dialog, team, playerOut, playerIn ) );
+            parentView.addView( button );
+        }
+        dialog.setOnCancelListener( new CancelGameEventListener() );
+        dialog.show();
+    }
+
     private void showSubstitutionOutDialog( Team team )
     {
         Builder builder = new Builder( GameActivity.this );
@@ -684,23 +748,6 @@ public class GameActivity extends Activity
         }
         dialog.setOnCancelListener( new CancelGameEventListener() );
         dialog.show();
-    }
-
-    private class SubstitutionOutListener extends GameEventListener
-    {
-
-        public SubstitutionOutListener( AlertDialog parentDialog, Team team, Player player )
-        {
-            super( parentDialog, team, player );
-        }
-
-        @Override
-        public void onClick( View v )
-        {
-            super.onClick( v );
-            showSubstitutionInDialog( mGameEventTeam, mGameEventPlayer );
-        }
-
     }
 
     private void showTimeButtonDialog()
@@ -754,52 +801,6 @@ public class GameActivity extends Activity
         resetShotClockButton.setEnabled( !gameOngoing );
         pauseResumeButton.setText( gameOngoing ? R.string.time_dialog_pause_text : R.string.time_dialog_resume_text );
         dialog.setOnCancelListener( new CancelGameEventListener() );
-    }
-
-    private void showSubstitutionInDialog( Team team, Player playerOut )
-    {
-        Builder builder = new Builder( GameActivity.this );
-        LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_container, null );
-        builder.setView( parentView );
-        TextView question = ( TextView ) parentView.findViewById( R.id.dialog_container_question_textview );
-        question.setText( R.string.substitution_dialog_player_out_question );
-        AlertDialog dialog = builder.create();
-        List< Player > inGamePlayers = team.getInGamePlayers();
-        SparseArray< Player > allPlayers = team.getPlayers();
-        for( int index = 0; index < allPlayers.size(); index++ )
-        {
-            Player playerIn = allPlayers.valueAt( index );
-            if( inGamePlayers.contains( playerIn ) )
-            {
-                continue;
-            }
-            Button button = new Button( GameActivity.this );
-            button.setText( playerIn.toString() );
-            button.setOnClickListener( new SubstitutionInListener( dialog, team, playerOut, playerIn ) );
-            parentView.addView( button );
-        }
-        dialog.setOnCancelListener( new CancelGameEventListener() );
-        dialog.show();
-    }
-
-    private class SubstitutionInListener extends GameEventListener
-    {
-        private Player mPlayerIn;
-
-        public SubstitutionInListener( AlertDialog parentDialog, Team team, Player playerOut, Player playerIn )
-        {
-            super( parentDialog, team, playerOut );
-            mPlayerIn = playerIn;
-        }
-
-        @Override
-        public void onClick( View v )
-        {
-            super.onClick( v );
-            SubstitutionEvent event = new SubstitutionEvent( mGameEventPlayer, mPlayerIn, mGameEventTeam );
-            addNewEvent( event );
-        }
-
     }
 
     private void showTurnoverButtonDialog()
@@ -874,15 +875,6 @@ public class GameActivity extends Activity
         }
     }
 
-    private class EmptyDialogInterfaceOnClickListener implements DialogInterface.OnClickListener
-    {
-        @Override
-        public void onClick( DialogInterface dialog, int which )
-        {
-            // do nothing
-        }
-    }
-
     private class BallPossessionDeciderListener implements DialogInterface.OnClickListener
     {
         Team mTeamWithPossession;
@@ -901,6 +893,15 @@ public class GameActivity extends Activity
 
     }
 
+    private class CancelGameEventListener implements OnCancelListener
+    {
+        @Override
+        public void onCancel( DialogInterface dialog )
+        {
+            mGame.endNewEvent();
+        }
+    }
+
     private class CancelGameEventUnpauseListener extends CancelGameEventListener
     {
         @Override
@@ -911,12 +912,36 @@ public class GameActivity extends Activity
         }
     }
 
-    private class CancelGameEventListener implements OnCancelListener
+    private class EmptyDialogInterfaceOnClickListener implements DialogInterface.OnClickListener
     {
         @Override
-        public void onCancel( DialogInterface dialog )
+        public void onClick( DialogInterface dialog, int which )
         {
-            mGame.endNewEvent();
+            // do nothing
+        }
+    }
+
+    private class FreeThrowEventListener extends GameEventListener
+    {
+        private int mFTCount;
+
+        private boolean mFTMade;
+
+        public FreeThrowEventListener( AlertDialog parentDialog, Team team, Player player, int ftCount, boolean ftMade )
+        {
+            super( parentDialog, team, player );
+            mFTCount = ftCount;
+            mFTMade = ftMade;
+        }
+
+        @Override
+        public void onClick( View v )
+        {
+            super.onClick( v );
+            ShootEvent event = new ShootEvent( ShotClass.FT, mFTMade ? ShotType.MADE : ShotType.MISSED, getPlayer(),
+                    getTeam() );
+            addNewEvent( event );
+            showFreeThrowEventDialog( mFTCount - 1, getTeam(), getPlayer() );
         }
     }
 
@@ -934,12 +959,11 @@ public class GameActivity extends Activity
             FoulEvent event = ( FoulEvent ) v.getTag();
             if( event instanceof NonShootingFoulEvent )
             {
-                showFreeThrowEventDialog( 2, mGameEventTeam, mGameEventPlayer );
+                showFreeThrowEventDialog( 2, getTeam(), getPlayer() );
             }
             else if( event instanceof ShootingFoulEvent )
             {
-                showFreeThrowEventDialog( ( ( ShootingFoulEvent ) event ).getFTCount(), mGameEventTeam,
-                        mGameEventPlayer );
+                showFreeThrowEventDialog( ( ( ShootingFoulEvent ) event ).getFTCount(), getTeam(), getPlayer() );
             }
         }
     }
@@ -964,6 +988,16 @@ public class GameActivity extends Activity
         {
             mParentDialog.dismiss();
         }
+
+        protected Player getPlayer()
+        {
+            return mGameEventPlayer;
+        }
+
+        protected Team getTeam()
+        {
+            return mGameEventTeam;
+        }
     }
 
     private class NonShootingFoulListener extends GameEventListener
@@ -977,14 +1011,47 @@ public class GameActivity extends Activity
         public void onClick( View v )
         {
             super.onClick( v );
-            boolean isPenalty = mGame.isPenalty( mGameEventTeam );
+            boolean isPenalty = mGame.isPenalty( getTeam() );
             NonShootingFoulType type = isPenalty ? NonShootingFoulType.PENALTY : NonShootingFoulType.NON_PENALTY;
-            NonShootingFoulEvent event = new NonShootingFoulEvent( type, mGameEventPlayer, mGameEventTeam );
+            NonShootingFoulEvent event = new NonShootingFoulEvent( type, getPlayer(), getTeam() );
             if( isPenalty )
             {
                 showFreeThrowShooterDialog( event );
             }
             addNewEvent( event );
+        }
+    }
+
+    private class ShootButtonDialogListener extends GameEventListener
+    {
+
+        public ShootButtonDialogListener( AlertDialog dialog, Team team, Player player )
+        {
+            super( dialog, team, player );
+        }
+
+        @Override
+        public void onClick( View v )
+        {
+            super.onClick( v );
+            showShotClassDialog( getTeam(), getPlayer() );
+        }
+    }
+
+    private class ShotClassDialogListener extends GameEventListener
+    {
+
+        public ShotClassDialogListener( AlertDialog parentDialog, Team team, Player player )
+        {
+            super( parentDialog, team, player );
+        }
+
+        @Override
+        public void onClick( View v )
+        {
+            super.onClick( v );
+            ShotClass shotClass = ( ShotClass ) v.getTag();
+            showShotTypeDialog( getTeam(), getPlayer(), shotClass );
         }
     }
 
@@ -999,11 +1066,68 @@ public class GameActivity extends Activity
         public void onClick( View v )
         {
             super.onClick( v );
-            StealEvent event = new StealEvent( mGameEventPlayer, mGameEventTeam );
+            StealEvent event = new StealEvent( getPlayer(), getTeam() );
             GameEvent parent = ( GameEvent ) v.getTag();
             parent.append( event );
             addNewEvent( parent );
         }
+    }
+
+    private class SubstitutionDialogListener implements OnClickListener
+    {
+        private final Team mSelectedTeam;
+
+        private AlertDialog mParentDialog;
+
+        private SubstitutionDialogListener( AlertDialog parentDialog, Team team )
+        {
+            mSelectedTeam = team;
+            mParentDialog = parentDialog;
+        }
+
+        @Override
+        public void onClick( View v )
+        {
+            showSubstitutionOutDialog( mSelectedTeam );
+            mParentDialog.dismiss();
+        }
+    }
+
+    private class SubstitutionInListener extends GameEventListener
+    {
+        private Player mPlayerIn;
+
+        public SubstitutionInListener( AlertDialog parentDialog, Team team, Player playerOut, Player playerIn )
+        {
+            super( parentDialog, team, playerOut );
+            mPlayerIn = playerIn;
+        }
+
+        @Override
+        public void onClick( View v )
+        {
+            super.onClick( v );
+            SubstitutionEvent event = new SubstitutionEvent( getPlayer(), mPlayerIn, getTeam() );
+            addNewEvent( event );
+        }
+
+    }
+
+    private class SubstitutionOutListener extends GameEventListener
+    {
+
+        public SubstitutionOutListener( AlertDialog parentDialog, Team team, Player player )
+        {
+            super( parentDialog, team, player );
+        }
+
+        @Override
+        public void onClick( View v )
+        {
+            super.onClick( v );
+            showSubstitutionInDialog( getTeam(), getPlayer() );
+        }
+
     }
 
     private final class TeamStartersConfirmationListener implements OnClickListener
@@ -1056,7 +1180,7 @@ public class GameActivity extends Activity
         public void onClick( View v )
         {
             super.onClick( v );
-            showTurnoverTypeDialog( mGameEventTeam, mGameEventPlayer );
+            showTurnoverTypeDialog( getTeam(), getPlayer() );
         }
     }
 
@@ -1072,7 +1196,7 @@ public class GameActivity extends Activity
         {
             super.onClick( v );
             TurnoverType type = ( TurnoverType ) v.getTag();
-            TurnoverEvent event = new TurnoverEvent( type, mGameEventPlayer, mGameEventTeam );
+            TurnoverEvent event = new TurnoverEvent( type, getPlayer(), getTeam() );
             if( type.equals( TurnoverType.STEAL ) )
             {
                 showStealEventDialog( event );
@@ -1080,7 +1204,7 @@ public class GameActivity extends Activity
             }
             else if( type.equals( TurnoverType.OFFENSIVE_FOUL ) )
             {
-                OffensiveFoulEvent foulEvent = new OffensiveFoulEvent( mGameEventPlayer, mGameEventTeam );
+                OffensiveFoulEvent foulEvent = new OffensiveFoulEvent( getPlayer(), getTeam() );
                 event.append( foulEvent );
             }
             addNewEvent( event );
