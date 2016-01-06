@@ -7,7 +7,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.example.bballstatstrack.models.game.GameLog;
+import com.example.bballstatstrack.models.gameevents.BlockEvent;
 import com.example.bballstatstrack.models.gameevents.GameEvent;
+import com.example.bballstatstrack.models.gameevents.GameEvent.ReboundType;
+import com.example.bballstatstrack.models.gameevents.GameEvent.ShotType;
+import com.example.bballstatstrack.models.gameevents.ReboundEvent;
+import com.example.bballstatstrack.models.gameevents.ShootEvent;
 import com.example.bballstatstrack.models.gameevents.TurnoverEvent;
 import com.example.bballstatstrack.models.gameevents.foulevents.NonShootingFoulEvent;
 import com.example.bballstatstrack.models.gameevents.foulevents.ShootingFoulEvent;
@@ -101,6 +106,7 @@ public class Game
         endNewEvent();
         checkTeamFoulEvent( event );
         checkTurnoverEvent( event );
+        checkShootEvent( event );
 
     }
 
@@ -233,7 +239,7 @@ public class Game
         mCurrentGameClock = mMaxGameClock;
     }
 
-    public void resetShotClock()
+    public void resetMidShotClock()
     {
         mCurrentShotClock = mReducedMaxShotClock;
     }
@@ -304,6 +310,53 @@ public class Game
         }
     }
 
+    private void checkReboundEvent( GameEvent event )
+    {
+        GameEvent appended = event.getAppended();
+        if( appended == null )
+        {
+            return;
+        }
+        if( appended instanceof BlockEvent )
+        {
+            checkReboundEvent( appended );
+        }
+        else if( appended instanceof ReboundEvent )
+        {
+            ReboundEvent rEvent = ( ReboundEvent ) appended;
+            ReboundType type = rEvent.getReboundType();
+            switch( type )
+            {
+                case DEFENSIVE:
+                    swapBallPossession();
+                    resetShotClock24();
+                    return;
+                case OFFENSIVE:
+                    resetMidShotClock();
+                    return;
+                case TEAM_REBOUND:
+                    checkTeamReboundEvent( event );
+                    return;
+            }
+        }
+    }
+
+    private void checkShootEvent( GameEvent event )
+    {
+        if( event instanceof ShootEvent )
+        {
+            if( isShotMade( event ) )
+            {
+                swapBallPossession();
+            }
+            else
+            {
+                checkReboundEvent( event );
+            }
+        }
+        return;
+    }
+
     private void checkTeamFoulEvent( GameEvent event )
     {
         if( event == null )
@@ -317,6 +370,19 @@ public class Game
         else
         {
             checkTeamFoulEvent( event.getAppended() );
+        }
+    }
+
+    private void checkTeamReboundEvent( GameEvent event )
+    {
+        if( getTeamWithPossession().equals( event.getTeam() ) )
+        {
+            resetMidShotClock();
+        }
+        else
+        {
+            swapBallPossession();
+            resetShotClock24();
         }
     }
 
@@ -350,6 +416,19 @@ public class Game
     private boolean isClocksValid()
     {
         return mCurrentGameClock > 0 && mCurrentShotClock > 0;
+    }
+
+    private boolean isShotMade( GameEvent event )
+    {
+        ShotType type = ( ( ShootEvent ) event ).getShotType();
+        switch( type )
+        {
+            case MADE:
+                return true;
+            case MISSED:
+                return false;
+        }
+        return false;
     }
 
     private void resetPeriodFouls()
