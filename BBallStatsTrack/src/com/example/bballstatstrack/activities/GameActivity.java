@@ -304,6 +304,7 @@ public class GameActivity extends Activity
         dialog.show();
         dialog.getButton( AlertDialog.BUTTON_POSITIVE )
                 .setOnClickListener( new TeamStartersConfirmationListener( team, dialog, selected ) );
+        dialog.setCancelable( false );
     }
 
     private void setButtonListeners()
@@ -553,6 +554,7 @@ public class GameActivity extends Activity
                 showMaxShotClockResetDialog();
             }
         } );
+        dialog.setCancelable( false );
     }
 
     private void showMaxShotClockResetDialog()
@@ -572,6 +574,7 @@ public class GameActivity extends Activity
                 fetchHomeStarters();
             }
         } );
+        dialog.setCancelable( false );
     }
 
     private void showReboundDialog( GameEvent parent )
