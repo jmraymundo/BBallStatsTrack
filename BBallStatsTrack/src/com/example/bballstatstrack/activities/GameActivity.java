@@ -1343,7 +1343,16 @@ public class GameActivity extends Activity
         @Override
         public void onClick( View v )
         {
-            showSubstitutionOutDialog( mSelectedTeam );
+            List< Player > inGame = mSelectedTeam.getInGamePlayers();
+            if( inGame.size() > 5 )
+            {
+                showSubstitutionOutDialog( mSelectedTeam );
+            }
+            else
+            {
+                Toast.makeText( GameActivity.this, getString( R.string.substitution_toast_not_enough_players ),
+                        Toast.LENGTH_SHORT ).show();
+            }
             mParentDialog.dismiss();
         }
     }

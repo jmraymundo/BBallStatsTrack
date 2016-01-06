@@ -57,6 +57,7 @@
 	<string name="substitution_dialog_question">Which team made a substitution?</string>
 	<string name="substitution_dialog_player_out_question">Who would you like to substitute?</string>
 	<string name="substitution_dialog_player_in_question">Who would you like to insert into the game?</string>
+	<string name="substitution_toast_not_enough_players">Cannot substitute. The team has no bench players!</string>
 	<string name="shoot_dialog_player_question">Who took the shot?</string>
 	<string name="shoot_dialog_class_question">What kind of shot the player took?</string>
 	<string name="shoot_dialog_class_2pt">2pt shot</string>
