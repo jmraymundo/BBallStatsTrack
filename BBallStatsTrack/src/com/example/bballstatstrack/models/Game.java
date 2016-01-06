@@ -239,11 +239,6 @@ public class Game
         mCurrentGameClock = mMaxGameClock;
     }
 
-    public void resetMidShotClock()
-    {
-        mCurrentShotClock = mReducedMaxShotClock;
-    }
-
     public void resetShotClock24()
     {
         mCurrentShotClock = MAX_SHOT_CLOCK;
@@ -264,18 +259,6 @@ public class Game
     public void startNewEvent()
     {
         mEventGameClock = mCurrentGameClock;
-    }
-
-    public void swapBallPossession()
-    {
-        if( mHasBallPossession.equals( mHomeTeam ) )
-        {
-            mHasBallPossession = mAwayTeam;
-        }
-        else
-        {
-            mHasBallPossession = mHomeTeam;
-        }
     }
 
     public void unpauseGame()
@@ -329,7 +312,6 @@ public class Game
             {
                 case DEFENSIVE:
                     swapBallPossession();
-                    resetShotClock24();
                     return;
                 case OFFENSIVE:
                     resetMidShotClock();
@@ -382,7 +364,6 @@ public class Game
         else
         {
             swapBallPossession();
-            resetShotClock24();
         }
     }
 
@@ -395,7 +376,6 @@ public class Game
         if( event instanceof TurnoverEvent )
         {
             swapBallPossession();
-            resetShotClock24();
         }
     }
 
@@ -431,10 +411,28 @@ public class Game
         return false;
     }
 
+    private void resetMidShotClock()
+    {
+        mCurrentShotClock = mReducedMaxShotClock;
+    }
+
     private void resetPeriodFouls()
     {
         mHomePeriodFouls = 0;
         mAwayPeriodFouls = 0;
+    }
+
+    private void swapBallPossession()
+    {
+        if( mHasBallPossession.equals( mHomeTeam ) )
+        {
+            mHasBallPossession = mAwayTeam;
+        }
+        else
+        {
+            mHasBallPossession = mHomeTeam;
+        }
+        resetShotClock24();
     }
 
     public enum GameStats
