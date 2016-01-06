@@ -72,7 +72,6 @@ public class JSONFileSaverLoader
         JSONArray array = new JSONArray();
         for( Game c : games )
             array.put( jsonSerializer.toJSONObject( c ) );
-
         // write the file to disk
         Writer writer = null;
         try
