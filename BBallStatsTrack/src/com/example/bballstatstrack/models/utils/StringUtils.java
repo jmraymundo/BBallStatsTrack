@@ -1,8 +1,9 @@
 package com.example.bballstatstrack.models.utils;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 public class StringUtils
 {
@@ -47,6 +48,29 @@ public class StringUtils
             default:
                 return ( period - 4 ) + " OT";
         }
+    }
+
+    public static String getShotFraction( int made, int miss )
+    {
+        int total = made + miss;
+        if( total == 0 )
+        {
+            return "0/0";
+        }
+        return made + "/" + total;
+    }
+
+    public static String getShotPercentage( int made, int miss )
+    {
+        int total = made + miss;
+        if( total == 0 )
+        {
+            return "n/a";
+        }
+        double value = ( made / total ) * 100;
+        DecimalFormat df = new DecimalFormat( "###.##" );
+        df.setRoundingMode( RoundingMode.CEILING );
+        return df.format( value ) + "%";
     }
 
     public static String getStringDate( Date date )
