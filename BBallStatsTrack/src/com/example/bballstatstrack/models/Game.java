@@ -17,7 +17,6 @@ import com.example.bballstatstrack.models.gameevents.TurnoverEvent;
 import com.example.bballstatstrack.models.gameevents.foulevents.NonShootingFoulEvent;
 import com.example.bballstatstrack.models.gameevents.foulevents.ShootingFoulEvent;
 import com.example.bballstatstrack.models.utils.GameEventDeserializer;
-import com.example.bballstatstrack.models.utils.StringUtils;
 
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -206,16 +205,6 @@ public class Game
         return mGameOngoing;
     }
 
-    public boolean isPeriodOngoing()
-    {
-        return mCurrentGameClock > 0;
-    }
-
-    public boolean isPossessionOngoing()
-    {
-        return mCurrentShotClock > 0;
-    }
-
     public boolean isPenalty( Team team )
     {
         if( team.equals( mAwayTeam ) )
@@ -227,6 +216,16 @@ public class Game
             return( mHomePeriodFouls >= 5 );
         }
         return false;
+    }
+
+    public boolean isPeriodOngoing()
+    {
+        return mCurrentGameClock > 0;
+    }
+
+    public boolean isPossessionOngoing()
+    {
+        return mCurrentShotClock > 0;
     }
 
     public void nextPeriod()
@@ -295,6 +294,7 @@ public class Game
     {
         if( isPeriodOngoing() && isPossessionOngoing() && isGameOngoing() )
         {
+            mHasBallPossession.updatePossessionTime();
             mAwayTeam.updatePlayingTime();
             mHomeTeam.updatePlayingTime();
             mCurrentGameClock--;
