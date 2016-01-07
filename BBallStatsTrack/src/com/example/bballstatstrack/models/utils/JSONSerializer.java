@@ -42,77 +42,6 @@ public class JSONSerializer
         return mInstance;
     }
 
-    public JSONObject toJSONObject( Game game ) throws JSONException
-    {
-        JSONObject jsonObject = new JSONObject();
-        JSONObject awayTeam = toJSONObject( game.getAwayTeam() );
-        JSONObject homeTeam = toJSONObject( game.getHomeTeam() );
-        JSONArray gameLogArray = toJSONArray( game.getGameLog() );
-        jsonObject.put( GameStats.ID.toString(), game.getId() );
-        jsonObject.put( GameStats.DATE.toString(), game.getDateMillis() );
-        jsonObject.put( GameStats.AWAY_TEAM.toString(), awayTeam );
-        jsonObject.put( GameStats.HOME_TEAM.toString(), homeTeam );
-        jsonObject.put( GameStats.GAME_LOG.toString(), gameLogArray );
-        return jsonObject;
-    }
-
-    public JSONObject toJSONObject( Team team ) throws JSONException
-    {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put( TeamStats.NAME.toString(), team.getName() );
-        jsonObject.put( TeamStats.PLAYER_LIST.toString(), getJSONArray( team.getPlayers() ) );
-        jsonObject.put( TeamStats.INGAME_PLAYER_LIST.toString(), getJSONArray( team.getInGamePlayers() ) );
-        jsonObject.put( TeamStats.TOTAL_FOULS.toString(), team.getTotalFouls() );
-        jsonObject.put( TeamStats.TEAM_REBOUNDS.toString(), team.getTeamRebounds() );
-        jsonObject.put( TeamStats.TIMEOUTS.toString(), team.getTimeOuts() );
-        jsonObject.put( TeamStats.TEAM_ID.toString(), team.getID() );
-        return jsonObject;
-    }
-
-    private JSONArray getJSONArray( List< Player > list )
-    {
-        JSONArray jsonArray = new JSONArray();
-        for( Player player : list )
-        {
-            jsonArray.put( player.getNumber() );
-        }
-        return jsonArray;
-    }
-
-    private JSONArray getJSONArray( SparseArray< Player > sparseArray ) throws JSONException
-    {
-        JSONArray jsonArray = new JSONArray();
-        for( int index = 0; index < sparseArray.size(); index++ )
-        {
-            Player player = sparseArray.valueAt( index );
-            JSONObject playerObject = toJSONObject( player );
-            jsonArray.put( playerObject );
-        }
-        return jsonArray;
-    }
-
-    public JSONObject toJSONObject( Player player ) throws JSONException
-    {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put( PlayerStats.NUMBER.toString(), player.getNumber() );
-        jsonObject.put( PlayerStats.NAME.toString(), player.getFullName() );
-        jsonObject.put( PlayerStats.MISS_1PT.toString(), player.getFTMiss() );
-        jsonObject.put( PlayerStats.MISS_2PT.toString(), player.get2ptFGMiss() );
-        jsonObject.put( PlayerStats.MISS_3PT.toString(), player.get3ptFGMiss() );
-        jsonObject.put( PlayerStats.MADE_1PT.toString(), player.getFTMade() );
-        jsonObject.put( PlayerStats.MADE_2PT.toString(), player.get2ptFGMade() );
-        jsonObject.put( PlayerStats.MADE_3PT.toString(), player.get3ptFGMade() );
-        jsonObject.put( PlayerStats.OFFENSIVE_REBOUND.toString(), player.getOffRebound() );
-        jsonObject.put( PlayerStats.DEFENSIVE_REBOUND.toString(), player.getDefRebound() );
-        jsonObject.put( PlayerStats.ASSIST.toString(), player.getAssist() );
-        jsonObject.put( PlayerStats.TURNOVER.toString(), player.getTurnover() );
-        jsonObject.put( PlayerStats.STEAL.toString(), player.getSteal() );
-        jsonObject.put( PlayerStats.BLOCK.toString(), player.getBlock() );
-        jsonObject.put( PlayerStats.FOUL.toString(), player.getFoulCount() );
-        jsonObject.put( PlayerStats.PLAYING_TIME.toString(), player.getPlayingTimeSec() );
-        return jsonObject;
-    }
-
     public JSONArray toJSONArray( GameLog gameLog ) throws JSONException
     {
         JSONArray jsonArray = new JSONArray();
@@ -140,6 +69,116 @@ public class JSONSerializer
         return jsonArray;
     }
 
+    public JSONObject toJSONObject( FoulEvent foulEvent ) throws JSONException
+    {
+        GameEvent baseEvent = ( GameEvent ) foulEvent;
+        JSONObject jsonObject = toJSONObjectDefault( baseEvent );
+        jsonObject.put( FoulEvent.FOUL_TYPE, foulEvent.getFoulType() );
+        return jsonObject;
+    }
+
+    public JSONObject toJSONObject( Game game ) throws JSONException
+    {
+        JSONObject jsonObject = new JSONObject();
+        JSONObject awayTeam = toJSONObject( game.getAwayTeam() );
+        JSONObject homeTeam = toJSONObject( game.getHomeTeam() );
+        JSONArray gameLogArray = toJSONArray( game.getGameLog() );
+        jsonObject.put( GameStats.ID.toString(), game.getId() );
+        jsonObject.put( GameStats.DATE.toString(), game.getDateMillis() );
+        jsonObject.put( GameStats.AWAY_TEAM.toString(), awayTeam );
+        jsonObject.put( GameStats.HOME_TEAM.toString(), homeTeam );
+        jsonObject.put( GameStats.GAME_LOG.toString(), gameLogArray );
+        return jsonObject;
+    }
+
+    public JSONObject toJSONObject( NonShootingFoulEvent nonShootingFoulEvent ) throws JSONException
+    {
+        FoulEvent baseEvent = ( FoulEvent ) nonShootingFoulEvent;
+        JSONObject jsonObject = toJSONObject( baseEvent );
+        jsonObject.put( NonShootingFoulEvent.NON_SHOOTING_FOUL_TYPE, nonShootingFoulEvent.getNonShootingFoulType() );
+        return jsonObject;
+    }
+
+    public JSONObject toJSONObject( Player player ) throws JSONException
+    {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put( PlayerStats.NUMBER.toString(), player.getNumber() );
+        jsonObject.put( PlayerStats.NAME.toString(), player.getFullName() );
+        jsonObject.put( PlayerStats.MISS_1PT.toString(), player.getFTMiss() );
+        jsonObject.put( PlayerStats.MISS_2PT.toString(), player.get2ptFGMiss() );
+        jsonObject.put( PlayerStats.MISS_3PT.toString(), player.get3ptFGMiss() );
+        jsonObject.put( PlayerStats.MADE_1PT.toString(), player.getFTMade() );
+        jsonObject.put( PlayerStats.MADE_2PT.toString(), player.get2ptFGMade() );
+        jsonObject.put( PlayerStats.MADE_3PT.toString(), player.get3ptFGMade() );
+        jsonObject.put( PlayerStats.OFFENSIVE_REBOUND.toString(), player.getOffRebound() );
+        jsonObject.put( PlayerStats.DEFENSIVE_REBOUND.toString(), player.getDefRebound() );
+        jsonObject.put( PlayerStats.ASSIST.toString(), player.getAssist() );
+        jsonObject.put( PlayerStats.TURNOVER.toString(), player.getTurnover() );
+        jsonObject.put( PlayerStats.STEAL.toString(), player.getSteal() );
+        jsonObject.put( PlayerStats.BLOCK.toString(), player.getBlock() );
+        jsonObject.put( PlayerStats.FOUL.toString(), player.getFoulCount() );
+        jsonObject.put( PlayerStats.PLAYING_TIME.toString(), player.getPlayingTimeSec() );
+        return jsonObject;
+    }
+
+    public JSONObject toJSONObject( ReboundEvent reboundEvent ) throws JSONException
+    {
+        GameEvent baseEvent = ( GameEvent ) reboundEvent;
+        JSONObject jsonObject = toJSONObjectDefault( baseEvent );
+        jsonObject.put( ReboundEvent.REBOUND_TYPE, reboundEvent.getReboundType() );
+        return jsonObject;
+    }
+
+    public JSONObject toJSONObject( ShootEvent shootEvent ) throws JSONException
+    {
+        GameEvent baseEvent = ( GameEvent ) shootEvent;
+        JSONObject jsonObject = toJSONObjectDefault( baseEvent );
+        jsonObject.put( ShootEvent.SHOT_CLASS, shootEvent.getShotClass() );
+        jsonObject.put( ShootEvent.SHOT_TYPE, shootEvent.getShotType() );
+        return jsonObject;
+    }
+
+    public JSONObject toJSONObject( ShootingFoulEvent shootingFoulEvent ) throws JSONException
+    {
+        FoulEvent baseEvent = ( FoulEvent ) shootingFoulEvent;
+        JSONObject jsonObject = toJSONObject( baseEvent );
+        Player shooter = shootingFoulEvent.getShooter();
+        jsonObject.put( ShootingFoulEvent.SHOOTER, shooter.getNumber() );
+        jsonObject.put( ShootingFoulEvent.FT_COUNT, shootingFoulEvent.getFTCount() );
+        return jsonObject;
+    }
+
+    public JSONObject toJSONObject( SubstitutionEvent substitutionEvent ) throws JSONException
+    {
+        GameEvent baseEvent = ( GameEvent ) substitutionEvent;
+        JSONObject jsonObject = toJSONObjectDefault( baseEvent );
+        Player player = substitutionEvent.getNewPlayer();
+        jsonObject.put( SubstitutionEvent.NEW_PLAYER_NUMBER, player.getNumber() );
+        return jsonObject;
+    }
+
+    public JSONObject toJSONObject( Team team ) throws JSONException
+    {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put( TeamStats.NAME.toString(), team.getName() );
+        jsonObject.put( TeamStats.PLAYER_LIST.toString(), getJSONArray( team.getPlayers() ) );
+        jsonObject.put( TeamStats.INGAME_PLAYER_LIST.toString(), getJSONArray( team.getInGamePlayers() ) );
+        jsonObject.put( TeamStats.TOTAL_FOULS.toString(), team.getTeamFouls() );
+        jsonObject.put( TeamStats.TEAM_REBOUNDS.toString(), team.getTeamRebounds() );
+        jsonObject.put( TeamStats.TIMEOUTS.toString(), team.getTimeOuts() );
+        jsonObject.put( TeamStats.POSSESSION_TIME.toString(), team.getPossessionTimeSec() );
+        jsonObject.put( TeamStats.TEAM_ID.toString(), team.getID() );
+        return jsonObject;
+    }
+
+    public JSONObject toJSONObject( TurnoverEvent turnoverEvent ) throws JSONException
+    {
+        GameEvent baseEvent = ( GameEvent ) turnoverEvent;
+        JSONObject jsonObject = toJSONObjectDefault( baseEvent );
+        jsonObject.put( TurnoverEvent.TURNOVER_TYPE, turnoverEvent.getTurnoverType() );
+        return jsonObject;
+    }
+
     public JSONObject toJSONObjectDefault( GameEvent gameEvent ) throws JSONException
     {
         JSONObject jsonObject = new JSONObject();
@@ -158,6 +197,28 @@ public class JSONSerializer
             jsonObject.put( GameEvent.APPENDED, toJSONObject( appended ) );
         }
         return jsonObject;
+    }
+
+    private JSONArray getJSONArray( List< Player > list )
+    {
+        JSONArray jsonArray = new JSONArray();
+        for( Player player : list )
+        {
+            jsonArray.put( player.getNumber() );
+        }
+        return jsonArray;
+    }
+
+    private JSONArray getJSONArray( SparseArray< Player > sparseArray ) throws JSONException
+    {
+        JSONArray jsonArray = new JSONArray();
+        for( int index = 0; index < sparseArray.size(); index++ )
+        {
+            Player player = sparseArray.valueAt( index );
+            JSONObject playerObject = toJSONObject( player );
+            jsonArray.put( playerObject );
+        }
+        return jsonArray;
     }
 
     private JSONObject toJSONObject( GameEvent event ) throws JSONException
@@ -194,65 +255,5 @@ public class JSONSerializer
         {
             return toJSONObjectDefault( event );
         }
-    }
-
-    public JSONObject toJSONObject( ShootEvent shootEvent ) throws JSONException
-    {
-        GameEvent baseEvent = ( GameEvent ) shootEvent;
-        JSONObject jsonObject = toJSONObjectDefault( baseEvent );
-        jsonObject.put( ShootEvent.SHOT_CLASS, shootEvent.getShotClass() );
-        jsonObject.put( ShootEvent.SHOT_TYPE, shootEvent.getShotType() );
-        return jsonObject;
-    }
-
-    public JSONObject toJSONObject( FoulEvent foulEvent ) throws JSONException
-    {
-        GameEvent baseEvent = ( GameEvent ) foulEvent;
-        JSONObject jsonObject = toJSONObjectDefault( baseEvent );
-        jsonObject.put( FoulEvent.FOUL_TYPE, foulEvent.getFoulType() );
-        return jsonObject;
-    }
-
-    public JSONObject toJSONObject( TurnoverEvent turnoverEvent ) throws JSONException
-    {
-        GameEvent baseEvent = ( GameEvent ) turnoverEvent;
-        JSONObject jsonObject = toJSONObjectDefault( baseEvent );
-        jsonObject.put( TurnoverEvent.TURNOVER_TYPE, turnoverEvent.getTurnoverType() );
-        return jsonObject;
-    }
-
-    public JSONObject toJSONObject( ReboundEvent reboundEvent ) throws JSONException
-    {
-        GameEvent baseEvent = ( GameEvent ) reboundEvent;
-        JSONObject jsonObject = toJSONObjectDefault( baseEvent );
-        jsonObject.put( ReboundEvent.REBOUND_TYPE, reboundEvent.getReboundType() );
-        return jsonObject;
-    }
-
-    public JSONObject toJSONObject( NonShootingFoulEvent nonShootingFoulEvent ) throws JSONException
-    {
-        FoulEvent baseEvent = ( FoulEvent ) nonShootingFoulEvent;
-        JSONObject jsonObject = toJSONObject( baseEvent );
-        jsonObject.put( NonShootingFoulEvent.NON_SHOOTING_FOUL_TYPE, nonShootingFoulEvent.getNonShootingFoulType() );
-        return jsonObject;
-    }
-
-    public JSONObject toJSONObject( ShootingFoulEvent shootingFoulEvent ) throws JSONException
-    {
-        FoulEvent baseEvent = ( FoulEvent ) shootingFoulEvent;
-        JSONObject jsonObject = toJSONObject( baseEvent );
-        Player shooter = shootingFoulEvent.getShooter();
-        jsonObject.put( ShootingFoulEvent.SHOOTER, shooter.getNumber() );
-        jsonObject.put( ShootingFoulEvent.FT_COUNT, shootingFoulEvent.getFTCount() );
-        return jsonObject;
-    }
-
-    public JSONObject toJSONObject( SubstitutionEvent substitutionEvent ) throws JSONException
-    {
-        GameEvent baseEvent = ( GameEvent ) substitutionEvent;
-        JSONObject jsonObject = toJSONObjectDefault( baseEvent );
-        Player player = substitutionEvent.getNewPlayer();
-        jsonObject.put( SubstitutionEvent.NEW_PLAYER_NUMBER, player.getNumber() );
-        return jsonObject;
     }
 }
