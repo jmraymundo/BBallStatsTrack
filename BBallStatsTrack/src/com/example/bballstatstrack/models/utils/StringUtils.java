@@ -53,16 +53,12 @@ public class StringUtils
     public static String getShotFraction( int made, int miss )
     {
         int total = made + miss;
-        if( total == 0 )
-        {
-            return "0/0";
-        }
         return made + "/" + total;
     }
 
-    public static String getShotPercentage( int made, int miss )
+    public static String getShotPercentage( double made, double miss )
     {
-        int total = made + miss;
+        double total = made + miss;
         if( total == 0 )
         {
             return "n/a";

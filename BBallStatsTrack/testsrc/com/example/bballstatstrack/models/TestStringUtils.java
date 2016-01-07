@@ -21,4 +21,26 @@ public class TestStringUtils extends TestCase
         assertEquals( 180, StringUtils.getIntSecondsFromMinSecFormattedString( "03:00" ) );
     }
 
+    @Test
+    public void testGetShotPercentage()
+    {
+        assertEquals( "100%", StringUtils.getShotPercentage( 1, 0 ) );
+        assertEquals( "75%", StringUtils.getShotPercentage( 3, 1 ) );
+        assertEquals( "50%", StringUtils.getShotPercentage( 1, 1 ) );
+        assertEquals( "25%", StringUtils.getShotPercentage( 1, 3 ) );
+        assertEquals( "0%", StringUtils.getShotPercentage( 0, 1 ) );
+        assertEquals( "n/a", StringUtils.getShotPercentage( 0, 0 ) );
+    }
+
+    @Test
+    public void testGetShotFraction()
+    {
+        assertEquals( "1/1", StringUtils.getShotFraction( 1, 0 ) );
+        assertEquals( "3/4", StringUtils.getShotFraction( 3, 1 ) );
+        assertEquals( "1/2", StringUtils.getShotFraction( 1, 1 ) );
+        assertEquals( "1/4", StringUtils.getShotFraction( 1, 3 ) );
+        assertEquals( "0/1", StringUtils.getShotFraction( 0, 1 ) );
+        assertEquals( "0/0", StringUtils.getShotFraction( 0, 0 ) );
+    }
+
 }
