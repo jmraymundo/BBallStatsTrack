@@ -53,7 +53,7 @@ public class ListGamesFragment extends ListFragment
         Game c = ( ( GameAdapter ) getListAdapter() ).getItem( position );
         // start an instance of GameReviewActivity
         Intent i = new Intent( getActivity(), GameReviewActivity.class );
-        i.putExtra( GameActivity.EXTRA_GAME_ID, c.getId() );
+        i.putExtra( GameActivity.EXTRA_GAME_ID, c.getId().toString() );
         startActivityForResult( i, 0 );
     }
 
