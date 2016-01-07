@@ -15,25 +15,6 @@ public class Team
 {
     private static final String B_BALL_STAT_TRACK = "BBallStatTrack";
 
-    public enum TeamStats
-    {
-        NAME( "name" ), PLAYER_LIST( "playerList" ), INGAME_PLAYER_LIST( "inGamePlayerList" ), TOTAL_FOULS(
-                "totalFouls" ), TEAM_REBOUNDS( "teamRebound" ), TIMEOUTS( "timeOuts" ), TEAM_ID( "signature" );
-
-        private final String mConstant;
-
-        private TeamStats( String constant )
-        {
-            mConstant = constant;
-        }
-
-        @Override
-        public String toString()
-        {
-            return mConstant;
-        }
-    }
-
     private String mName;
 
     SparseArray< Player > mPlayerList = new SparseArray< Player >();
@@ -47,16 +28,6 @@ public class Team
     private int mTimeOuts;
 
     private UUID mID;
-
-    public Team( String name, List< Player > playerList )
-    {
-        setName( name );
-        mID = UUID.nameUUIDFromBytes( name.getBytes() );
-        for( Player player : playerList )
-        {
-            mPlayerList.append( player.getNumber(), player );
-        }
-    }
 
     public Team( JSONObject team )
     {
@@ -77,34 +48,19 @@ public class Team
         }
     }
 
-    private void setPlayerList( JSONObject team ) throws JSONException
+    public Team( String name, List< Player > playerList )
     {
-        JSONArray jsonArray = team.getJSONArray( TeamStats.PLAYER_LIST.toString() );
-        for( int index = 0; index < jsonArray.length(); index++ )
+        setName( name );
+        mID = UUID.nameUUIDFromBytes( name.getBytes() );
+        for( Player player : playerList )
         {
-            Player player = new Player( jsonArray.getJSONObject( index ) );
-            mPlayerList.put( player.getNumber(), player );
+            mPlayerList.append( player.getNumber(), player );
         }
     }
 
-    private void setIngamePlayerList( JSONObject team ) throws JSONException
+    public void addFoul()
     {
-        JSONArray jsonArray = team.getJSONArray( TeamStats.INGAME_PLAYER_LIST.toString() );
-        for( int index = 0; index < jsonArray.length(); index++ )
-        {
-            int playerNumber = jsonArray.getInt( index );
-            mInGamePlayerList.add( mPlayerList.get( playerNumber ) );
-        }
-    }
-
-    public SparseArray< Player > getPlayers()
-    {
-        return mPlayerList;
-    }
-
-    public List< Player > getInGamePlayers()
-    {
-        return mInGamePlayerList;
+        mTotalFouls++;
     }
 
     public void addStarter( int playerNumber )
@@ -112,29 +68,111 @@ public class Team
         mInGamePlayerList.add( mPlayerList.get( playerNumber ) );
     }
 
-    public void updatePlayingTime()
+    public int get2ptFGMade()
     {
-        for( Player player : mInGamePlayerList )
-        {
-            player.incrementPlayingTime();
-        }
-    }
-
-    public void substitutePlayer( Player in, Player out )
-    {
-        mInGamePlayerList.remove( out );
-        mInGamePlayerList.add( in );
-    }
-
-    public int getTotalScore()
-    {
-        int score = 0;
+        int total = 0;
+        Player player;
         for( int index = 0; index < mPlayerList.size(); index++ )
         {
-            Player player = mPlayerList.valueAt( index );
-            score += ( player.get2ptFGMade() * 2 ) + ( player.get3ptFGMade() * 3 ) + player.getFTMade();
+            player = mPlayerList.valueAt( index );
+            total += player.get2ptFGMade();
         }
-        return score;
+        return total;
+    }
+
+    public int get2ptFGMiss()
+    {
+        int total = 0;
+        Player player;
+        for( int index = 0; index < mPlayerList.size(); index++ )
+        {
+            player = mPlayerList.valueAt( index );
+            total += player.get2ptFGMiss();
+        }
+        return total;
+    }
+
+    public int get3ptFGMade()
+    {
+        int total = 0;
+        Player player;
+        for( int index = 0; index < mPlayerList.size(); index++ )
+        {
+            player = mPlayerList.valueAt( index );
+            total += player.get3ptFGMade();
+        }
+        return total;
+    }
+
+    public int get3ptFGMiss()
+    {
+        int total = 0;
+        Player player;
+        for( int index = 0; index < mPlayerList.size(); index++ )
+        {
+            player = mPlayerList.valueAt( index );
+            total += player.get3ptFGMiss();
+        }
+        return total;
+    }
+
+    public int getFTMade()
+    {
+        int total = 0;
+        Player player;
+        for( int index = 0; index < mPlayerList.size(); index++ )
+        {
+            player = mPlayerList.valueAt( index );
+            total += player.getFTMade();
+        }
+        return total;
+    }
+
+    public int getFTMiss()
+    {
+        int total = 0;
+        Player player;
+        for( int index = 0; index < mPlayerList.size(); index++ )
+        {
+            player = mPlayerList.valueAt( index );
+            total += player.getFTMiss();
+        }
+        return total;
+    }
+
+    public UUID getID()
+    {
+        return mID;
+    }
+
+    public List< Player > getInGamePlayers()
+    {
+        return mInGamePlayerList;
+    }
+
+    public String getName()
+    {
+        return mName;
+    }
+
+    public SparseArray< Player > getPlayers()
+    {
+        return mPlayerList;
+    }
+
+    public int getTeamRebounds()
+    {
+        return mTeamRebound;
+    }
+
+    public int getTimeOuts()
+    {
+        return mTimeOuts;
+    }
+
+    public int getTotalFouls()
+    {
+        return mTotalFouls;
     }
 
     public int getTotalRebounds()
@@ -148,24 +186,9 @@ public class Team
         return rebounds;
     }
 
-    public String getName()
+    public int getTotalScore()
     {
-        return mName;
-    }
-
-    public void setName( String name )
-    {
-        mName = name;
-    }
-
-    public void addFoul()
-    {
-        mTotalFouls++;
-    }
-
-    public int getTotalFouls()
-    {
-        return mTotalFouls;
+        return getFTMade() + ( get2ptFGMade() * 2 ) + ( get3ptFGMade() * 3 );
     }
 
     public void makeTeamRebound()
@@ -173,19 +196,9 @@ public class Team
         mTeamRebound++;
     }
 
-    public int getTeamRebounds()
+    public void setName( String name )
     {
-        return mTeamRebound;
-    }
-
-    public void useTimeOut()
-    {
-        mTimeOuts--;
-    }
-
-    public int getTimeOuts()
-    {
-        return mTimeOuts;
+        mName = name;
     }
 
     public void setTimeOuts( int timeOuts )
@@ -193,8 +206,61 @@ public class Team
         mTimeOuts = timeOuts;
     }
 
-    public UUID getID()
+    public void substitutePlayer( Player in, Player out )
     {
-        return mID;
+        mInGamePlayerList.remove( out );
+        mInGamePlayerList.add( in );
+    }
+
+    public void updatePlayingTime()
+    {
+        for( Player player : mInGamePlayerList )
+        {
+            player.incrementPlayingTime();
+        }
+    }
+
+    public void useTimeOut()
+    {
+        mTimeOuts--;
+    }
+
+    private void setIngamePlayerList( JSONObject team ) throws JSONException
+    {
+        JSONArray jsonArray = team.getJSONArray( TeamStats.INGAME_PLAYER_LIST.toString() );
+        for( int index = 0; index < jsonArray.length(); index++ )
+        {
+            int playerNumber = jsonArray.getInt( index );
+            mInGamePlayerList.add( mPlayerList.get( playerNumber ) );
+        }
+    }
+
+    private void setPlayerList( JSONObject team ) throws JSONException
+    {
+        JSONArray jsonArray = team.getJSONArray( TeamStats.PLAYER_LIST.toString() );
+        for( int index = 0; index < jsonArray.length(); index++ )
+        {
+            Player player = new Player( jsonArray.getJSONObject( index ) );
+            mPlayerList.put( player.getNumber(), player );
+        }
+    }
+
+    public enum TeamStats
+    {
+        NAME( "name" ), PLAYER_LIST( "playerList" ), INGAME_PLAYER_LIST( "inGamePlayerList" ), TOTAL_FOULS(
+                "totalFouls" ), TEAM_REBOUNDS( "teamRebound" ), TIMEOUTS( "timeOuts" ), TEAM_ID( "signature" );
+
+        private final String mConstant;
+
+        private TeamStats( String constant )
+        {
+            mConstant = constant;
+        }
+
+        @Override
+        public String toString()
+        {
+            return mConstant;
+        }
     }
 }
