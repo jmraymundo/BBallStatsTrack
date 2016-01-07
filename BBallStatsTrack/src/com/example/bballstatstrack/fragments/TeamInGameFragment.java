@@ -35,6 +35,18 @@ public class TeamInGameFragment extends Fragment
         return view;
     }
 
+    public void setInGamePlayerStats( Player player, TextView number, TextView name, TextView score )
+    {
+        number.setText( String.valueOf( player.getNumber() ) );
+        name.setText( player.getFullName() );
+        score.setText( String.valueOf( player.getTotalscore() ) );
+    }
+
+    public void updateInGamePlayers( List< Player > inGameList )
+    {
+        mInGameList = inGameList;
+    }
+
     public void updateUI()
     {
         if( mTableLayout == null )
@@ -55,17 +67,5 @@ public class TeamInGameFragment extends Fragment
             Player player = mInGameList.get( i - 1 );
             setInGamePlayerStats( player, number, name, score );
         }
-    }
-
-    public void setInGamePlayerStats( Player player, TextView number, TextView name, TextView score )
-    {
-        number.setText( String.valueOf( player.getNumber() ) );
-        name.setText( player.getFullName() );
-        score.setText( String.valueOf( player.getTotalscore() ) );
-    }
-
-    public void updateInGamePlayers( List< Player > inGameList )
-    {
-        mInGameList = inGameList;
     }
 }

@@ -22,50 +22,6 @@ public class ShootEvent extends GameEvent
         mShotType = shotType;
     }
 
-    public ShotClass getShotClass()
-    {
-        return mShotClass;
-    }
-
-    public ShotType getShotType()
-    {
-        return mShotType;
-    }
-
-    @Override
-    public void resolve()
-    {
-        switch( mShotType )
-        {
-            case MADE:
-                handleShot( true );
-                break;
-            case MISSED:
-                handleShot( false );
-                break;
-        }
-        if( mAppended != null )
-        {
-            mAppended.resolve();
-        }
-    }
-
-    private void handleShot( boolean shotMade )
-    {
-        switch( mShotClass )
-        {
-            case FT:
-                mPlayer.shootFT( shotMade );
-                return;
-            case FG_2PT:
-                mPlayer.shoot2pt( shotMade );
-                return;
-            case FG_3PT:
-                mPlayer.shoot3pt( shotMade );
-                return;
-        }
-    }
-
     @Override
     public void append( GameEvent appendedEvent )
     {
@@ -98,6 +54,34 @@ public class ShootEvent extends GameEvent
 
     }
 
+    public ShotClass getShotClass()
+    {
+        return mShotClass;
+    }
+
+    public ShotType getShotType()
+    {
+        return mShotType;
+    }
+
+    @Override
+    public void resolve()
+    {
+        switch( mShotType )
+        {
+            case MADE:
+                handleShot( true );
+                break;
+            case MISSED:
+                handleShot( false );
+                break;
+        }
+        if( mAppended != null )
+        {
+            mAppended.resolve();
+        }
+    }
+
     @Override
     public String toString()
     {
@@ -121,5 +105,21 @@ public class ShootEvent extends GameEvent
             output = output.concat( mAppended.toString() );
         }
         return output.trim();
+    }
+
+    private void handleShot( boolean shotMade )
+    {
+        switch( mShotClass )
+        {
+            case FT:
+                mPlayer.shootFT( shotMade );
+                return;
+            case FG_2PT:
+                mPlayer.shoot2pt( shotMade );
+                return;
+            case FG_3PT:
+                mPlayer.shoot3pt( shotMade );
+                return;
+        }
     }
 }

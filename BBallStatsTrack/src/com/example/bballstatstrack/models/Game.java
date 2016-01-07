@@ -5,11 +5,8 @@ import java.util.List;
 import java.util.UUID;
 
 import com.example.bballstatstrack.models.game.GameLog;
-import com.example.bballstatstrack.models.gameevents.BlockEvent;
 import com.example.bballstatstrack.models.gameevents.GameEvent;
-import com.example.bballstatstrack.models.gameevents.GameEvent.ReboundType;
 import com.example.bballstatstrack.models.gameevents.GameEvent.ShotType;
-import com.example.bballstatstrack.models.gameevents.ReboundEvent;
 import com.example.bballstatstrack.models.gameevents.ShootEvent;
 import com.example.bballstatstrack.models.gameevents.TurnoverEvent;
 import com.example.bballstatstrack.models.gameevents.foulevents.NonShootingFoulEvent;
@@ -240,6 +237,11 @@ public class Game
         }
     }
 
+    public void resetMidShotClock()
+    {
+        mCurrentShotClock = mReducedMaxShotClock;
+    }
+
     public void resetShotClock24()
     {
         int timeDifference;
@@ -269,6 +271,19 @@ public class Game
     public void startNewEvent()
     {
         mEventGameClock = mCurrentGameClock;
+    }
+
+    public void swapBallPossession()
+    {
+        if( mHasBallPossession.equals( mHomeTeam ) )
+        {
+            mHasBallPossession = mAwayTeam;
+        }
+        else
+        {
+            mHasBallPossession = mHomeTeam;
+        }
+        resetShotClock24();
     }
 
     public void unpauseGame()
@@ -372,28 +387,10 @@ public class Game
         return false;
     }
 
-    public void resetMidShotClock()
-    {
-        mCurrentShotClock = mReducedMaxShotClock;
-    }
-
     private void resetPeriodFouls()
     {
         mHomePeriodFouls = 0;
         mAwayPeriodFouls = 0;
-    }
-
-    public void swapBallPossession()
-    {
-        if( mHasBallPossession.equals( mHomeTeam ) )
-        {
-            mHasBallPossession = mAwayTeam;
-        }
-        else
-        {
-            mHasBallPossession = mHomeTeam;
-        }
-        resetShotClock24();
     }
 
     public enum GameStats

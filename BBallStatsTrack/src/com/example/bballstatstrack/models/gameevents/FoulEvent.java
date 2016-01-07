@@ -15,6 +15,11 @@ public class FoulEvent extends GameEvent
         mType = type;
     }
 
+    public FoulType getFoulType()
+    {
+        return mType;
+    }
+
     @Override
     public void resolve()
     {
@@ -23,11 +28,6 @@ public class FoulEvent extends GameEvent
         {
             mAppended.resolve();
         }
-    }
-
-    public FoulType getFoulType()
-    {
-        return mType;
     }
 
     @Override

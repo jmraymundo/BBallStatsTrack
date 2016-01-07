@@ -25,16 +25,6 @@ public abstract class GameEvent
 
     protected int mTime;
 
-    public int getTime()
-    {
-        return mTime;
-    }
-
-    public void setTime( int time )
-    {
-        mTime = time;
-    }
-
     protected GameEvent( EventType event, Player player, Team team )
     {
         mEvent = event;
@@ -42,55 +32,10 @@ public abstract class GameEvent
         mTeam = team;
     }
 
-    public enum EventType
-    {
-        FOUL, SHOOT, REBOUND, TURNOVER, ASSIST, SUBSTITUTION, TIME_OUT, BLOCK, STEAL;
-    }
-
-    public enum FoulType
-    {
-        SHOOTING, NON_SHOOTING, OFFENSIVE;
-    }
-
-    public enum NonShootingFoulType
-    {
-        PENALTY, NON_PENALTY;
-    }
-
-    public enum TurnoverType
-    {
-        STEAL, OFFENSIVE_FOUL, OTHER;
-    }
-
-    public enum ShotClass
-    {
-        FT, FG_2PT, FG_3PT;
-    }
-
-    public enum ShotType
-    {
-        MADE, MISSED;
-    }
-
-    public enum MissType
-    {
-        BLOCKED, UNFORCED;
-    }
-
-    public enum ReboundType
-    {
-        OFFENSIVE, DEFENSIVE, TEAM_REBOUND;
-    }
-
     public void append( GameEvent appendedEvent )
     {
         return;
     }
-
-    @Override
-    public abstract String toString();
-
-    public abstract void resolve();
 
     public GameEvent getAppended()
     {
@@ -110,5 +55,60 @@ public abstract class GameEvent
     public Team getTeam()
     {
         return mTeam;
+    }
+
+    public int getTime()
+    {
+        return mTime;
+    }
+
+    public abstract void resolve();
+
+    public void setTime( int time )
+    {
+        mTime = time;
+    }
+
+    @Override
+    public abstract String toString();
+
+    public enum EventType
+    {
+        FOUL, SHOOT, REBOUND, TURNOVER, ASSIST, SUBSTITUTION, TIME_OUT, BLOCK, STEAL;
+    }
+
+    public enum FoulType
+    {
+        SHOOTING, NON_SHOOTING, OFFENSIVE;
+    }
+
+    public enum MissType
+    {
+        BLOCKED, UNFORCED;
+    }
+
+    public enum NonShootingFoulType
+    {
+        PENALTY, NON_PENALTY;
+    }
+
+    public enum ReboundType
+    {
+        OFFENSIVE, DEFENSIVE, TEAM_REBOUND;
+    }
+
+    public enum ShotClass
+    {
+        FT, FG_2PT, FG_3PT;
+    }
+
+    public enum ShotType
+    {
+        MADE, MISSED;
+    }
+
+    public enum TurnoverType
+    {
+        STEAL, OFFENSIVE_FOUL, OTHER;
     }
 }

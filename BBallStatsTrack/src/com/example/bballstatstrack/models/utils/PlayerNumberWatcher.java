@@ -18,6 +18,21 @@ public class PlayerNumberWatcher implements TextWatcher
     }
 
     @Override
+    public void afterTextChanged( Editable s )
+    {
+        if( s == null || s.length() == 0 )
+        {
+            return;
+        }
+        int input = Integer.parseInt( s.toString() );
+        if( inRange( input ) )
+        {
+            return;
+        }
+        s.replace( 0, s.length(), mCurrent );
+    }
+
+    @Override
     public void beforeTextChanged( CharSequence s, int start, int count, int after )
     {
         if( s == null || s.length() == 0 )
@@ -32,21 +47,6 @@ public class PlayerNumberWatcher implements TextWatcher
     public void onTextChanged( CharSequence s, int start, int before, int count )
     {
         // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void afterTextChanged( Editable s )
-    {
-        if( s == null || s.length() == 0 )
-        {
-            return;
-        }
-        int input = Integer.parseInt( s.toString() );
-        if( inRange( input ) )
-        {
-            return;
-        }
-        s.replace( 0, s.length(), mCurrent );
     }
 
     private boolean inRange( int input )

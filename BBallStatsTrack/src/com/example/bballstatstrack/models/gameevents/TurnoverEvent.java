@@ -16,11 +16,6 @@ public class TurnoverEvent extends GameEvent
         mTurnoverType = type;
     }
 
-    public TurnoverType getTurnoverType()
-    {
-        return mTurnoverType;
-    }
-
     @Override
     public void append( GameEvent appendedEvent )
     {
@@ -44,6 +39,11 @@ public class TurnoverEvent extends GameEvent
             }
         }
         super.append( appendedEvent );
+    }
+
+    public TurnoverType getTurnoverType()
+    {
+        return mTurnoverType;
     }
 
     @Override

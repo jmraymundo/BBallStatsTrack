@@ -51,77 +51,6 @@ public class AddPlayersToTeamsActivity extends Activity
     Button mProceedButton;
 
     @Override
-    protected void onCreate( Bundle savedInstanceState )
-    {
-        super.onCreate( savedInstanceState );
-        setContentView( R.layout.activity_new_team );
-        mHomeTeamFragment = new TeamFragment( true );
-        mAwayTeamFragment = new TeamFragment( false );
-        mHomeButton = ( Button ) findViewById( R.id.homeTeamButton );
-        mHomeButton.setOnClickListener( new FragmentButtonListener( mHomeTeamFragment ) );
-        mAwayButton = ( Button ) findViewById( R.id.awayTeamButton );
-        mAwayButton.setOnClickListener( new FragmentButtonListener( mAwayTeamFragment ) );
-        mProceedButton = ( Button ) findViewById( R.id.proceedButton );
-        mProceedButton.setOnClickListener( new ProceedButtonListener() );
-        replaceCurrentFragment( mHomeTeamFragment );
-        updateView( mHomeTeamFragment );
-    }
-
-    private void updateView( Fragment current )
-    {
-        if( mHomeTeamFragment.equals( current ) )
-        {
-            mHomeButton.setEnabled( false );
-            mAwayButton.setEnabled( true );
-        }
-        else if( mAwayTeamFragment.equals( current ) )
-        {
-            mHomeButton.setEnabled( true );
-            mAwayButton.setEnabled( false );
-        }
-        else
-        {
-            mHomeButton.setEnabled( true );
-            mAwayButton.setEnabled( true );
-        }
-    }
-
-    private void replaceCurrentFragment( Fragment fragment )
-    {
-        FragmentManager manager = getFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace( R.id.fragmentContainer, fragment );
-        transaction.commit();
-    }
-
-    private Fragment getCurrentFragment()
-    {
-        FragmentManager manager = getFragmentManager();
-        return manager.findFragmentById( R.id.fragmentContainer );
-    }
-
-    private class FragmentButtonListener implements OnClickListener
-    {
-        Fragment mFragment;
-
-        public FragmentButtonListener( Fragment fragment )
-        {
-            mFragment = fragment;
-        }
-
-        @Override
-        public void onClick( View v )
-        {
-            if( mFragment.equals( getCurrentFragment() ) )
-            {
-                return;
-            }
-            replaceCurrentFragment( mFragment );
-            updateView( mFragment );
-        }
-    }
-
-    @Override
     public void onBackPressed()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder( AddPlayersToTeamsActivity.this );
@@ -146,8 +75,89 @@ public class AddPlayersToTeamsActivity extends Activity
         builder.show();
     }
 
+    @Override
+    protected void onCreate( Bundle savedInstanceState )
+    {
+        super.onCreate( savedInstanceState );
+        setContentView( R.layout.activity_new_team );
+        mHomeTeamFragment = new TeamFragment( true );
+        mAwayTeamFragment = new TeamFragment( false );
+        mHomeButton = ( Button ) findViewById( R.id.homeTeamButton );
+        mHomeButton.setOnClickListener( new FragmentButtonListener( mHomeTeamFragment ) );
+        mAwayButton = ( Button ) findViewById( R.id.awayTeamButton );
+        mAwayButton.setOnClickListener( new FragmentButtonListener( mAwayTeamFragment ) );
+        mProceedButton = ( Button ) findViewById( R.id.proceedButton );
+        mProceedButton.setOnClickListener( new ProceedButtonListener() );
+        replaceCurrentFragment( mHomeTeamFragment );
+        updateView( mHomeTeamFragment );
+    }
+
+    private Fragment getCurrentFragment()
+    {
+        FragmentManager manager = getFragmentManager();
+        return manager.findFragmentById( R.id.fragmentContainer );
+    }
+
+    private void replaceCurrentFragment( Fragment fragment )
+    {
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace( R.id.fragmentContainer, fragment );
+        transaction.commit();
+    }
+
+    private void updateView( Fragment current )
+    {
+        if( mHomeTeamFragment.equals( current ) )
+        {
+            mHomeButton.setEnabled( false );
+            mAwayButton.setEnabled( true );
+        }
+        else if( mAwayTeamFragment.equals( current ) )
+        {
+            mHomeButton.setEnabled( true );
+            mAwayButton.setEnabled( false );
+        }
+        else
+        {
+            mHomeButton.setEnabled( true );
+            mAwayButton.setEnabled( true );
+        }
+    }
+
+    private class FragmentButtonListener implements OnClickListener
+    {
+        Fragment mFragment;
+
+        public FragmentButtonListener( Fragment fragment )
+        {
+            mFragment = fragment;
+        }
+
+        @Override
+        public void onClick( View v )
+        {
+            if( mFragment.equals( getCurrentFragment() ) )
+            {
+                return;
+            }
+            replaceCurrentFragment( mFragment );
+            updateView( mFragment );
+        }
+    }
+
     private class ProceedButtonListener implements OnClickListener
     {
+        public boolean hasCompleteTeamNames()
+        {
+            return mHomeName.isEmpty() || mAwayName.isEmpty();
+        }
+
+        public boolean hasInsufficientPlayers()
+        {
+            return mHomeTeam.size() < 5 || mAwayTeam.size() < 5;
+        }
+
         @Override
         public void onClick( View v )
         {
@@ -175,16 +185,6 @@ public class AddPlayersToTeamsActivity extends Activity
             setIntentExtras( intent, mAwayTeam, AWAY_TEAM_NUMBERS, AWAY_TEAM_MEMBER_NAMES );
             finish();
             startActivity( intent );
-        }
-
-        public boolean hasCompleteTeamNames()
-        {
-            return mHomeName.isEmpty() || mAwayName.isEmpty();
-        }
-
-        public boolean hasInsufficientPlayers()
-        {
-            return mHomeTeam.size() < 5 || mAwayTeam.size() < 5;
         }
 
         private void setIntentExtras( Intent intent, SparseArray< String > team, String extraTeamNumbersIdentifier,

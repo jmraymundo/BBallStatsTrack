@@ -23,15 +23,15 @@ public class NonShootingFoulEvent extends FoulEvent
     }
 
     @Override
-    public String toString()
-    {
-        return mPlayer.getFullName() + " committed a foul.";
-    }
-
-    @Override
     public void resolve()
     {
         super.resolve();
         mTeam.addFoul();
+    }
+
+    @Override
+    public String toString()
+    {
+        return mPlayer.getFullName() + " committed a foul.";
     }
 }

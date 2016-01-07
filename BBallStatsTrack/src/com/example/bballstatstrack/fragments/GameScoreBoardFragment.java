@@ -33,6 +33,13 @@ public class GameScoreBoardFragment extends Fragment
 
     private TextView mPeriod;
 
+    public void initialize( Game game )
+    {
+        mHomeName.setText( game.getHomeTeam().getName() );
+        mAwayName.setText( game.getAwayTeam().getName() );
+        updateUI( game );
+    }
+
     @Override
     public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
     {
@@ -47,11 +54,29 @@ public class GameScoreBoardFragment extends Fragment
         return view;
     }
 
-    public void initialize( Game game )
+    public void setAwayScore( int score )
     {
-        mHomeName.setText( game.getHomeTeam().getName() );
-        mAwayName.setText( game.getAwayTeam().getName() );
-        updateUI( game );
+        mAwayScore.setText( StringUtils.getLeadZeroFormattedString( score ) );
+    }
+
+    public void setGameClock( int gameClock )
+    {
+        mGameClock.setText( StringUtils.getMinSecFormattedString( gameClock ) );
+    }
+
+    public void setHomeScore( int score )
+    {
+        mHomeScore.setText( StringUtils.getLeadZeroFormattedString( score ) );
+    }
+
+    public void setPeriod( int period )
+    {
+        mPeriod.setText( StringUtils.getPeriodString( period ) );
+    }
+
+    public void setShotClock( int shotClock )
+    {
+        mShotClock.setText( StringUtils.getLeadZeroFormattedString( shotClock ) );
     }
 
     public void updateUI( Game game )
@@ -62,6 +87,14 @@ public class GameScoreBoardFragment extends Fragment
         setGameClock( game.getCurrentGameClock() );
         setShotClock( game.getCurrentShotClock() );
         setPeriod( game.getPeriod() );
+    }
+
+    private Drawable getResizedBasketball( int textViewHeight )
+    {
+        Resources resources = getResources();
+        Bitmap bitmap = BitmapFactory.decodeResource( resources, R.drawable.basketball );
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap( bitmap, textViewHeight, textViewHeight, true );
+        return new BitmapDrawable( resources, scaledBitmap );
     }
 
     private void setBallPossession( Game game )
@@ -90,38 +123,5 @@ public class GameScoreBoardFragment extends Fragment
             mHomeName.setCompoundDrawablesWithIntrinsicBounds( 0, 0, 0, 0 );
             mAwayName.setCompoundDrawablesWithIntrinsicBounds( 0, 0, 0, 0 );
         }
-    }
-
-    private Drawable getResizedBasketball( int textViewHeight )
-    {
-        Resources resources = getResources();
-        Bitmap bitmap = BitmapFactory.decodeResource( resources, R.drawable.basketball );
-        Bitmap scaledBitmap = Bitmap.createScaledBitmap( bitmap, textViewHeight, textViewHeight, true );
-        return new BitmapDrawable( resources, scaledBitmap );
-    }
-
-    public void setPeriod( int period )
-    {
-        mPeriod.setText( StringUtils.getPeriodString( period ) );
-    }
-
-    public void setShotClock( int shotClock )
-    {
-        mShotClock.setText( StringUtils.getLeadZeroFormattedString( shotClock ) );
-    }
-
-    public void setGameClock( int gameClock )
-    {
-        mGameClock.setText( StringUtils.getMinSecFormattedString( gameClock ) );
-    }
-
-    public void setHomeScore( int score )
-    {
-        mHomeScore.setText( StringUtils.getLeadZeroFormattedString( score ) );
-    }
-
-    public void setAwayScore( int score )
-    {
-        mAwayScore.setText( StringUtils.getLeadZeroFormattedString( score ) );
     }
 }

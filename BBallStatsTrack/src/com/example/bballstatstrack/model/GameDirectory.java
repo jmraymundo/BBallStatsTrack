@@ -58,22 +58,6 @@ public class GameDirectory
         saveGames();
     }
 
-    private void saveGames()
-    {
-        try
-        {
-            mFileSaverLoader.saveGames( mGames );
-        }
-        catch( IOException e )
-        {
-            e.printStackTrace();
-        }
-        catch( JSONException e )
-        {
-            e.printStackTrace();
-        }
-    }
-
     public void deleteGame( Game game )
     {
         mGames.remove( game );
@@ -92,5 +76,21 @@ public class GameDirectory
     public ArrayList< Game > getGames()
     {
         return mGames;
+    }
+
+    private void saveGames()
+    {
+        try
+        {
+            mFileSaverLoader.saveGames( mGames );
+        }
+        catch( IOException e )
+        {
+            e.printStackTrace();
+        }
+        catch( JSONException e )
+        {
+            e.printStackTrace();
+        }
     }
 }

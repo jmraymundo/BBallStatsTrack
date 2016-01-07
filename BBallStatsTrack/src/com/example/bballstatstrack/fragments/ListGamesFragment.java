@@ -31,6 +31,24 @@ public class ListGamesFragment extends ListFragment
     }
 
     @Override
+    public boolean onContextItemSelected( MenuItem item )
+    {
+        AdapterContextMenuInfo info = ( AdapterContextMenuInfo ) item.getMenuInfo();
+        int position = info.position;
+        GameAdapter adapter = ( GameAdapter ) getListAdapter();
+        Game game = adapter.getItem( position );
+
+        switch( item.getItemId() )
+        {
+            case R.id.menu_item_delete_game:
+                GameDirectory.get( getActivity() ).deleteGame( game );
+                adapter.notifyDataSetChanged();
+                return true;
+        }
+        return super.onContextItemSelected( item );
+    }
+
+    @Override
     public void onCreate( Bundle savedInstanceState )
     {
         super.onCreate( savedInstanceState );
@@ -55,24 +73,6 @@ public class ListGamesFragment extends ListFragment
         Intent i = new Intent( getActivity(), GameReviewActivity.class );
         i.putExtra( GameActivity.EXTRA_GAME_ID, c.getId().toString() );
         startActivityForResult( i, 0 );
-    }
-
-    @Override
-    public boolean onContextItemSelected( MenuItem item )
-    {
-        AdapterContextMenuInfo info = ( AdapterContextMenuInfo ) item.getMenuInfo();
-        int position = info.position;
-        GameAdapter adapter = ( GameAdapter ) getListAdapter();
-        Game game = adapter.getItem( position );
-
-        switch( item.getItemId() )
-        {
-            case R.id.menu_item_delete_game:
-                GameDirectory.get( getActivity() ).deleteGame( game );
-                adapter.notifyDataSetChanged();
-                return true;
-        }
-        return super.onContextItemSelected( item );
     }
 
     public boolean onOptionsItemSelected( MenuItem item )

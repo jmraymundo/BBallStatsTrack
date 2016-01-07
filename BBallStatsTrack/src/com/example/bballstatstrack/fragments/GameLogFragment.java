@@ -1,7 +1,5 @@
 package com.example.bballstatstrack.fragments;
 
-import java.util.List;
-
 import com.example.bballstatstrack.R;
 import com.example.bballstatstrack.models.game.GameLog;
 

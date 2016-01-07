@@ -21,21 +21,6 @@ public class GameReviewActivity extends Activity
 
     private TeamReviewFragment mAwayFragment;
 
-    @Override
-    protected void onCreate( Bundle savedInstanceState )
-    {
-        super.onCreate( savedInstanceState );
-        setContentView( R.layout.activity_game_review );
-        mGame = getGame();
-        mHomeFragment = new TeamReviewFragment( mGame.getHomeTeam() );
-        mAwayFragment = new TeamReviewFragment( mGame.getAwayTeam() );
-        FragmentManager manager = getFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace( R.id.game_review_home_container, mHomeFragment );
-        transaction.replace( R.id.game_review_away_container, mAwayFragment );
-        transaction.commit();
-    }
-
     public Game getGame()
     {
         ArrayList< Game > games = GameDirectory.get( GameReviewActivity.this ).getGames();
@@ -49,5 +34,20 @@ public class GameReviewActivity extends Activity
             }
         }
         return null;
+    }
+
+    @Override
+    protected void onCreate( Bundle savedInstanceState )
+    {
+        super.onCreate( savedInstanceState );
+        setContentView( R.layout.activity_game_review );
+        mGame = getGame();
+        mHomeFragment = new TeamReviewFragment( mGame.getHomeTeam() );
+        mAwayFragment = new TeamReviewFragment( mGame.getAwayTeam() );
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace( R.id.game_review_home_container, mHomeFragment );
+        transaction.replace( R.id.game_review_away_container, mAwayFragment );
+        transaction.commit();
     }
 }
