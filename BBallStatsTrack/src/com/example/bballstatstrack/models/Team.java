@@ -4,18 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.example.bballstatstrack.models.Player.PlayerStats;
 
-import android.util.Log;
 import android.util.SparseArray;
 
 public class Team
 {
     private static final String B_BALL_STAT_TRACK = "BBallStatTrack";
+
+    private UUID mID;
 
     private String mName;
 
@@ -31,28 +28,6 @@ public class Team
 
     private int mPossessionTime = 0;
 
-    private UUID mID;
-
-    public Team( JSONObject team )
-    {
-        try
-        {
-            setName( team.getString( TeamStats.NAME.toString() ) );
-            setPlayerList( team );
-            setIngamePlayerList( team );
-            mTeamFouls = team.getInt( TeamStats.TOTAL_FOULS.toString() );
-            mTeamRebound = team.getInt( TeamStats.TEAM_REBOUNDS.toString() );
-            mTimeOuts = team.getInt( TeamStats.TIMEOUTS.toString() );
-            mPossessionTime = team.getInt( TeamStats.POSSESSION_TIME.toString() );
-            mID = UUID.fromString( team.getString( TeamStats.TEAM_ID.toString() ) );
-        }
-        catch( JSONException e )
-        {
-            e.printStackTrace();
-            Log.e( B_BALL_STAT_TRACK, "Attribute missing from Team JSONObject!", e );
-        }
-    }
-
     public Team( String name, List< Player > playerList )
     {
         setName( name );
@@ -61,6 +36,19 @@ public class Team
         {
             mPlayerList.append( player.getNumber(), player );
         }
+    }
+
+    public Team( UUID id, String name, SparseArray< Player > playerList, List< Integer > inGamePlayerListNumbers,
+            int teamFouls, int teamRebounds, int timeouts, int possessionTimeSec )
+    {
+        mID = id;
+        mName = name;
+        mPlayerList = playerList;
+        mInGamePlayerList = getInGamePlayerList( inGamePlayerListNumbers );
+        mTeamFouls = teamFouls;
+        mTeamRebound = teamRebounds;
+        mTimeOuts = timeouts;
+        mPossessionTime = possessionTimeSec;
     }
 
     public void addFoul()
@@ -237,6 +225,16 @@ public class Team
         mTimeOuts--;
     }
 
+    private List< Player > getInGamePlayerList( List< Integer > numbers )
+    {
+        List< Player > list = new ArrayList< Player >();
+        for( int number : numbers )
+        {
+            list.add( mPlayerList.get( number ) );
+        }
+        return list;
+    }
+
     private int getStats( PlayerStats stat )
     {
         int total = 0;
@@ -290,26 +288,6 @@ public class Team
             }
         }
         return total;
-    }
-
-    private void setIngamePlayerList( JSONObject team ) throws JSONException
-    {
-        JSONArray jsonArray = team.getJSONArray( TeamStats.INGAME_PLAYER_LIST.toString() );
-        for( int index = 0; index < jsonArray.length(); index++ )
-        {
-            int playerNumber = jsonArray.getInt( index );
-            mInGamePlayerList.add( mPlayerList.get( playerNumber ) );
-        }
-    }
-
-    private void setPlayerList( JSONObject team ) throws JSONException
-    {
-        JSONArray jsonArray = team.getJSONArray( TeamStats.PLAYER_LIST.toString() );
-        for( int index = 0; index < jsonArray.length(); index++ )
-        {
-            Player player = new Player( jsonArray.getJSONObject( index ) );
-            mPlayerList.put( player.getNumber(), player );
-        }
     }
 
     public enum TeamStats

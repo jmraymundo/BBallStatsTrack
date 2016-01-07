@@ -1,34 +1,8 @@
 package com.example.bballstatstrack.models;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.util.Log;
-
 public class Player
 {
     private static final String B_BALL_STAT_TRACK = "BBallStatTrack";
-
-    public enum PlayerStats
-    {
-        NUMBER( "number" ), NAME( "fullName" ), MISS_1PT( "ftMiss" ), MADE_1PT( "ftMade" ), MISS_2PT(
-                "2ptFGMiss" ), MADE_2PT( "2ptFGMade" ), MISS_3PT( "3ptFGMiss" ), MADE_3PT(
-                        "3ptFGMade" ), OFFENSIVE_REBOUND( "offRebound" ), DEFENSIVE_REBOUND( "defRebound" ), ASSIST(
-                                "assist" ), TURNOVER( "turnover" ), STEAL( "steal" ), BLOCK( "block" ), FOUL(
-                                        "foul" ), PLAYING_TIME( "playingTimeSec" );
-
-        private final String mConstant;
-
-        private PlayerStats( String constant )
-        {
-            mConstant = constant;
-        }
-
-        public String toString()
-        {
-            return mConstant;
-        }
-    }
 
     private int mNumber;
 
@@ -68,69 +42,25 @@ public class Player
         setFullName( fullName );
     }
 
-    public Player( JSONObject player )
-    {
-        try
-        {
-            setNumber( player.getInt( PlayerStats.NUMBER.toString() ) );
-            setFullName( player.getString( PlayerStats.NAME.toString() ) );
-            mFTMade = player.getInt( PlayerStats.MADE_1PT.toString() );
-            mFTMiss = player.getInt( PlayerStats.MISS_1PT.toString() );
-            m2ptFGMade = player.getInt( PlayerStats.MADE_2PT.toString() );
-            m2ptFGMiss = player.getInt( PlayerStats.MISS_2PT.toString() );
-            m3ptFGMade = player.getInt( PlayerStats.MADE_3PT.toString() );
-            m3ptFGMiss = player.getInt( PlayerStats.MISS_3PT.toString() );
-            mOffRebound = player.getInt( PlayerStats.OFFENSIVE_REBOUND.toString() );
-            mDefRebound = player.getInt( PlayerStats.DEFENSIVE_REBOUND.toString() );
-            mAssist = player.getInt( PlayerStats.ASSIST.toString() );
-            mTurnover = player.getInt( PlayerStats.TURNOVER.toString() );
-            mSteal = player.getInt( PlayerStats.STEAL.toString() );
-            mBlock = player.getInt( PlayerStats.BLOCK.toString() );
-            mFoul = player.getInt( PlayerStats.FOUL.toString() );
-            mPlayingTimeSec = player.getInt( PlayerStats.PLAYING_TIME.toString() );
-        }
-        catch( JSONException e )
-        {
-            e.printStackTrace();
-            Log.e( B_BALL_STAT_TRACK, "Attribute missing from Player JSONObject!", e );
-        }
-    }
-
-    public int getNumber()
-    {
-        return mNumber;
-    }
-
-    public void setNumber( int number )
+    public Player( int number, String fullName, int miss1pt, int miss2pt, int miss3pt, int made1pt, int made2pt,
+            int made3pt, int offReb, int defReb, int assist, int to, int stl, int blk, int foul, int playingTimeSec )
     {
         mNumber = number;
-    }
-
-    public String getFullName()
-    {
-        return mFullName;
-    }
-
-    public void setFullName( String fullName )
-    {
         mFullName = fullName;
-    }
-
-    public void shoot2pt( boolean made )
-    {
-        if( made )
-        {
-            m2ptFGMade++;
-        }
-        else
-        {
-            m2ptFGMiss++;
-        }
-    }
-
-    public int get2ptFGMiss()
-    {
-        return m2ptFGMiss;
+        mFTMiss = miss1pt;
+        m2ptFGMiss = miss2pt;
+        m3ptFGMiss = miss3pt;
+        mFTMade = made1pt;
+        m2ptFGMade = made2pt;
+        m3ptFGMade = made3pt;
+        mOffRebound = offReb;
+        mDefRebound = defReb;
+        mAssist = assist;
+        mTurnover = to;
+        mSteal = stl;
+        mBlock = blk;
+        mFoul = foul;
+        mPlayingTimeSec = playingTimeSec;
     }
 
     public int get2ptFGMade()
@@ -138,21 +68,9 @@ public class Player
         return m2ptFGMade;
     }
 
-    public void shoot3pt( boolean made )
+    public int get2ptFGMiss()
     {
-        if( made )
-        {
-            m3ptFGMade++;
-        }
-        else
-        {
-            m3ptFGMiss++;
-        }
-    }
-
-    public int get3ptFGMiss()
-    {
-        return m3ptFGMiss;
+        return m2ptFGMiss;
     }
 
     public int get3ptFGMade()
@@ -160,16 +78,34 @@ public class Player
         return m3ptFGMade;
     }
 
-    public void shootFT( boolean made )
+    public int get3ptFGMiss()
     {
-        if( made )
-        {
-            mFTMade++;
-        }
-        else
-        {
-            mFTMiss++;
-        }
+        return m3ptFGMiss;
+    }
+
+    public int getAssist()
+    {
+        return mAssist;
+    }
+
+    public int getBlock()
+    {
+        return mBlock;
+    }
+
+    public int getDefRebound()
+    {
+        return mDefRebound;
+    }
+
+    public int getFoulCount()
+    {
+        return mFoul;
+    }
+
+    public int getFTMade()
+    {
+        return mFTMade;
     }
 
     public int getFTMiss()
@@ -177,9 +113,59 @@ public class Player
         return mFTMiss;
     }
 
-    public int getFTMade()
+    public String getFullName()
     {
-        return mFTMade;
+        return mFullName;
+    }
+
+    public int getNumber()
+    {
+        return mNumber;
+    }
+
+    public int getOffRebound()
+    {
+        return mOffRebound;
+    }
+
+    public int getPlayingTimeSec()
+    {
+        return mPlayingTimeSec;
+    }
+
+    public int getSteal()
+    {
+        return mSteal;
+    }
+
+    public int getTotalscore()
+    {
+        return getFTMade() + ( get2ptFGMade() * 2 ) + ( get3ptFGMade() * 3 );
+    }
+
+    public int getTurnover()
+    {
+        return mTurnover;
+    }
+
+    public void incrementPlayingTime()
+    {
+        mPlayingTimeSec++;
+    }
+
+    public void makeAssist()
+    {
+        mAssist++;
+    }
+
+    public void makeBlock()
+    {
+        mBlock++;
+    }
+
+    public void makeFoul()
+    {
+        mFoul++;
     }
 
     public void makeRebound( boolean offensive )
@@ -194,24 +180,9 @@ public class Player
         }
     }
 
-    public int getOffRebound()
+    public void makeSteal()
     {
-        return mOffRebound;
-    }
-
-    public int getDefRebound()
-    {
-        return mDefRebound;
-    }
-
-    public void makeAssist()
-    {
-        mAssist++;
-    }
-
-    public int getAssist()
-    {
-        return mAssist;
+        mSteal++;
     }
 
     public void makeTurnover()
@@ -219,59 +190,76 @@ public class Player
         mTurnover++;
     }
 
-    public int getTurnover()
+    public void setFullName( String fullName )
     {
-        return mTurnover;
+        mFullName = fullName;
     }
 
-    public void makeSteal()
+    public void setNumber( int number )
     {
-        mSteal++;
+        mNumber = number;
     }
 
-    public int getSteal()
+    public void shoot2pt( boolean made )
     {
-        return mSteal;
+        if( made )
+        {
+            m2ptFGMade++;
+        }
+        else
+        {
+            m2ptFGMiss++;
+        }
     }
 
-    public void makeBlock()
+    public void shoot3pt( boolean made )
     {
-        mBlock++;
+        if( made )
+        {
+            m3ptFGMade++;
+        }
+        else
+        {
+            m3ptFGMiss++;
+        }
     }
 
-    public int getBlock()
+    public void shootFT( boolean made )
     {
-        return mBlock;
-    }
-
-    public void makeFoul()
-    {
-        mFoul++;
-    }
-
-    public int getFoulCount()
-    {
-        return mFoul;
-    }
-
-    public void incrementPlayingTime()
-    {
-        mPlayingTimeSec++;
-    }
-
-    public int getPlayingTimeSec()
-    {
-        return mPlayingTimeSec;
-    }
-
-    public int getTotalscore()
-    {
-        return getFTMade() + ( get2ptFGMade() * 2 ) + ( get3ptFGMade() * 3 );
+        if( made )
+        {
+            mFTMade++;
+        }
+        else
+        {
+            mFTMiss++;
+        }
     }
 
     @Override
     public String toString()
     {
         return getNumber() + " - " + getFullName();
+    }
+
+    public enum PlayerStats
+    {
+        NUMBER( "number" ), NAME( "fullName" ), MISS_1PT( "ftMiss" ), MADE_1PT( "ftMade" ), MISS_2PT(
+                "2ptFGMiss" ), MADE_2PT( "2ptFGMade" ), MISS_3PT( "3ptFGMiss" ), MADE_3PT(
+                        "3ptFGMade" ), OFFENSIVE_REBOUND( "offRebound" ), DEFENSIVE_REBOUND( "defRebound" ), ASSIST(
+                                "assist" ), TURNOVER( "turnover" ), STEAL( "steal" ), BLOCK( "block" ), FOUL(
+                                        "foul" ), PLAYING_TIME( "playingTimeSec" );
+
+        private final String mConstant;
+
+        private PlayerStats( String constant )
+        {
+            mConstant = constant;
+        }
+
+        public String toString()
+        {
+            return mConstant;
+        }
     }
 }

@@ -17,6 +17,8 @@ import org.json.JSONTokener;
 import com.example.bballstatstrack.models.Game;
 
 import android.content.Context;
+import android.util.JsonReader;
+import android.util.JsonWriter;
 
 public class JSONFileSaverLoader
 {
@@ -33,56 +35,30 @@ public class JSONFileSaverLoader
     public ArrayList< Game > loadGames() throws IOException, JSONException
     {
         ArrayList< Game > games = new ArrayList< Game >();
-        BufferedReader reader = null;
-        try
+        InputStream in = mContext.openFileInput( mFilename );
+        BufferedReader bufferedReader = new BufferedReader( new InputStreamReader( in ) );
+        JsonReader reader = new JsonReader( bufferedReader );
+        reader.beginArray();
+        while( reader.hasNext() )
         {
-            // open and read the file into a StringBuilder
-            InputStream in = mContext.openFileInput( mFilename );
-            reader = new BufferedReader( new InputStreamReader( in ) );
-            StringBuilder jsonString = new StringBuilder();
-            String line = null;
-            while( ( line = reader.readLine() ) != null )
-            {
-                // line breaks are omitted and irrelevant
-                jsonString.append( line );
-            }
-            // parse the JSON using JSONTokener
-            JSONArray array = ( JSONArray ) new JSONTokener( jsonString.toString() ).nextValue();
-            // build the array of crimes from JSONObjects
-            for( int i = 0; i < array.length(); i++ )
-            {
-                games.add( new Game( array.getJSONObject( i ) ) );
-            }
+            games.add( JSONDeserializer.readGame( reader ) );
         }
-        catch( FileNotFoundException e )
-        {
-            // we will ignore this one, since it happens when we start fresh
-        }
-        finally
-        {
-            if( reader != null ) reader.close();
-        }
+        reader.endArray();
+        reader.close();
         return games;
     }
 
     public void saveGames( ArrayList< Game > games ) throws JSONException, IOException
     {
-        JSONSerializer jsonSerializer = JSONSerializer.getInstance();
-        // build an array in JSON
-        JSONArray array = new JSONArray();
+        OutputStream out = mContext.openFileOutput( mFilename, Context.MODE_PRIVATE );
+        OutputStreamWriter outStreamWriter = new OutputStreamWriter( out );
+        JsonWriter writer = new JsonWriter( outStreamWriter );
+        writer.beginArray();
         for( Game c : games )
-            array.put( jsonSerializer.toJSONObject( c ) );
-        // write the file to disk
-        Writer writer = null;
-        try
         {
-            OutputStream out = mContext.openFileOutput( mFilename, Context.MODE_PRIVATE );
-            writer = new OutputStreamWriter( out );
-            writer.write( array.toString() );
+            JSONSerializer.writeGame( writer, c );
         }
-        finally
-        {
-            if( writer != null ) writer.close();
-        }
+        writer.endArray();
+        writer.close();
     }
 }

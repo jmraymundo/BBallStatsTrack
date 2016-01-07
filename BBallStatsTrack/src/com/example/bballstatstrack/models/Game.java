@@ -3,9 +3,6 @@ package com.example.bballstatstrack.models;
 import java.util.Date;
 import java.util.UUID;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.example.bballstatstrack.models.game.GameLog;
 import com.example.bballstatstrack.models.gameevents.BlockEvent;
 import com.example.bballstatstrack.models.gameevents.GameEvent;
@@ -16,10 +13,8 @@ import com.example.bballstatstrack.models.gameevents.ShootEvent;
 import com.example.bballstatstrack.models.gameevents.TurnoverEvent;
 import com.example.bballstatstrack.models.gameevents.foulevents.NonShootingFoulEvent;
 import com.example.bballstatstrack.models.gameevents.foulevents.ShootingFoulEvent;
-import com.example.bballstatstrack.models.utils.GameEventDeserializer;
 
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.util.SparseArray;
 
 public class Game
@@ -76,26 +71,17 @@ public class Game
         mDate = new MyDate();
     }
 
-    public Game( JSONObject game )
+    public Game( UUID id, long longDate, Team homeTeam, Team awayTeam, GameLog gameLog )
     {
         mMaxGameClock = 0;
         mMaxOTGameClock = 0;
         mReducedMaxShotClock = 0;
-        try
-        {
-            mID = UUID.fromString( game.getString( GameStats.ID.toString() ) );
-            mAwayTeam = new Team( game.getJSONObject( GameStats.AWAY_TEAM.toString() ) );
-            mHomeTeam = new Team( game.getJSONObject( GameStats.HOME_TEAM.toString() ) );
-            GameEventDeserializer serializer = new GameEventDeserializer( this );
-            mGameLog = serializer.getGameLog( game );
-            mPeriod = mGameLog.size();
-            mDate = new MyDate( game.getLong( GameStats.DATE.toString() ) );
-        }
-        catch( JSONException e )
-        {
-            e.printStackTrace();
-            Log.e( B_BALL_STAT_TRACK, "Attribute missing from Game JSONObject!", e );
-        }
+        mID = id;
+        mDate = new MyDate( longDate );
+        mHomeTeam = homeTeam;
+        mAwayTeam = awayTeam;
+        mGameLog = gameLog;
+        mPeriod = mGameLog.size();
     }
 
     public void addNewEvent( GameEvent event )
