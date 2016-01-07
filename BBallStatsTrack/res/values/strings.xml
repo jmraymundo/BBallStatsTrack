@@ -71,4 +71,21 @@
 	<string name="rebound_dialog_team_rebound">Ball went out of bounds.</string>
 	<string name="time_dialog_save_game_text">Save game</string>
 	<string name="save_dialog_confirmation_question">Are you sure you want to save now? You will not be able to track this game again.</string>
+	<string name="game_review_team_name">Team</string>
+	<string name="game_review_team_points">Points</string>
+	<string name="game_review_team_2pt_fg">2pt Field Goal</string>
+	<string name="game_review_team_2pt_fg_percentage">2pt Field Goal Percentage</string>
+	<string name="game_review_team_3pt_fg">3pt Field Goal</string>
+	<string name="game_review_team_3pt_fg_percentage">3pt Field Goal Percentage</string>
+	<string name="game_review_team_ft">Free Throw</string>
+	<string name="game_review_team_ft_percentage">Free Throw Percentage</string>
+	<string name="game_review_team_offensive_rebounds">Offensive Rebounds</string>
+	<string name="game_review_team_defensive_rebounds">Defensive Rebounds</string>
+	<string name="game_review_team_total_rebounds">Total Rebounds</string>
+	<string name="game_review_team_assists">Assists</string>
+	<string name="game_review_team_steals">Steals</string>
+	<string name="game_review_team_blocks">Blocks</string>
+	<string name="game_review_team_turnovers">Turnovers</string>
+	<string name="game_review_team_fouls">Team Fouls</string>
+	<string name="game_review_team_total_possession">Total Ball Possession Duration</string>
 </resources>

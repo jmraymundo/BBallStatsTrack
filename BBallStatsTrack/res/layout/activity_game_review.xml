@@ -1,7 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:orientation="vertical" >
-	
-</LinearLayout>
+	android:layout_height="match_parent" >
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:baselineAligned="false"
+		android:orientation="horizontal"
+		android:weightSum="4" >
+		<RelativeLayout
+			android:id="@+id/game_review_home_container"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="1" />
+		<LinearLayout
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="2"
+			android:orientation="vertical" >
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="@drawable/cell_border"
+				android:gravity="center"
+				android:text="@string/game_review_team_name" />
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="@drawable/cell_border"
+				android:gravity="center"
+				android:text="@string/game_review_team_points" />
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="@drawable/cell_border"
+				android:gravity="center"
+				android:text="@string/game_review_team_2pt_fg" />
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="@drawable/cell_border"
+				android:gravity="center"
+				android:text="@string/game_review_team_2pt_fg_percentage" />
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="@drawable/cell_border"
+				android:gravity="center"
+				android:text="@string/game_review_team_3pt_fg" />
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="@drawable/cell_border"
+				android:gravity="center"
+				android:text="@string/game_review_team_3pt_fg_percentage" />
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="@drawable/cell_border"
+				android:gravity="center"
+				android:text="@string/game_review_team_ft" />
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="@drawable/cell_border"
+				android:gravity="center"
+				android:text="@string/game_review_team_ft_percentage" />
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="@drawable/cell_border"
+				android:gravity="center"
+				android:text="@string/game_review_team_offensive_rebounds" />
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="@drawable/cell_border"
+				android:gravity="center"
+				android:text="@string/game_review_team_defensive_rebounds" />
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="@drawable/cell_border"
+				android:gravity="center"
+				android:text="@string/game_review_team_total_rebounds" />
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="@drawable/cell_border"
+				android:gravity="center"
+				android:text="@string/game_review_team_assists" />
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="@drawable/cell_border"
+				android:gravity="center"
+				android:text="@string/game_review_team_steals" />
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="@drawable/cell_border"
+				android:gravity="center"
+				android:text="@string/game_review_team_blocks" />
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="@drawable/cell_border"
+				android:gravity="center"
+				android:text="@string/game_review_team_turnovers" />
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="@drawable/cell_border"
+				android:gravity="center"
+				android:text="@string/game_review_team_fouls" />
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="@drawable/cell_border"
+				android:gravity="center"
+				android:text="@string/game_review_team_total_possession" />
+		</LinearLayout>
+		<RelativeLayout
+			android:id="@+id/game_review_away_container"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="1" />
+	</LinearLayout>
+</ScrollView>

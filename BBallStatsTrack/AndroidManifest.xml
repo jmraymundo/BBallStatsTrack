@@ -35,5 +35,10 @@
 			android:configChanges="orientation|keyboardHidden"
 			android:label="@string/app_name"
 			android:screenOrientation="landscape" />
+		<activity
+			android:name=".activities.GameReviewActivity"
+			android:configChanges="orientation|keyboardHidden"
+			android:label="@string/app_name"
+			android:screenOrientation="landscape" />
 	</application>
 </manifest>
