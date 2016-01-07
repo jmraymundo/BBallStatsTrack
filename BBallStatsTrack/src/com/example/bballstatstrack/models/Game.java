@@ -1,6 +1,7 @@
 package com.example.bballstatstrack.models;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import com.example.bballstatstrack.models.game.GameLog;
@@ -15,7 +16,6 @@ import com.example.bballstatstrack.models.gameevents.foulevents.NonShootingFoulE
 import com.example.bballstatstrack.models.gameevents.foulevents.ShootingFoulEvent;
 
 import android.text.format.DateFormat;
-import android.util.SparseArray;
 
 public class Game
 {
@@ -47,7 +47,7 @@ public class Game
 
     private GameLog mGameLog;
 
-    private SparseArray< GameEvent > mPeriodLog;
+    private List< GameEvent > mPeriodLog;
 
     private int mHomePeriodFouls = 0;
 
@@ -87,10 +87,10 @@ public class Game
     public void addNewEvent( GameEvent event )
     {
         event.resolve();
-        mPeriodLog.append( mEventGameClock, event );
+        event.setTime( mEventGameClock );
+        mPeriodLog.add( event );
         checkTeamFoulEvent( event );
         checkTurnoverEvent( event );
-        checkShootEvent( event );
         endNewEvent();
 
     }
@@ -304,51 +304,6 @@ public class Game
         }
     }
 
-    private void checkReboundEvent( GameEvent event )
-    {
-        GameEvent appended = event.getAppended();
-        if( appended == null )
-        {
-            return;
-        }
-        if( appended instanceof BlockEvent )
-        {
-            checkReboundEvent( appended );
-        }
-        else if( appended instanceof ReboundEvent )
-        {
-            ReboundEvent rEvent = ( ReboundEvent ) appended;
-            ReboundType type = rEvent.getReboundType();
-            switch( type )
-            {
-                case DEFENSIVE:
-                    swapBallPossession();
-                    return;
-                case OFFENSIVE:
-                    resetMidShotClock();
-                    return;
-                case TEAM_REBOUND:
-                    checkTeamReboundEvent( event );
-                    return;
-            }
-        }
-    }
-
-    private void checkShootEvent( GameEvent event )
-    {
-        if( event instanceof ShootEvent )
-        {
-            if( isShotMade( event ) )
-            {
-                swapBallPossession();
-            }
-            else
-            {
-                checkReboundEvent( event );
-            }
-        }
-    }
-
     private void checkTeamFoulEvent( GameEvent event )
     {
         if( event == null )
@@ -417,7 +372,7 @@ public class Game
         return false;
     }
 
-    private void resetMidShotClock()
+    public void resetMidShotClock()
     {
         mCurrentShotClock = mReducedMaxShotClock;
     }
@@ -428,7 +383,7 @@ public class Game
         mAwayPeriodFouls = 0;
     }
 
-    private void swapBallPossession()
+    public void swapBallPossession()
     {
         if( mHasBallPossession.equals( mHomeTeam ) )
         {

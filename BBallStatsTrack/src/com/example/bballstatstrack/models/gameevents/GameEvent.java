@@ -13,6 +13,8 @@ public abstract class GameEvent
 
     public static final String PLAYER_NUMBER = "playerNumber";
 
+    public static final String TIME = "time";
+
     protected EventType mEvent;
 
     protected Player mPlayer;
@@ -20,6 +22,18 @@ public abstract class GameEvent
     protected Team mTeam;
 
     protected GameEvent mAppended = null;
+
+    protected int mTime;
+
+    public int getTime()
+    {
+        return mTime;
+    }
+
+    public void setTime( int time )
+    {
+        mTime = time;
+    }
 
     protected GameEvent( EventType event, Player player, Team team )
     {

@@ -1,20 +1,21 @@
 package com.example.bballstatstrack.models.game;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.example.bballstatstrack.models.gameevents.GameEvent;
 import com.example.bballstatstrack.models.utils.StringUtils;
 
 import android.util.SparseArray;
 
-public class GameLog extends SparseArray< SparseArray< GameEvent > >
+public class GameLog extends SparseArray< List< GameEvent > >
 {
     private int mCurrentPeriod;
 
     public GameLog()
     {
         mCurrentPeriod = 0;
-        put( mCurrentPeriod, new SparseArray< GameEvent >() );
+        put( mCurrentPeriod, new ArrayList< GameEvent >() );
     }
 
     public int getCurrentPeriod()
@@ -22,7 +23,7 @@ public class GameLog extends SparseArray< SparseArray< GameEvent > >
         return mCurrentPeriod;
     }
 
-    public SparseArray< GameEvent > getCurrentPeriodLog()
+    public List< GameEvent > getCurrentPeriodLog()
     {
         return get( mCurrentPeriod );
     }
@@ -30,7 +31,7 @@ public class GameLog extends SparseArray< SparseArray< GameEvent > >
     public void nextPeriod()
     {
         mCurrentPeriod++;
-        put( mCurrentPeriod, new SparseArray< GameEvent >() );
+        put( mCurrentPeriod, new ArrayList< GameEvent >() );
     }
 
     public ArrayList< String > toStringList()
@@ -38,12 +39,12 @@ public class GameLog extends SparseArray< SparseArray< GameEvent > >
         ArrayList< String > output = new ArrayList< String >();
         for( int index = 0; index < size(); index++ )
         {
-            SparseArray< GameEvent > periodLog = valueAt( index );
-            for( int innerIndex = 0; innerIndex < periodLog.size(); innerIndex++ )
+            List< GameEvent > periodLog = valueAt( index );
+            for( int innerIndex = periodLog.size() - 1; innerIndex >= 0; innerIndex-- )
             {
-                String time = StringUtils.getMinSecFormattedString( periodLog.keyAt( innerIndex ) );
-                String event = periodLog.valueAt( innerIndex ).toString();
-                output.add( time + " : " + event );
+                GameEvent event = periodLog.get( innerIndex );
+                String time = StringUtils.getMinSecFormattedString( event.getTime() );
+                output.add( time + " : " + event.toString() );
             }
             output.add( "Start of " + StringUtils.getPeriodString( index ) );
         }

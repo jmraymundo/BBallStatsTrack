@@ -42,38 +42,6 @@ public class JSONDeserializer
 
     private static Team mAwayTeam = null;
 
-    public static Team getTeamFromUUID( UUID teamID )
-    {
-        if( teamID.equals( mHomeTeam.getID() ) )
-        {
-            return mHomeTeam;
-        }
-        else if( teamID.equals( mAwayTeam.getID() ) )
-        {
-            return mAwayTeam;
-        }
-        else
-        {
-            return null;
-        }
-    }
-
-    public static ReboundEvent readEventRebound( JsonReader reader, Team team, Player player ) throws IOException
-    {
-        return new ReboundEvent( ReboundType.valueOf( reader.nextString() ), player, team );
-    }
-
-    public static SubstitutionEvent readEventSubstitution( JsonReader reader, Team team, Player player )
-            throws IOException
-    {
-        return new SubstitutionEvent( player, getPlayerFromTeam( team, reader.nextInt() ), team );
-    }
-
-    public static TurnoverEvent readEventTurnover( JsonReader reader, Team team, Player player ) throws IOException
-    {
-        return new TurnoverEvent( TurnoverType.valueOf( reader.nextString() ), player, team );
-    }
-
     public static Game readGame( JsonReader reader ) throws IOException
     {
         UUID id = null;
@@ -108,71 +76,20 @@ public class JSONDeserializer
         return new Game( id, longDate, mHomeTeam, mAwayTeam, gameLog );
     }
 
-    public static GameLog readGameLog( JsonReader reader ) throws IOException
+    private static Team getOtherTeam( Team team )
     {
-        GameLog gameLog = new GameLog();
-        reader.beginArray();
-        int index = 0;
-        while( reader.hasNext() )
+        if( team.equals( mHomeTeam ) )
         {
-            gameLog.append( index, readPeriodLog( reader ) );
-            index++;
+            return mAwayTeam;
         }
-        reader.endArray();
-        return gameLog;
-    }
-
-    public static Team readTeam( JsonReader reader ) throws IOException
-    {
-        UUID id = null;
-        String teamName = null;
-        SparseArray< Player > playerList = null;
-        List< Integer > inGamePlayerList = null;
-        int teamFouls = Integer.MIN_VALUE;
-        int teamRebounds = Integer.MIN_VALUE;
-        int timeouts = Integer.MIN_VALUE;
-        int possessionTimeSec = Integer.MIN_VALUE;
-        reader.beginObject();
-        String name;
-        while( reader.hasNext() )
+        else if( team.equals( mAwayTeam ) )
         {
-            name = reader.nextName();
-            if( name.equals( TeamStats.TEAM_ID.toString() ) )
-            {
-                id = UUID.fromString( reader.nextString() );
-            }
-            else if( name.equals( TeamStats.NAME.toString() ) )
-            {
-                teamName = reader.nextString();
-            }
-            else if( name.equals( TeamStats.PLAYER_LIST.toString() ) )
-            {
-                playerList = readPlayerList( reader );
-            }
-            else if( name.equals( TeamStats.INGAME_PLAYER_LIST.toString() ) )
-            {
-                inGamePlayerList = readInGamePlayerNumbers( reader );
-            }
-            else if( name.equals( TeamStats.TOTAL_FOULS.toString() ) )
-            {
-                teamFouls = reader.nextInt();
-            }
-            else if( name.equals( TeamStats.TEAM_REBOUNDS.toString() ) )
-            {
-                teamRebounds = reader.nextInt();
-            }
-            else if( name.equals( TeamStats.TIMEOUTS.toString() ) )
-            {
-                timeouts = reader.nextInt();
-            }
-            else if( name.equals( TeamStats.POSSESSION_TIME.toString() ) )
-            {
-                possessionTimeSec = reader.nextInt();
-            }
+            return mHomeTeam;
         }
-        reader.endObject();
-        return new Team( id, teamName, playerList, inGamePlayerList, teamFouls, teamRebounds, timeouts,
-                possessionTimeSec );
+        else
+        {
+            return null;
+        }
     }
 
     private static Player getPlayerFromTeam( Team team, int playerNumber )
@@ -182,20 +99,24 @@ public class JSONDeserializer
 
     private static Player getPlayerNumberFromOtherTeam( Team team, int number )
     {
-        Team otherTeam;
-        if( team.equals( mHomeTeam ) )
+        Team otherTeam = getOtherTeam( team );
+        return otherTeam.getPlayers().get( number );
+    }
+
+    private static Team getTeamFromUUID( UUID teamID )
+    {
+        if( teamID.equals( mHomeTeam.getID() ) )
         {
-            otherTeam = mAwayTeam;
+            return mHomeTeam;
         }
-        else if( team.equals( mAwayTeam ) )
+        else if( teamID.equals( mAwayTeam.getID() ) )
         {
-            otherTeam = mHomeTeam;
+            return mAwayTeam;
         }
         else
         {
             return null;
         }
-        return otherTeam.getPlayers().get( number );
     }
 
     private static GameEvent readEvent( JsonReader reader ) throws IOException
@@ -203,6 +124,7 @@ public class JSONDeserializer
         EventType type = null;
         int playerNumber = Integer.MIN_VALUE;
         UUID teamID = null;
+        int time = Integer.MIN_VALUE;
         GameEvent appended = null;
         GameEvent thisEvent = null;
         reader.beginObject();
@@ -217,6 +139,10 @@ public class JSONDeserializer
         if( reader.nextName().equals( GameEvent.TEAM_ID ) )
         {
             teamID = UUID.fromString( reader.nextString() );
+        }
+        if( reader.nextName().equals( GameEvent.TIME ) )
+        {
+            time = reader.nextInt();
         }
         if( reader.nextName().equals( GameEvent.APPENDED ) )
         {
@@ -254,6 +180,7 @@ public class JSONDeserializer
                 thisEvent = readEventTurnover( reader, team, player );
                 break;
         }
+        thisEvent.setTime( time );
         reader.endObject();
         if( thisEvent != null )
         {
@@ -273,9 +200,14 @@ public class JSONDeserializer
                 return new NonShootingFoulEvent( NonShootingFoulType.valueOf( reader.nextString() ), player, team );
             case SHOOTING:
                 return new ShootingFoulEvent( player, team, getPlayerNumberFromOtherTeam( team, reader.nextInt() ),
-                        reader.nextInt() );
+                        getTeamFromUUID( UUID.fromString( reader.nextString() ) ), reader.nextInt() );
         }
         return null;
+    }
+
+    private static ReboundEvent readEventRebound( JsonReader reader, Team team, Player player ) throws IOException
+    {
+        return new ReboundEvent( ReboundType.valueOf( reader.nextString() ), player, team );
     }
 
     private static ShootEvent readEventShoot( JsonReader reader, Player player, Team team ) throws IOException
@@ -283,6 +215,31 @@ public class JSONDeserializer
         ShotClass shotClass = ShotClass.valueOf( reader.nextString() );
         ShotType shotType = ShotType.valueOf( reader.nextString() );
         return new ShootEvent( shotClass, shotType, player, team );
+    }
+
+    private static SubstitutionEvent readEventSubstitution( JsonReader reader, Team team, Player player )
+            throws IOException
+    {
+        return new SubstitutionEvent( player, getPlayerFromTeam( team, reader.nextInt() ), team );
+    }
+
+    private static TurnoverEvent readEventTurnover( JsonReader reader, Team team, Player player ) throws IOException
+    {
+        return new TurnoverEvent( TurnoverType.valueOf( reader.nextString() ), player, team );
+    }
+
+    private static GameLog readGameLog( JsonReader reader ) throws IOException
+    {
+        GameLog gameLog = new GameLog();
+        reader.beginArray();
+        int index = 0;
+        while( reader.hasNext() )
+        {
+            gameLog.append( index, readPeriodLog( reader ) );
+            index++;
+        }
+        reader.endArray();
+        return gameLog;
     }
 
     private static List< Integer > readInGamePlayerNumbers( JsonReader reader ) throws IOException
@@ -297,16 +254,15 @@ public class JSONDeserializer
         return list;
     }
 
-    private static SparseArray< GameEvent > readPeriodLog( JsonReader reader ) throws IOException
+    private static List< GameEvent > readPeriodLog( JsonReader reader ) throws IOException
     {
-        SparseArray< GameEvent > periodLog = new SparseArray< GameEvent >();
+        List< GameEvent > periodLog = new ArrayList< GameEvent >();
         reader.beginArray();
         while( reader.hasNext() )
         {
             reader.beginObject();
-            String name = reader.nextName();
             GameEvent event = readEvent( reader );
-            periodLog.append( StringUtils.getIntSecondsFromMinSecFormattedString( name ), event );
+            periodLog.add( event );
             reader.endObject();
         }
         reader.endArray();
@@ -418,5 +374,58 @@ public class JSONDeserializer
         }
         reader.endArray();
         return list;
+    }
+
+    private static Team readTeam( JsonReader reader ) throws IOException
+    {
+        UUID id = null;
+        String teamName = null;
+        SparseArray< Player > playerList = null;
+        List< Integer > inGamePlayerList = null;
+        int teamFouls = Integer.MIN_VALUE;
+        int teamRebounds = Integer.MIN_VALUE;
+        int timeouts = Integer.MIN_VALUE;
+        int possessionTimeSec = Integer.MIN_VALUE;
+        reader.beginObject();
+        String name;
+        while( reader.hasNext() )
+        {
+            name = reader.nextName();
+            if( name.equals( TeamStats.TEAM_ID.toString() ) )
+            {
+                id = UUID.fromString( reader.nextString() );
+            }
+            else if( name.equals( TeamStats.NAME.toString() ) )
+            {
+                teamName = reader.nextString();
+            }
+            else if( name.equals( TeamStats.PLAYER_LIST.toString() ) )
+            {
+                playerList = readPlayerList( reader );
+            }
+            else if( name.equals( TeamStats.INGAME_PLAYER_LIST.toString() ) )
+            {
+                inGamePlayerList = readInGamePlayerNumbers( reader );
+            }
+            else if( name.equals( TeamStats.TOTAL_FOULS.toString() ) )
+            {
+                teamFouls = reader.nextInt();
+            }
+            else if( name.equals( TeamStats.TEAM_REBOUNDS.toString() ) )
+            {
+                teamRebounds = reader.nextInt();
+            }
+            else if( name.equals( TeamStats.TIMEOUTS.toString() ) )
+            {
+                timeouts = reader.nextInt();
+            }
+            else if( name.equals( TeamStats.POSSESSION_TIME.toString() ) )
+            {
+                possessionTimeSec = reader.nextInt();
+            }
+        }
+        reader.endObject();
+        return new Team( id, teamName, playerList, inGamePlayerList, teamFouls, teamRebounds, timeouts,
+                possessionTimeSec );
     }
 }

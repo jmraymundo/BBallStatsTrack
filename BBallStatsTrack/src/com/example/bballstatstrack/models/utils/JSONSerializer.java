@@ -30,6 +30,7 @@ public class JSONSerializer
         EventType event = gameEvent.getEventType();
         Player player = gameEvent.getPlayer();
         Team team = gameEvent.getTeam();
+        int time = gameEvent.getTime();
         GameEvent appended = gameEvent.getAppended();
         writer.name( GameEvent.EVENT_TYPE ).value( event.toString() );
         if( player != null )
@@ -37,6 +38,7 @@ public class JSONSerializer
             writer.name( GameEvent.PLAYER_NUMBER ).value( player.getNumber() );
         }
         writer.name( GameEvent.TEAM_ID ).value( team.getID().toString() );
+        writer.name( GameEvent.TIME ).value( time );
         if( appended != null )
         {
             writer.name( GameEvent.APPENDED );
@@ -68,7 +70,9 @@ public class JSONSerializer
             throws IOException
     {
         Player shooter = shootingFoulEvent.getShooter();
+        Team shooterTeam = shootingFoulEvent.getShooterTeam();
         writer.name( ShootingFoulEvent.SHOOTER ).value( shooter.getNumber() );
+        writer.name( ShootingFoulEvent.SHOOTER_TEAM ).value( shooterTeam.getID().toString() );
         writer.name( ShootingFoulEvent.FT_COUNT ).value( shootingFoulEvent.getFTCount() );
     }
 
@@ -114,7 +118,7 @@ public class JSONSerializer
         writer.beginArray();
         for( int index = 0; index < gameLog.size(); index++ )
         {
-            SparseArray< GameEvent > periodLog = gameLog.get( index );
+            List< GameEvent > periodLog = gameLog.get( index );
             writePeriodLog( writer, periodLog );
         }
         writer.endArray();
@@ -130,14 +134,15 @@ public class JSONSerializer
         writer.endArray();
     }
 
-    public static void writePeriodLog( JsonWriter writer, SparseArray< GameEvent > periodLog ) throws IOException
+    public static void writePeriodLog( JsonWriter writer, List< GameEvent > periodLog ) throws IOException
     {
         writer.beginArray();
         for( int index = 0; index < periodLog.size(); index++ )
         {
             writer.beginObject();
-            writer.name( StringUtils.getMinSecFormattedString( periodLog.keyAt( index ) ) );
-            writeEvent( writer, periodLog.valueAt( index ) );
+            GameEvent event = periodLog.get( index );
+            writer.name( StringUtils.getMinSecFormattedString( event.getTime() ) );
+            writeEvent( writer, event );
             writer.endObject();
         }
         writer.endArray();

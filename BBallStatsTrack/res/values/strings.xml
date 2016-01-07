@@ -88,4 +88,5 @@
 	<string name="game_review_team_turnovers">Turnovers</string>
 	<string name="game_review_team_fouls">Team Fouls</string>
 	<string name="game_review_team_total_possession">Total Ball Possession Duration</string>
+	<string name="foul_dialog_shooting_question">Is it a shooting foul?</string>
 </resources>

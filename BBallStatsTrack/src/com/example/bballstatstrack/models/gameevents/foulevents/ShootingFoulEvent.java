@@ -14,17 +14,32 @@ public class ShootingFoulEvent extends FoulEvent
 
     public static final String SHOOTER = "shooter";
 
+    public static final String SHOOTER_TEAM = "shooter_team";
+
     public static final String FT_COUNT = "free_throw_count";
 
     private Player mShooter;
 
+    private Team mShooterTeam;
+
     private int mFTCount;
 
-    public ShootingFoulEvent( Player player, Team team, Player shooter, int ftCount )
+    public ShootingFoulEvent( Player player, Team team )
     {
         super( FoulType.SHOOTING, player, team );
+    }
+
+    public ShootingFoulEvent( Player player, Team team, Player shooter, Team shooterTeam, int ftCount )
+    {
+        this( player, team );
         mShooter = shooter;
+        mShooterTeam = shooterTeam;
         mFTCount = ftCount;
+    }
+
+    public int getFTCount()
+    {
+        return mFTCount;
     }
 
     public Player getShooter()
@@ -32,9 +47,31 @@ public class ShootingFoulEvent extends FoulEvent
         return mShooter;
     }
 
-    public int getFTCount()
+    public Team getShooterTeam()
     {
-        return mFTCount;
+        return mShooterTeam;
+    }
+
+    @Override
+    public void resolve()
+    {
+        super.resolve();
+        mTeam.addFoul();
+    }
+
+    public void setFTCount( int fTCount )
+    {
+        mFTCount = fTCount;
+    }
+
+    public void setShooter( Player shooter )
+    {
+        mShooter = shooter;
+    }
+
+    public void setShooterTeam( Team shooterTeam )
+    {
+        mShooterTeam = shooterTeam;
     }
 
     @Override
@@ -61,12 +98,5 @@ public class ShootingFoulEvent extends FoulEvent
             output = output.concat( additional );
         }
         return output.trim();
-    }
-
-    @Override
-    public void resolve()
-    {
-        super.resolve();
-        mTeam.addFoul();
     }
 }
