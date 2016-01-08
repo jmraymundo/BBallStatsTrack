@@ -278,7 +278,7 @@ public class TeamFragment extends Fragment
         inputMethodManager.hideSoftInputFromWindow( focusedView.getWindowToken(), 0 );
     }
 
-    private void setPlayerNumberEditTextListeners( final AlertDialog dialog )
+    private void setPlayerNumberEditTextListeners( AlertDialog dialog )
     {
         EditText playerNumberText = ( EditText ) dialog.findViewById( R.id.player_number_editText );
         playerNumberText.addTextChangedListener( new PlayerNumberWatcher( 0, 99 ) );
