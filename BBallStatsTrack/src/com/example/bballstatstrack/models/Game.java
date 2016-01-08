@@ -6,8 +6,6 @@ import java.util.UUID;
 
 import com.example.bballstatstrack.models.game.GameLog;
 import com.example.bballstatstrack.models.gameevents.GameEvent;
-import com.example.bballstatstrack.models.gameevents.GameEvent.ShotType;
-import com.example.bballstatstrack.models.gameevents.ShootEvent;
 import com.example.bballstatstrack.models.gameevents.TurnoverEvent;
 import com.example.bballstatstrack.models.gameevents.foulevents.NonShootingFoulEvent;
 import com.example.bballstatstrack.models.gameevents.foulevents.ShootingFoulEvent;
@@ -335,19 +333,6 @@ public class Game
         }
     }
 
-    private void checkTeamReboundEvent( GameEvent event )
-    {
-        pauseGame();
-        if( getTeamWithPossession().equals( event.getTeam() ) )
-        {
-            resetMidShotClock();
-        }
-        else
-        {
-            swapBallPossession();
-        }
-    }
-
     private void checkTurnoverEvent( GameEvent event )
     {
         if( event == null )
@@ -372,19 +357,6 @@ public class Game
         mGameLog = new GameLog();
         mPeriodLog = mGameLog.getCurrentPeriodLog();
         mPeriod = mGameLog.getCurrentPeriod();
-    }
-
-    private boolean isShotMade( GameEvent event )
-    {
-        ShotType type = ( ( ShootEvent ) event ).getShotType();
-        switch( type )
-        {
-            case MADE:
-                return true;
-            case MISSED:
-                return false;
-        }
-        return false;
     }
 
     private void resetPeriodFouls()

@@ -146,7 +146,8 @@ public class GameActivity extends Activity
     private AlertDialog buildClockDialog( int detailedTextID )
     {
         Builder builder = new Builder( GameActivity.this );
-        View dialogView = getLayoutInflater().inflate( R.layout.dialog_get_clock, null );
+        View dialogView = getLayoutInflater().inflate( R.layout.dialog_get_clock,
+                ( LinearLayout ) findViewById( R.id.parentContainer ), false );
         builder.setView( dialogView );
         builder.setTitle( R.string.set_time_title );
         TextView detailedQuestionView = ( TextView ) dialogView.findViewById( R.id.requested_clock_text );
@@ -155,6 +156,7 @@ public class GameActivity extends Activity
         final AlertDialog dialog = builder.create();
         dialog.getWindow().setSoftInputMode( WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE );
         dialog.setCanceledOnTouchOutside( false );
+        dialog.show();
         return dialog;
     }
 
@@ -351,23 +353,6 @@ public class GameActivity extends Activity
         } );
     }
 
-    private int setClockFromDialog( DialogInterface dialog, int max )
-    {
-        AlertDialog alertDialog = ( AlertDialog ) dialog;
-        EditText clockField = ( EditText ) alertDialog.findViewById( R.id.requested_clock_field );
-        clockField.addTextChangedListener( new PlayerNumberWatcher( 0, max ) );
-        String clockValue = clockField.getText().toString();
-        if( clockValue.isEmpty() )
-        {
-            Toast.makeText( GameActivity.this, getResources().getString( R.string.clock_input_error ),
-                    Toast.LENGTH_SHORT ).show();
-            return -1;
-        }
-        int number = Integer.parseInt( clockValue );
-        dialog.dismiss();
-        return number;
-    }
-
     private void setStarters( Team team, List< Integer > selected )
     {
         for( Integer number : selected )
@@ -389,7 +374,8 @@ public class GameActivity extends Activity
     private void showAssistDialog( GameEvent parent, ShootingFoulEvent shootingFoulEvent )
     {
         Builder builder = new Builder( GameActivity.this );
-        LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_container, null );
+        LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_container,
+                ( LinearLayout ) findViewById( R.id.parentContainer ), false );
         builder.setView( parentView );
         TextView question = ( TextView ) parentView.findViewById( R.id.dialog_container_question_textview );
         question.setText( R.string.assist_dialog_player_question );
@@ -434,7 +420,8 @@ public class GameActivity extends Activity
     private void showBlockDialog( GameEvent parent )
     {
         Builder builder = new Builder( GameActivity.this );
-        LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_container, null );
+        LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_container,
+                ( LinearLayout ) findViewById( R.id.parentContainer ), false );
         builder.setView( parentView );
         TextView question = ( TextView ) parentView.findViewById( R.id.dialog_container_question_textview );
         question.setText( R.string.block_dialog_player_question );
@@ -487,7 +474,8 @@ public class GameActivity extends Activity
     {
         newGamePauseEvent();
         Builder builder = new Builder( GameActivity.this );
-        LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_container, null );
+        LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_container,
+                ( LinearLayout ) findViewById( R.id.parentContainer ), false );
         builder.setView( parentView );
         TextView question = ( TextView ) parentView.findViewById( R.id.dialog_container_question_textview );
         question.setText( R.string.foul_dialog_player_question );
@@ -544,7 +532,8 @@ public class GameActivity extends Activity
         {
             builder.setTitle( R.string.free_throw_dialog_penalty );
         }
-        LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_container, null );
+        LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_container,
+                ( LinearLayout ) findViewById( R.id.parentContainer ), false );
         builder.setView( parentView );
         TextView question = ( TextView ) parentView.findViewById( R.id.dialog_container_question_textview );
         question.setText( R.string.foul_dialog_fouled_question );
@@ -566,13 +555,13 @@ public class GameActivity extends Activity
     private void showMaxGameClockDialog()
     {
         final AlertDialog dialog = buildClockDialog( R.string.set_max_game_clock_title );
-        dialog.show();
+        final EditText clockField = getClockFieldAndSetMaxValueWatcher( dialog, 12 );
         dialog.getButton( DialogInterface.BUTTON_POSITIVE ).setOnClickListener( new OnClickListener()
         {
             @Override
             public void onClick( View v )
             {
-                mGameClock = setClockFromDialog( dialog, 12 );
+                mGameClock = setClockFromDialog( clockField );
                 if( mGameClock == -1 )
                 {
                     return;
@@ -586,13 +575,13 @@ public class GameActivity extends Activity
     private void showMaxShotClockResetDialog()
     {
         final AlertDialog dialog = buildClockDialog( R.string.set_reset_shot_clock_title );
-        dialog.show();
+        final EditText clockField = getClockFieldAndSetMaxValueWatcher( dialog, 24 );
         dialog.getButton( DialogInterface.BUTTON_POSITIVE ).setOnClickListener( new OnClickListener()
         {
             @Override
             public void onClick( View v )
             {
-                mShotClockReset = setClockFromDialog( dialog, 24 );
+                mShotClockReset = setClockFromDialog( clockField );
                 if( mShotClockReset == -1 )
                 {
                     return;
@@ -601,6 +590,25 @@ public class GameActivity extends Activity
             }
         } );
         dialog.setCancelable( false );
+    }
+
+    private int setClockFromDialog( EditText clockField )
+    {
+        String clockValue = clockField.getText().toString();
+        if( clockValue.isEmpty() )
+        {
+            Toast.makeText( GameActivity.this, getResources().getString( R.string.clock_input_error ),
+                    Toast.LENGTH_SHORT ).show();
+            return -1;
+        }
+        return Integer.parseInt( clockValue );
+    }
+
+    private EditText getClockFieldAndSetMaxValueWatcher( AlertDialog dialog, int max )
+    {
+        EditText clockField = ( EditText ) dialog.findViewById( R.id.requested_clock_field );
+        clockField.addTextChangedListener( new PlayerNumberWatcher( 0, max ) );
+        return clockField;
     }
 
     private void showReboundDialog( GameEvent parent )
@@ -615,7 +623,8 @@ public class GameActivity extends Activity
     private void showReboundEventDialog( GameEvent parent, Team team )
     {
         Builder builder = new Builder( GameActivity.this );
-        LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_container, null );
+        LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_container,
+                ( LinearLayout ) findViewById( R.id.parentContainer ), false );
         builder.setView( parentView );
         TextView question = ( TextView ) parentView.findViewById( R.id.dialog_container_question_textview );
         question.setText( R.string.rebound_dialog_player_question );
@@ -731,7 +740,8 @@ public class GameActivity extends Activity
     {
         mGame.startNewEvent();
         Builder builder = new Builder( GameActivity.this );
-        LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_container, null );
+        LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_container,
+                ( LinearLayout ) findViewById( R.id.parentContainer ), false );
         builder.setView( parentView );
         TextView question = ( TextView ) parentView.findViewById( R.id.dialog_container_question_textview );
         question.setText( R.string.shoot_dialog_player_question );
@@ -773,7 +783,8 @@ public class GameActivity extends Activity
     private void showStealEventDialog( GameEvent parent )
     {
         Builder builder = new Builder( GameActivity.this );
-        LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_container, null );
+        LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_container,
+                ( LinearLayout ) findViewById( R.id.parentContainer ), false );
         builder.setView( parentView );
         TextView question = ( TextView ) parentView.findViewById( R.id.dialog_container_question_textview );
         question.setText( R.string.steal_dialog_player_question );
@@ -795,7 +806,7 @@ public class GameActivity extends Activity
     {
         Builder builder = new Builder( GameActivity.this );
         LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_substitution_button,
-                null );
+                ( LinearLayout ) findViewById( R.id.parentContainer ), false );
         builder.setView( parentView );
         AlertDialog dialog = builder.show();
         final Team homeTeam = mGame.getHomeTeam();
@@ -811,7 +822,8 @@ public class GameActivity extends Activity
     private void showSubstitutionInDialog( Team team, Player playerOut )
     {
         Builder builder = new Builder( GameActivity.this );
-        LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_container, null );
+        LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_container,
+                ( LinearLayout ) findViewById( R.id.parentContainer ), false );
         builder.setView( parentView );
         TextView question = ( TextView ) parentView.findViewById( R.id.dialog_container_question_textview );
         question.setText( R.string.substitution_dialog_player_out_question );
@@ -837,7 +849,8 @@ public class GameActivity extends Activity
     private void showSubstitutionOutDialog( Team team )
     {
         Builder builder = new Builder( GameActivity.this );
-        LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_container, null );
+        LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_container,
+                ( LinearLayout ) findViewById( R.id.parentContainer ), false );
         builder.setView( parentView );
         TextView question = ( TextView ) parentView.findViewById( R.id.dialog_container_question_textview );
         question.setText( R.string.substitution_dialog_player_out_question );
@@ -922,7 +935,8 @@ public class GameActivity extends Activity
     {
         newGamePauseEvent();
         Builder builder = new Builder( GameActivity.this );
-        LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_container, null );
+        LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_container,
+                ( LinearLayout ) findViewById( R.id.parentContainer ), false );
         builder.setView( parentView );
         TextView question = ( TextView ) parentView.findViewById( R.id.dialog_container_question_textview );
         question.setText( R.string.turnover_dialog_player_question );
@@ -942,7 +956,8 @@ public class GameActivity extends Activity
     private void showTurnoverTypeDialog( Team team, Player player )
     {
         Builder builder = new Builder( GameActivity.this );
-        LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_container, null );
+        LinearLayout parentView = ( LinearLayout ) getLayoutInflater().inflate( R.layout.dialog_container,
+                ( LinearLayout ) findViewById( R.id.parentContainer ), false );
         builder.setView( parentView );
         TextView question = ( TextView ) parentView.findViewById( R.id.dialog_container_question_textview );
         question.setText( R.string.turnover_dialog_type_question );
