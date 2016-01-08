@@ -417,8 +417,9 @@ public class GameActivity extends Activity
         builder.setTitle( R.string.ball_possession_question );
         builder.setNegativeButton( mHomeTeam.getName(), new BallPossessionDeciderListener( mHomeTeam ) );
         builder.setPositiveButton( mAwayTeam.getName(), new BallPossessionDeciderListener( mAwayTeam ) );
-        AlertDialog ballPossessionDialog = builder.create();
-        ballPossessionDialog.show();
+        AlertDialog dialog = builder.create();
+        dialog.show();
+        dialog.setCancelable( false );
     }
 
     private void showBlockCheckDialog( final GameEvent parent )
