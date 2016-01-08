@@ -19,7 +19,6 @@ import android.widget.Toast;
 
 public class AddPlayersToTeamsActivity extends Activity
 {
-
     protected static final String HOME_TEAM_NAME = "HomeTeamName";
 
     protected static final String HOME_TEAM_MEMBER_NAMES = "HomeTeamMemberNames";
@@ -36,19 +35,19 @@ public class AddPlayersToTeamsActivity extends Activity
 
     private String mAwayName;
 
-    SparseArray< String > mHomeTeam;
+    private SparseArray< String > mHomeTeam;
 
-    SparseArray< String > mAwayTeam;
+    private SparseArray< String > mAwayTeam;
 
-    TeamFragment mHomeTeamFragment;
+    private TeamFragment mHomeTeamFragment;
 
-    TeamFragment mAwayTeamFragment;
+    private TeamFragment mAwayTeamFragment;
 
-    Button mHomeButton;
+    private Button mHomeButton;
 
-    Button mAwayButton;
+    private Button mAwayButton;
 
-    Button mProceedButton;
+    private Button mProceedButton;
 
     @Override
     public void onBackPressed()
@@ -118,11 +117,6 @@ public class AddPlayersToTeamsActivity extends Activity
             mHomeButton.setEnabled( true );
             mAwayButton.setEnabled( false );
         }
-        else
-        {
-            mHomeButton.setEnabled( true );
-            mAwayButton.setEnabled( true );
-        }
     }
 
     private class FragmentButtonListener implements OnClickListener
@@ -148,7 +142,7 @@ public class AddPlayersToTeamsActivity extends Activity
 
     private class ProceedButtonListener implements OnClickListener
     {
-        public boolean hasCompleteTeamNames()
+        public boolean hasIncompleteTeamNames()
         {
             return mHomeName.isEmpty() || mAwayName.isEmpty();
         }
@@ -171,9 +165,8 @@ public class AddPlayersToTeamsActivity extends Activity
                         Toast.LENGTH_SHORT ).show();
                 return;
             }
-            if( hasCompleteTeamNames() )
+            if( hasIncompleteTeamNames() )
             {
-
                 Toast.makeText( AddPlayersToTeamsActivity.this, "Team names are mandatory. Cannot proceed.",
                         Toast.LENGTH_SHORT ).show();
                 return;
