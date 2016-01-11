@@ -567,6 +567,7 @@ public class GameActivity extends Activity
                     return;
                 }
                 showMaxShotClockResetDialog();
+                dialog.dismiss();
             }
         } );
         dialog.setCancelable( false );
@@ -587,6 +588,7 @@ public class GameActivity extends Activity
                     return;
                 }
                 fetchHomeStarters();
+                dialog.dismiss();
             }
         } );
         dialog.setCancelable( false );
