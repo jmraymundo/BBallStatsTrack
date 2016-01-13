@@ -41,7 +41,6 @@ public class TurnoverEvent extends GameEvent
             if( foulType == FoulType.OFFENSIVE )
             {
                 mAppended = appendedEvent;
-                return;
             }
         }
     }
