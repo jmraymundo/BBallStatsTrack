@@ -1,7 +1,6 @@
 package com.example.bballstatstrack.listeners;
 
 import com.example.bballstatstrack.activities.GameActivity;
-import com.example.bballstatstrack.models.gameevents.GameEvent;
 import com.example.bballstatstrack.models.gameevents.ReboundEvent;
 import com.example.bballstatstrack.models.gameevents.ShootEvent;
 

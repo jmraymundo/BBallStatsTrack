@@ -7,7 +7,6 @@ import java.util.UUID;
 
 import com.example.bballstatstrack.models.Game;
 import com.example.bballstatstrack.models.Game.GameStats;
-import com.example.bballstatstrack.models.Player.PlayerStats;
 import com.example.bballstatstrack.models.Player;
 import com.example.bballstatstrack.models.PlayerList;
 import com.example.bballstatstrack.models.Team;
@@ -98,6 +97,19 @@ public class JSONDeserializer
         return team.getPlayers().getPlayer( playerNumber );
     }
 
+    private static int getPlayerNumber( JsonReader reader ) throws IOException
+    {
+        if( reader.peek() == JsonToken.NULL )
+        {
+            reader.nextNull();
+            return -1;
+        }
+        else
+        {
+            return reader.nextInt();
+        }
+    }
+
     private static Player getPlayerNumberFromOtherTeam( Team team, int number )
     {
         Team otherTeam = getOtherTeam( team );
@@ -177,19 +189,6 @@ public class JSONDeserializer
             thisEvent.append( appended );
         }
         return thisEvent;
-    }
-
-    private static int getPlayerNumber( JsonReader reader ) throws IOException
-    {
-        if( reader.peek() == JsonToken.NULL )
-        {
-            reader.nextNull();
-            return -1;
-        }
-        else
-        {
-            return reader.nextInt();
-        }
     }
 
     private static FoulEvent readEventFoul( JsonReader reader, Player player, Team team ) throws IOException

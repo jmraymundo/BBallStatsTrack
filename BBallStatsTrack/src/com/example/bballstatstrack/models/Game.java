@@ -357,17 +357,16 @@ public class Game extends Observable
         ID( "id" ), AWAY_TEAM( "awayTeam" ), HOME_TEAM( "homeTeam" ), GAME_LOG( "gameLog" ), PERIOD_LOG(
                 "periodLog" ), DATE( "date" );
 
-        private final String mConstant;
+        private String mString;
 
-        private GameStats( String constant )
+        private GameStats( String string )
         {
-            mConstant = constant;
+            mString = string;
         }
 
-        @Override
-        public String toString()
+        public String getString()
         {
-            return mConstant;
+            return mString;
         }
     }
 

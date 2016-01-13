@@ -21,7 +21,6 @@ import com.example.bballstatstrack.models.Game;
 import com.example.bballstatstrack.models.Team;
 import com.example.bballstatstrack.models.UpdateTimeTask;
 import com.example.bballstatstrack.models.gameevents.GameEvent;
-import com.example.bballstatstrack.models.gameevents.ReboundEvent;
 import com.example.bballstatstrack.models.gameevents.foulevents.ShootingFoulEvent;
 
 import android.app.Activity;
@@ -116,11 +115,22 @@ public class GameActivity extends Activity
         return mTimer == null;
     }
 
+    public void nextPeriod()
+    {
+        timerStop();
+        mGame.nextPeriod();
+    }
+
     @Override
     public void onBackPressed()
     {
         AlertDialog dialog = new BackConfirmationDialog( GameActivity.this );
         dialog.show();
+    }
+
+    public void resetMidShotClock()
+    {
+        mGame.resetMidShotClock();
     }
 
     public void setGameClock( int gameClock )
@@ -295,16 +305,5 @@ public class GameActivity extends Activity
     {
         AlertDialog dialog = new TurnoverButtonDialog( GameActivity.this );
         dialog.show();
-    }
-
-    public void resetMidShotClock()
-    {
-        mGame.resetMidShotClock();
-    }
-
-    public void nextPeriod()
-    {
-        timerStop();
-        mGame.nextPeriod();
     }
 }
