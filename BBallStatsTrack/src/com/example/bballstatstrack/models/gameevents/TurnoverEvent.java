@@ -10,10 +10,16 @@ public class TurnoverEvent extends GameEvent
 
     private TurnoverType mTurnoverType;
 
-    public TurnoverEvent( TurnoverType type, Player player, Team team )
+    public TurnoverEvent( Player player, Team team )
     {
         super( EventType.TURNOVER, player, team );
-        mTurnoverType = type;
+        mTurnoverType = null;
+    }
+
+    public TurnoverEvent( TurnoverType type, Player player, Team team )
+    {
+        this( player, team );
+        setTurnoverType( type );
     }
 
     @Override
@@ -38,7 +44,6 @@ public class TurnoverEvent extends GameEvent
                 return;
             }
         }
-        super.append( appendedEvent );
     }
 
     public TurnoverType getTurnoverType()
@@ -54,6 +59,11 @@ public class TurnoverEvent extends GameEvent
         {
             mAppended.resolve();
         }
+    }
+
+    public void setTurnoverType( TurnoverType turnoverType )
+    {
+        mTurnoverType = turnoverType;
     }
 
     @Override

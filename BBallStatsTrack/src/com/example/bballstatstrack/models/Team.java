@@ -1,24 +1,38 @@
 package com.example.bballstatstrack.models;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 import java.util.UUID;
 
 import com.example.bballstatstrack.models.Player.PlayerStats;
 
-import android.util.SparseArray;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class Team
+public class Team extends Observable implements Parcelable
 {
-    private static final String B_BALL_STAT_TRACK = "BBallStatTrack";
+    public static final Parcelable.Creator< Team > CREATOR = new Parcelable.Creator< Team >()
+    {
+        @Override
+        public Team createFromParcel( Parcel source )
+        {
+            return new Team( source );
+        }
+
+        @Override
+        public Team[] newArray( int size )
+        {
+            return new Team[size];
+        }
+    };
 
     private UUID mID;
 
     private String mName;
 
-    SparseArray< Player > mPlayerList = new SparseArray< Player >();
+    private PlayerList mPlayerList;
 
-    List< Player > mInGamePlayerList = new ArrayList< Player >( 5 );
+    private PlayerList mInGamePlayerList;
 
     private int mTeamFouls;
 
@@ -26,20 +40,32 @@ public class Team
 
     private int mTimeOuts;
 
-    private int mPossessionTime = 0;
+    private int mPossessionTime;
 
-    public Team( String name, List< Player > playerList )
+    public Team()
     {
-        setName( name );
-        mID = UUID.nameUUIDFromBytes( name.getBytes() );
-        for( Player player : playerList )
-        {
-            mPlayerList.append( player.getNumber(), player );
-        }
+        mPlayerList = new PlayerList();
+        mInGamePlayerList = new PlayerList();
+        mTeamFouls = 0;
+        mTeamRebound = 0;
+        mTimeOuts = 0;
+        mPossessionTime = 0;
     }
 
-    public Team( UUID id, String name, SparseArray< Player > playerList, List< Integer > inGamePlayerListNumbers,
-            int teamFouls, int teamRebounds, int timeouts, int possessionTimeSec )
+    public Team( Parcel source )
+    {
+        mID = UUID.fromString( source.readString() );
+        mName = source.readString();
+        mPlayerList = source.readParcelable( PlayerList.class.getClassLoader() );
+        mInGamePlayerList = source.readParcelable( PlayerList.class.getClassLoader() );
+        mTeamFouls = source.readInt();
+        mTeamRebound = source.readInt();
+        mTimeOuts = source.readInt();
+        mPossessionTime = source.readInt();
+    }
+
+    public Team( UUID id, String name, PlayerList playerList, List< Integer > inGamePlayerListNumbers, int teamFouls,
+            int teamRebounds, int timeouts, int possessionTimeSec )
     {
         mID = id;
         mName = name;
@@ -56,9 +82,22 @@ public class Team
         mTeamFouls++;
     }
 
-    public void addStarter( int playerNumber )
+    public void addPlayer( Player player )
     {
-        mInGamePlayerList.add( mPlayerList.get( playerNumber ) );
+        mPlayerList.addPlayer( player );
+        setChanged();
+        notifyObservers();
+    }
+
+    public void addStarter( Player player )
+    {
+        mInGamePlayerList.addPlayer( player );
+    }
+
+    @Override
+    public int describeContents()
+    {
+        return 0;
     }
 
     public int get2ptFGMade()
@@ -120,7 +159,7 @@ public class Team
         return mID;
     }
 
-    public List< Player > getInGamePlayers()
+    public PlayerList getInGamePlayers()
     {
         return mInGamePlayerList;
     }
@@ -132,11 +171,10 @@ public class Team
 
     public int getOffRebounds()
     {
-
         return getStats( PlayerStats.OFFENSIVE_REBOUND );
     }
 
-    public SparseArray< Player > getPlayers()
+    public PlayerList getPlayers()
     {
         return mPlayerList;
     }
@@ -144,6 +182,11 @@ public class Team
     public int getPossessionTimeSec()
     {
         return mPossessionTime;
+    }
+
+    public int getSize()
+    {
+        return mPlayerList.getSize();
     }
 
     public int getSteals()
@@ -186,14 +229,39 @@ public class Team
         return getStats( PlayerStats.TURNOVER );
     }
 
+    public boolean isNumberAlreadyIn( int playerNumber )
+    {
+        for( Player player : mPlayerList )
+        {
+            if( player.getNumber() == playerNumber )
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void makeTeamRebound()
     {
         mTeamRebound++;
     }
 
+    public void removePlayer( Player player )
+    {
+        mPlayerList.removePlayer( player );
+        setChanged();
+        notifyObservers();
+    }
+
     public void setName( String name )
     {
         mName = name;
+        mID = UUID.nameUUIDFromBytes( name.getBytes() );
+    }
+
+    public void setStarters( PlayerList selectedPlayers )
+    {
+        mInGamePlayerList = selectedPlayers;
     }
 
     public void setTimeOuts( int timeOuts )
@@ -203,16 +271,13 @@ public class Team
 
     public void substitutePlayer( Player in, Player out )
     {
-        mInGamePlayerList.remove( out );
-        mInGamePlayerList.add( in );
+        mInGamePlayerList.removePlayer( out );
+        mInGamePlayerList.addPlayer( in );
     }
 
     public void updatePlayingTime()
     {
-        for( Player player : mInGamePlayerList )
-        {
-            player.incrementPlayingTime();
-        }
+        mInGamePlayerList.updatePlayingTime();
     }
 
     public void updatePossessionTime()
@@ -225,12 +290,25 @@ public class Team
         mTimeOuts--;
     }
 
-    private List< Player > getInGamePlayerList( List< Integer > numbers )
+    @Override
+    public void writeToParcel( Parcel dest, int flags )
     {
-        List< Player > list = new ArrayList< Player >();
+        dest.writeString( mID.toString() );
+        dest.writeString( mName );
+        dest.writeParcelable( mPlayerList, flags );
+        dest.writeParcelable( mInGamePlayerList, flags );
+        dest.writeInt( mTeamFouls );
+        dest.writeInt( mTeamRebound );
+        dest.writeInt( mTimeOuts );
+        dest.writeInt( mPossessionTime );
+    }
+
+    private PlayerList getInGamePlayerList( List< Integer > numbers )
+    {
+        PlayerList list = new PlayerList();
         for( int number : numbers )
         {
-            list.add( mPlayerList.get( number ) );
+            list.addPlayer( mPlayerList.getPlayer( number ) );
         }
         return list;
     }
@@ -239,9 +317,9 @@ public class Team
     {
         int total = 0;
         Player player;
-        for( int index = 0; index < mPlayerList.size(); index++ )
+        for( int index = 0; index < mPlayerList.getSize(); index++ )
         {
-            player = mPlayerList.valueAt( index );
+            player = mPlayerList.playerAt( index );
             switch( stat )
             {
                 case ASSIST:

@@ -59,9 +59,9 @@ public class ShootingFoulEvent extends FoulEvent
         mTeam.addFoul();
     }
 
-    public void setFTCount( int fTCount )
+    public void setFTCount( int ftCount )
     {
-        mFTCount = fTCount;
+        mFTCount = ftCount;
     }
 
     public void setShooter( Player shooter )

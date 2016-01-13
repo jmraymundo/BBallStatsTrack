@@ -1,52 +1,87 @@
 package com.example.bballstatstrack.models;
 
-public class Player
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Player implements Parcelable
 {
-    private static final String B_BALL_STAT_TRACK = "BBallStatTrack";
+    public static final Parcelable.Creator< Player > CREATOR = new Parcelable.Creator< Player >()
+    {
+        @Override
+        public Player createFromParcel( Parcel source )
+        {
+            return new Player( source );
+        }
+
+        @Override
+        public Player[] newArray( int size )
+        {
+            return new Player[size];
+        }
+    };
 
     private int mNumber;
 
     private String mFullName;
 
-    private int m2ptFGMiss = 0;
+    private int m2ptFGMiss;
 
-    private int m2ptFGMade = 0;
+    private int m2ptFGMade;
 
-    private int m3ptFGMiss = 0;
+    private int m3ptFGMiss;
 
-    private int m3ptFGMade = 0;
+    private int m3ptFGMade;
 
-    private int mFTMiss = 0;
+    private int mFTMiss;
 
-    private int mFTMade = 0;
+    private int mFTMade;
 
-    private int mOffRebound = 0;
+    private int mOffRebound;
 
-    private int mDefRebound = 0;
+    private int mDefRebound;
 
-    private int mAssist = 0;
+    private int mAssist;
 
-    private int mTurnover = 0;
+    private int mTurnover;
 
-    private int mSteal = 0;
+    private int mSteal;
 
-    private int mBlock = 0;
+    private int mBlock;
 
-    private int mFoul = 0;
+    private int mFoul;
 
-    private int mPlayingTimeSec = 0;
+    private int mPlayingTimeSec;
 
-    public Player( int id, String fullName )
+    public Player()
     {
-        setNumber( id );
+        setNumber( Integer.MIN_VALUE );
+        setFullName( null );
+        m2ptFGMiss = 0;
+        m2ptFGMade = 0;
+        m3ptFGMiss = 0;
+        m3ptFGMade = 0;
+        mFTMiss = 0;
+        mFTMade = 0;
+        mOffRebound = 0;
+        mDefRebound = 0;
+        mAssist = 0;
+        mTurnover = 0;
+        mSteal = 0;
+        mBlock = 0;
+        mFoul = 0;
+        mPlayingTimeSec = 0;
+    }
+
+    public Player( int number, String fullName )
+    {
+        setNumber( number );
         setFullName( fullName );
     }
 
     public Player( int number, String fullName, int miss1pt, int miss2pt, int miss3pt, int made1pt, int made2pt,
             int made3pt, int offReb, int defReb, int assist, int to, int stl, int blk, int foul, int playingTimeSec )
     {
-        mNumber = number;
-        mFullName = fullName;
+        this( number, fullName );
         mFTMiss = miss1pt;
         m2ptFGMiss = miss2pt;
         m3ptFGMiss = miss3pt;
@@ -61,6 +96,32 @@ public class Player
         mBlock = blk;
         mFoul = foul;
         mPlayingTimeSec = playingTimeSec;
+    }
+
+    public Player( Parcel source )
+    {
+        mNumber = source.readInt();
+        mFullName = source.readString();
+        m2ptFGMiss = source.readInt();
+        m2ptFGMade = source.readInt();
+        m3ptFGMiss = source.readInt();
+        m3ptFGMade = source.readInt();
+        mFTMiss = source.readInt();
+        mFTMade = source.readInt();
+        mOffRebound = source.readInt();
+        mDefRebound = source.readInt();
+        mAssist = source.readInt();
+        mTurnover = source.readInt();
+        mSteal = source.readInt();
+        mBlock = source.readInt();
+        mFoul = source.readInt();
+        mPlayingTimeSec = source.readInt();
+    }
+
+    @Override
+    public int describeContents()
+    {
+        return 0;
     }
 
     public int get2ptFGMade()
@@ -242,6 +303,27 @@ public class Player
         return getNumber() + " - " + getFullName();
     }
 
+    @Override
+    public void writeToParcel( Parcel dest, int flags )
+    {
+        dest.writeInt( mNumber );
+        dest.writeString( mFullName );
+        dest.writeInt( m2ptFGMiss );
+        dest.writeInt( m2ptFGMade );
+        dest.writeInt( m3ptFGMiss );
+        dest.writeInt( m3ptFGMade );
+        dest.writeInt( mFTMiss );
+        dest.writeInt( mFTMade );
+        dest.writeInt( mOffRebound );
+        dest.writeInt( mDefRebound );
+        dest.writeInt( mAssist );
+        dest.writeInt( mTurnover );
+        dest.writeInt( mSteal );
+        dest.writeInt( mBlock );
+        dest.writeInt( mFoul );
+        dest.writeInt( mPlayingTimeSec );
+    }
+
     public enum PlayerStats
     {
         NUMBER( "number" ), NAME( "fullName" ), MISS_1PT( "ftMiss" ), MADE_1PT( "ftMade" ), MISS_2PT(
@@ -250,16 +332,16 @@ public class Player
                                 "assist" ), TURNOVER( "turnover" ), STEAL( "steal" ), BLOCK( "block" ), FOUL(
                                         "foul" ), PLAYING_TIME( "playingTimeSec" );
 
-        private final String mConstant;
+        private final String mString;
 
-        private PlayerStats( String constant )
+        private PlayerStats( String string )
         {
-            mConstant = constant;
+            mString = string;
         }
 
-        public String toString()
+        public String getString()
         {
-            return mConstant;
+            return mString;
         }
     }
 }

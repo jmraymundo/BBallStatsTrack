@@ -7,8 +7,8 @@ import com.example.bballstatstrack.activities.AddPlayersToTeamsActivity;
 import com.example.bballstatstrack.activities.GameActivity;
 import com.example.bballstatstrack.activities.GameReviewActivity;
 import com.example.bballstatstrack.adapter.GameAdapter;
-import com.example.bballstatstrack.model.GameDirectory;
 import com.example.bballstatstrack.models.Game;
+import com.example.bballstatstrack.models.GameDirectory;
 
 import android.app.ListFragment;
 import android.content.Intent;

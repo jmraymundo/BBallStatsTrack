@@ -5,8 +5,8 @@ import java.util.UUID;
 
 import com.example.bballstatstrack.R;
 import com.example.bballstatstrack.fragments.TeamReviewFragment;
-import com.example.bballstatstrack.model.GameDirectory;
 import com.example.bballstatstrack.models.Game;
+import com.example.bballstatstrack.models.GameDirectory;
 
 import android.app.Activity;
 import android.app.FragmentManager;

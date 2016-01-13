@@ -1,25 +1,30 @@
 package com.example.bballstatstrack.models.gameevents;
 
-import java.util.Locale;
-
 import com.example.bballstatstrack.models.Player;
 import com.example.bballstatstrack.models.Team;
 
 public class ShootEvent extends GameEvent
 {
-    public static final String SHOT_TYPE = "shotType";
+    public static final String IS_SHOT_MADE = "isShotMade";
 
     public static final String SHOT_CLASS = "shotClass";
 
-    ShotClass mShotClass;
+    private ShotClass mShotClass;
 
-    ShotType mShotType;
+    private boolean mIsShotMade;
 
-    public ShootEvent( ShotClass shotClass, ShotType shotType, Player player, Team team )
+    public ShootEvent( Player player, Team team )
+    {
+        super( EventType.SHOOT, player, team );
+        mShotClass = null;
+        mIsShotMade = false;
+    }
+
+    public ShootEvent( ShotClass shotClass, boolean isShotMade, Player player, Team team )
     {
         super( EventType.SHOOT, player, team );
         mShotClass = shotClass;
-        mShotType = shotType;
+        mIsShotMade = isShotMade;
     }
 
     @Override
@@ -30,28 +35,26 @@ public class ShootEvent extends GameEvent
             mAppended.append( appendedEvent );
             return;
         }
-        switch( mShotType )
+        if( mIsShotMade )
         {
-            case MADE:
-                if( appendedEvent instanceof AssistEvent )
-                {
-                    mAppended = appendedEvent;
-                    return;
-                }
-                else if( appendedEvent instanceof BlockEvent || appendedEvent instanceof ReboundEvent )
-                {
-                    return;
-                }
-            case MISSED:
-                if( appendedEvent instanceof BlockEvent || appendedEvent instanceof ReboundEvent )
-                {
-                    mAppended = appendedEvent;
-                    return;
-                }
-                break;
+            if( appendedEvent instanceof AssistEvent )
+            {
+                mAppended = appendedEvent;
+                return;
+            }
+            else if( appendedEvent instanceof BlockEvent || appendedEvent instanceof ReboundEvent )
+            {
+                return;
+            }
         }
-        super.append( appendedEvent );
-
+        else
+        {
+            if( appendedEvent instanceof BlockEvent || appendedEvent instanceof ReboundEvent )
+            {
+                mAppended = appendedEvent;
+                return;
+            }
+        }
     }
 
     public ShotClass getShotClass()
@@ -59,22 +62,21 @@ public class ShootEvent extends GameEvent
         return mShotClass;
     }
 
-    public ShotType getShotType()
+    public boolean isShotMade()
     {
-        return mShotType;
+        return mIsShotMade;
     }
 
     @Override
     public void resolve()
     {
-        switch( mShotType )
+        if( mIsShotMade )
         {
-            case MADE:
-                handleShot( true );
-                break;
-            case MISSED:
-                handleShot( false );
-                break;
+            handleShot( true );
+        }
+        else
+        {
+            handleShot( false );
         }
         if( mAppended != null )
         {
@@ -82,24 +84,22 @@ public class ShootEvent extends GameEvent
         }
     }
 
+    public void setShotClass( ShotClass shotClass )
+    {
+        mShotClass = shotClass;
+    }
+
+    public void setShotMade( boolean isShotMade )
+    {
+        mIsShotMade = isShotMade;
+    }
+
     @Override
     public String toString()
     {
-        String shotType = mShotType.name().toLowerCase( Locale.getDefault() );
-        String shotClass = "";
-        switch( mShotClass )
-        {
-            case FT:
-                shotClass = "FT shot. ";
-                break;
-            case FG_2PT:
-                shotClass = "2pt shot. ";
-                break;
-            case FG_3PT:
-                shotClass = "3pt shot. ";
-                break;
-        }
-        String output = mPlayer.getFullName() + " " + shotType + " a " + shotClass;
+        String shotType = mIsShotMade ? "made" : "missed";
+        String shotClass = mShotClass.getText();
+        String output = mPlayer.getFullName() + " " + shotType + " a " + shotClass + ". ";
         if( mAppended != null )
         {
             output = output.concat( mAppended.toString() );

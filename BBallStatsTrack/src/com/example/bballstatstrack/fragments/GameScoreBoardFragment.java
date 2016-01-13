@@ -1,5 +1,8 @@
 package com.example.bballstatstrack.fragments;
 
+import java.util.Observable;
+import java.util.Observer;
+
 import com.example.bballstatstrack.R;
 import com.example.bballstatstrack.models.Game;
 import com.example.bballstatstrack.models.Team;
@@ -17,7 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class GameScoreBoardFragment extends Fragment
+public class GameScoreBoardFragment extends Fragment implements Observer
 {
     private TextView mHomeName;
 
@@ -77,6 +80,12 @@ public class GameScoreBoardFragment extends Fragment
     public void setShotClock( int shotClock )
     {
         mShotClock.setText( StringUtils.getLeadZeroFormattedString( shotClock ) );
+    }
+
+    @Override
+    public void update( Observable observable, Object data )
+    {
+        updateUI( ( Game ) observable );
     }
 
     public void updateUI( Game game )

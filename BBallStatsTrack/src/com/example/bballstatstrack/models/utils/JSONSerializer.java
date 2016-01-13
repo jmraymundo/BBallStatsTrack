@@ -7,6 +7,7 @@ import com.example.bballstatstrack.models.Game;
 import com.example.bballstatstrack.models.Game.GameStats;
 import com.example.bballstatstrack.models.Player;
 import com.example.bballstatstrack.models.Player.PlayerStats;
+import com.example.bballstatstrack.models.PlayerList;
 import com.example.bballstatstrack.models.Team;
 import com.example.bballstatstrack.models.Team.TeamStats;
 import com.example.bballstatstrack.models.game.GameLog;
@@ -21,7 +22,6 @@ import com.example.bballstatstrack.models.gameevents.foulevents.NonShootingFoulE
 import com.example.bballstatstrack.models.gameevents.foulevents.ShootingFoulEvent;
 
 import android.util.JsonWriter;
-import android.util.SparseArray;
 
 public class JSONSerializer
 {
@@ -33,16 +33,25 @@ public class JSONSerializer
         int time = gameEvent.getTime();
         GameEvent appended = gameEvent.getAppended();
         writer.name( GameEvent.EVENT_TYPE ).value( event.toString() );
+        writer.name( GameEvent.PLAYER_NUMBER );
         if( player != null )
         {
-            writer.name( GameEvent.PLAYER_NUMBER ).value( player.getNumber() );
+            writer.value( player.getNumber() );
+        }
+        else
+        {
+            writer.nullValue();
         }
         writer.name( GameEvent.TEAM_ID ).value( team.getID().toString() );
         writer.name( GameEvent.TIME ).value( time );
+        writer.name( GameEvent.APPENDED );
         if( appended != null )
         {
-            writer.name( GameEvent.APPENDED );
             writeEvent( writer, appended );
+        }
+        else
+        {
+            writer.nullValue();
         }
     }
 
@@ -84,7 +93,7 @@ public class JSONSerializer
     public static void writeEventShoot( JsonWriter writer, ShootEvent shootEvent ) throws IOException
     {
         writer.name( ShootEvent.SHOT_CLASS ).value( shootEvent.getShotClass().toString() );
-        writer.name( ShootEvent.SHOT_TYPE ).value( shootEvent.getShotType().toString() );
+        writer.name( ShootEvent.IS_SHOT_MADE ).value( shootEvent.isShotMade() );
     }
 
     public static void writeEventSubstitution( JsonWriter writer, SubstitutionEvent substitutionEvent )
@@ -124,12 +133,12 @@ public class JSONSerializer
         writer.endArray();
     }
 
-    public static void writeInGamePlayerNumbers( JsonWriter writer, List< Player > inGamePlayers ) throws IOException
+    public static void writeInGamePlayerNumbers( JsonWriter writer, PlayerList playerList ) throws IOException
     {
         writer.beginArray();
-        for( Player player : inGamePlayers )
+        for( int index = 0; index < playerList.getSize(); index++ )
         {
-            writer.value( player.getNumber() );
+            writer.value( playerList.playerAt( index ).getNumber() );
         }
         writer.endArray();
     }
@@ -151,22 +160,22 @@ public class JSONSerializer
     public static void writePlayer( JsonWriter writer, Player player ) throws IOException
     {
         writer.beginObject();
-        writer.name( PlayerStats.NUMBER.toString() ).value( player.getNumber() );
-        writer.name( PlayerStats.NAME.toString() ).value( player.getFullName() );
-        writer.name( PlayerStats.MISS_1PT.toString() ).value( player.getFTMiss() );
-        writer.name( PlayerStats.MISS_2PT.toString() ).value( player.get2ptFGMiss() );
-        writer.name( PlayerStats.MISS_3PT.toString() ).value( player.get3ptFGMiss() );
-        writer.name( PlayerStats.MADE_1PT.toString() ).value( player.getFTMade() );
-        writer.name( PlayerStats.MADE_2PT.toString() ).value( player.get2ptFGMade() );
-        writer.name( PlayerStats.MADE_3PT.toString() ).value( player.get3ptFGMade() );
-        writer.name( PlayerStats.OFFENSIVE_REBOUND.toString() ).value( player.getOffRebound() );
-        writer.name( PlayerStats.DEFENSIVE_REBOUND.toString() ).value( player.getDefRebound() );
-        writer.name( PlayerStats.ASSIST.toString() ).value( player.getAssist() );
-        writer.name( PlayerStats.TURNOVER.toString() ).value( player.getTurnover() );
-        writer.name( PlayerStats.STEAL.toString() ).value( player.getSteal() );
-        writer.name( PlayerStats.BLOCK.toString() ).value( player.getBlock() );
-        writer.name( PlayerStats.FOUL.toString() ).value( player.getFoulCount() );
-        writer.name( PlayerStats.PLAYING_TIME.toString() ).value( player.getPlayingTimeSec() );
+        writer.name( PlayerStats.NUMBER.getString() ).value( player.getNumber() );
+        writer.name( PlayerStats.NAME.getString() ).value( player.getFullName() );
+        writer.name( PlayerStats.MISS_1PT.getString() ).value( player.getFTMiss() );
+        writer.name( PlayerStats.MISS_2PT.getString() ).value( player.get2ptFGMiss() );
+        writer.name( PlayerStats.MISS_3PT.getString() ).value( player.get3ptFGMiss() );
+        writer.name( PlayerStats.MADE_1PT.getString() ).value( player.getFTMade() );
+        writer.name( PlayerStats.MADE_2PT.getString() ).value( player.get2ptFGMade() );
+        writer.name( PlayerStats.MADE_3PT.getString() ).value( player.get3ptFGMade() );
+        writer.name( PlayerStats.OFFENSIVE_REBOUND.getString() ).value( player.getOffRebound() );
+        writer.name( PlayerStats.DEFENSIVE_REBOUND.getString() ).value( player.getDefRebound() );
+        writer.name( PlayerStats.ASSIST.getString() ).value( player.getAssist() );
+        writer.name( PlayerStats.TURNOVER.getString() ).value( player.getTurnover() );
+        writer.name( PlayerStats.STEAL.getString() ).value( player.getSteal() );
+        writer.name( PlayerStats.BLOCK.getString() ).value( player.getBlock() );
+        writer.name( PlayerStats.FOUL.getString() ).value( player.getFoulCount() );
+        writer.name( PlayerStats.PLAYING_TIME.getString() ).value( player.getPlayingTimeSec() );
         writer.endObject();
     }
 
@@ -213,12 +222,12 @@ public class JSONSerializer
         writer.endObject();
     }
 
-    private static void writePlayerList( JsonWriter writer, SparseArray< Player > sparseArray ) throws IOException
+    private static void writePlayerList( JsonWriter writer, PlayerList playerList ) throws IOException
     {
         writer.beginArray();
-        for( int index = 0; index < sparseArray.size(); index++ )
+        for( int index = 0; index < playerList.getSize(); index++ )
         {
-            Player player = sparseArray.valueAt( index );
+            Player player = playerList.playerAt( index );
             writePlayer( writer, player );
         }
         writer.endArray();

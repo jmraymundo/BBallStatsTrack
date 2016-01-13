@@ -22,9 +22,7 @@ public class BlockEvent extends GameEvent
         if( appendedEvent instanceof ReboundEvent )
         {
             mAppended = appendedEvent;
-            return;
         }
-        super.append( appendedEvent );
     }
 
     @Override

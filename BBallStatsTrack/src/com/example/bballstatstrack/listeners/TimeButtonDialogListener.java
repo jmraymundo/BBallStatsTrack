@@ -1,0 +1,94 @@
+package com.example.bballstatstrack.listeners;
+
+import com.example.bballstatstrack.R;
+import com.example.bballstatstrack.activities.GameActivity;
+import com.example.bballstatstrack.dialogs.BallPossessionDeciderDialog;
+import com.example.bballstatstrack.dialogs.ResetGameClockDialog;
+import com.example.bballstatstrack.dialogs.ResetShotClockDialog;
+import com.example.bballstatstrack.dialogs.SaveGameDialog;
+import com.example.bballstatstrack.models.Game;
+
+import android.app.AlertDialog;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+
+public class TimeButtonDialogListener implements OnClickListener
+{
+    private Game mGame;
+
+    private AlertDialog mDialog;
+
+    private GameActivity mActivity;
+
+    public TimeButtonDialogListener( AlertDialog dialog, Game game, GameActivity activity )
+    {
+        mDialog = dialog;
+        mGame = game;
+        mActivity = activity;
+    }
+
+    @Override
+    public void onClick( View v )
+    {
+        Button button = ( Button ) v;
+        int buttonId = button.getId();
+        switch( buttonId )
+        {
+            case R.id.save_game_button:
+                showSaveGameDialog();
+                break;
+            case R.id.next_period_button:
+                goToNextPeriod();
+                break;
+            case R.id.reset_game_clock_button:
+                showResetGameClockDialog();
+                break;
+            case R.id.reset_shot_clock_button:
+                showResetShotClockDialog();
+                break;
+            case R.id.pauseResume_time_button:
+                pauseUnpauseGame();
+                break;
+        }
+        mDialog.dismiss();
+    }
+
+    private void goToNextPeriod()
+    {
+        AlertDialog dialog = new BallPossessionDeciderDialog( mActivity );
+        dialog.show();
+        mActivity.nextPeriod();
+    }
+
+    private void pauseUnpauseGame()
+    {
+        if( mActivity.isTimerStopped() )
+        {
+            mActivity.timerStart();
+        }
+        else
+        {
+            mActivity.timerStop();
+        }
+    }
+
+    private void showResetGameClockDialog()
+    {
+        AlertDialog dialog = new ResetGameClockDialog( mActivity );
+        dialog.show();
+    }
+
+    private void showResetShotClockDialog()
+    {
+        AlertDialog dialog = new ResetShotClockDialog( mActivity );
+        dialog.show();
+    }
+
+    private void showSaveGameDialog()
+    {
+        AlertDialog dialog = new SaveGameDialog( mActivity );
+        dialog.show();
+    }
+
+}

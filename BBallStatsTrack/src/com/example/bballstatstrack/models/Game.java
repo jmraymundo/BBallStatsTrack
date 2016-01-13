@@ -2,6 +2,7 @@ package com.example.bballstatstrack.models;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Observable;
 import java.util.UUID;
 
 import com.example.bballstatstrack.models.game.GameLog;
@@ -12,10 +13,8 @@ import com.example.bballstatstrack.models.gameevents.foulevents.ShootingFoulEven
 
 import android.text.format.DateFormat;
 
-public class Game
+public class Game extends Observable
 {
-    private static final String B_BALL_STAT_TRACK = "BBallStatTrack";
-
     private static final int MAX_SHOT_CLOCK = 24;
 
     private Team mAwayTeam;
@@ -23,8 +22,6 @@ public class Game
     private Team mHomeTeam;
 
     private Team mHasBallPossession;
-
-    private boolean mGameOngoing = false;
 
     private int mPeriod = 0;
 
@@ -87,7 +84,8 @@ public class Game
         checkTeamFoulEvent( event );
         checkTurnoverEvent( event );
         endNewEvent();
-
+        setChanged();
+        notifyObservers();
     }
 
     public void endNewEvent()
@@ -181,11 +179,6 @@ public class Game
         return home + " VS " + away + " [Final Score: " + homeScore + "-" + awayScore + "]";
     }
 
-    public boolean isGameOngoing()
-    {
-        return mGameOngoing;
-    }
-
     public boolean isPenalty( Team team )
     {
         if( team.equals( mAwayTeam ) )
@@ -216,11 +209,8 @@ public class Game
         mPeriodLog = mGameLog.getCurrentPeriodLog();
         initializeClocks();
         resetPeriodFouls();
-    }
-
-    public void pauseGame()
-    {
-        mGameOngoing = false;
+        setChanged();
+        notifyObservers();
     }
 
     public void resetGameClock()
@@ -233,11 +223,18 @@ public class Game
         {
             mCurrentGameClock = mMaxOTGameClock;
         }
+        setChanged();
+        notifyObservers();
     }
 
     public void resetMidShotClock()
     {
-        mCurrentShotClock = mReducedMaxShotClock;
+        if( mCurrentShotClock < mReducedMaxShotClock )
+        {
+            mCurrentShotClock = mReducedMaxShotClock;
+        }
+        setChanged();
+        notifyObservers();
     }
 
     public void resetShotClock24()
@@ -252,18 +249,15 @@ public class Game
             timeDifference = mEventGameClock - mCurrentGameClock;
         }
         mCurrentShotClock = MAX_SHOT_CLOCK - timeDifference;
+        setChanged();
+        notifyObservers();
     }
 
     public void setTeamWithPossession( Team team )
     {
-        if( team.equals( mAwayTeam ) )
-        {
-            mHasBallPossession = mAwayTeam;
-        }
-        else if( team.equals( mHomeTeam ) )
-        {
-            mHasBallPossession = mHomeTeam;
-        }
+        mHasBallPossession = team;
+        setChanged();
+        notifyObservers();
     }
 
     public void startNewEvent()
@@ -275,34 +269,27 @@ public class Game
     {
         if( mHasBallPossession.equals( mHomeTeam ) )
         {
-            mHasBallPossession = mAwayTeam;
+            setTeamWithPossession( mAwayTeam );
         }
         else
         {
-            mHasBallPossession = mHomeTeam;
+            setTeamWithPossession( mHomeTeam );
         }
         resetShotClock24();
     }
 
-    public void unpauseGame()
-    {
-        mGameOngoing = true;
-    }
-
     public void updateTime()
     {
-        if( isPeriodOngoing() && isPossessionOngoing() && isGameOngoing() )
+        if( isPeriodOngoing() && isPossessionOngoing() )
         {
             mHasBallPossession.updatePossessionTime();
             mAwayTeam.updatePlayingTime();
             mHomeTeam.updatePlayingTime();
             mCurrentGameClock--;
             mCurrentShotClock--;
+            setChanged();
         }
-        else
-        {
-            pauseGame();
-        }
+        notifyObservers();
     }
 
     private void addPeriodFoul( Team team )
@@ -347,9 +334,9 @@ public class Game
 
     private void initializeClocks()
     {
-        pauseGame();
         resetGameClock();
         resetShotClock24();
+        setChanged();
     }
 
     private void initializeLogs()
@@ -367,7 +354,6 @@ public class Game
 
     public enum GameStats
     {
-
         ID( "id" ), AWAY_TEAM( "awayTeam" ), HOME_TEAM( "homeTeam" ), GAME_LOG( "gameLog" ), PERIOD_LOG(
                 "periodLog" ), DATE( "date" );
 

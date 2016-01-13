@@ -9,11 +9,13 @@ public abstract class GameEvent
 
     public static final String APPENDED = "appended";
 
-    public static final String EVENT_TYPE = "event";
+    public static final String EVENT_TYPE = "eventType";
 
     public static final String PLAYER_NUMBER = "playerNumber";
 
     public static final String TIME = "time";
+
+    public static final String ADDITIONAL_DETAILS = "additionalDetails";
 
     protected EventType mEvent;
 
@@ -94,17 +96,23 @@ public abstract class GameEvent
 
     public enum ReboundType
     {
-        OFFENSIVE, DEFENSIVE, TEAM_REBOUND;
+        OFFENSIVE, DEFENSIVE;
     }
 
     public enum ShotClass
     {
-        FT, FG_2PT, FG_3PT;
-    }
+        FT( "FT shot" ), FG_2PT( "2pt shot" ), FG_3PT( "3pt shot" );
+        private final String mText;
 
-    public enum ShotType
-    {
-        MADE, MISSED;
+        private ShotClass( String text )
+        {
+            mText = text;
+        }
+
+        public String getText()
+        {
+            return mText;
+        }
     }
 
     public enum TurnoverType

@@ -23,17 +23,21 @@ public class ReboundEvent extends GameEvent
     @Override
     public void resolve()
     {
-        switch( mReboundType )
+        if( mPlayer == null )
         {
-            case OFFENSIVE:
-                mPlayer.makeRebound( true );
-                return;
-            case DEFENSIVE:
-                mPlayer.makeRebound( false );
-                return;
-            case TEAM_REBOUND:
-                mTeam.makeTeamRebound();
-                return;
+            mTeam.makeTeamRebound();
+        }
+        else
+        {
+            switch( mReboundType )
+            {
+                case OFFENSIVE:
+                    mPlayer.makeRebound( true );
+                    break;
+                case DEFENSIVE:
+                    mPlayer.makeRebound( false );
+                    break;
+            }
         }
         if( mAppended != null )
         {
@@ -46,20 +50,24 @@ public class ReboundEvent extends GameEvent
     {
         String type = "";
         String rebounder = "";
-        switch( mReboundType )
+        if( mPlayer == null )
         {
-            case OFFENSIVE:
-                type = "Offensive";
-                rebounder = mPlayer.getFullName();
-                break;
-            case DEFENSIVE:
-                type = "Defensive";
-                rebounder = mPlayer.getFullName();
-                break;
-            case TEAM_REBOUND:
-                type = "Team";
-                rebounder = mTeam.getName();
-                break;
+            type = "Team";
+            rebounder = mTeam.getName();
+        }
+        else
+        {
+            switch( mReboundType )
+            {
+                case OFFENSIVE:
+                    type = "Offensive";
+                    rebounder = mPlayer.getFullName();
+                    break;
+                case DEFENSIVE:
+                    type = "Defensive";
+                    rebounder = mPlayer.getFullName();
+                    break;
+            }
         }
         return type + " rebound by " + rebounder + ".";
     }

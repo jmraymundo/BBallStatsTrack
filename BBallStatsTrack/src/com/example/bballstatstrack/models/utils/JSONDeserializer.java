@@ -7,8 +7,9 @@ import java.util.UUID;
 
 import com.example.bballstatstrack.models.Game;
 import com.example.bballstatstrack.models.Game.GameStats;
-import com.example.bballstatstrack.models.Player;
 import com.example.bballstatstrack.models.Player.PlayerStats;
+import com.example.bballstatstrack.models.Player;
+import com.example.bballstatstrack.models.PlayerList;
 import com.example.bballstatstrack.models.Team;
 import com.example.bballstatstrack.models.Team.TeamStats;
 import com.example.bballstatstrack.models.game.GameLog;
@@ -21,7 +22,6 @@ import com.example.bballstatstrack.models.gameevents.GameEvent.FoulType;
 import com.example.bballstatstrack.models.gameevents.GameEvent.NonShootingFoulType;
 import com.example.bballstatstrack.models.gameevents.GameEvent.ReboundType;
 import com.example.bballstatstrack.models.gameevents.GameEvent.ShotClass;
-import com.example.bballstatstrack.models.gameevents.GameEvent.ShotType;
 import com.example.bballstatstrack.models.gameevents.GameEvent.TurnoverType;
 import com.example.bballstatstrack.models.gameevents.ReboundEvent;
 import com.example.bballstatstrack.models.gameevents.ShootEvent;
@@ -34,7 +34,7 @@ import com.example.bballstatstrack.models.gameevents.foulevents.OffensiveFoulEve
 import com.example.bballstatstrack.models.gameevents.foulevents.ShootingFoulEvent;
 
 import android.util.JsonReader;
-import android.util.SparseArray;
+import android.util.JsonToken;
 
 public class JSONDeserializer
 {
@@ -86,21 +86,22 @@ public class JSONDeserializer
         {
             return mHomeTeam;
         }
-        else
-        {
-            return null;
-        }
+        return null;
     }
 
     private static Player getPlayerFromTeam( Team team, int playerNumber )
     {
-        return team.getPlayers().get( playerNumber );
+        if( playerNumber == -1 )
+        {
+            return null;
+        }
+        return team.getPlayers().getPlayer( playerNumber );
     }
 
     private static Player getPlayerNumberFromOtherTeam( Team team, int number )
     {
         Team otherTeam = getOtherTeam( team );
-        return otherTeam.getPlayers().get( number );
+        return otherTeam.getPlayers().getPlayer( number );
     }
 
     private static Team getTeamFromUUID( UUID teamID )
@@ -113,71 +114,60 @@ public class JSONDeserializer
         {
             return mAwayTeam;
         }
-        else
-        {
-            return null;
-        }
+        return null;
     }
 
     private static GameEvent readEvent( JsonReader reader ) throws IOException
     {
-        EventType type = null;
-        int playerNumber = Integer.MIN_VALUE;
-        UUID teamID = null;
-        int time = Integer.MIN_VALUE;
-        GameEvent appended = null;
+        if( reader.peek() == JsonToken.NULL )
+        {
+            reader.nextNull();
+            return null;
+        }
         GameEvent thisEvent = null;
         reader.beginObject();
-        if( reader.nextName().equals( GameEvent.EVENT_TYPE ) )
-        {
-            type = EventType.valueOf( reader.nextString() );
-        }
-        if( reader.nextName().equals( GameEvent.PLAYER_NUMBER ) )
-        {
-            playerNumber = reader.nextInt();
-        }
-        if( reader.nextName().equals( GameEvent.TEAM_ID ) )
-        {
-            teamID = UUID.fromString( reader.nextString() );
-        }
-        if( reader.nextName().equals( GameEvent.TIME ) )
-        {
-            time = reader.nextInt();
-        }
-        if( reader.nextName().equals( GameEvent.APPENDED ) )
-        {
-            appended = readEvent( reader );
-        }
+        reader.nextName(); // GameEvent.EVENT_TYPE
+        EventType type = EventType.valueOf( reader.nextString() );
+        reader.nextName(); // GameEvent.PLAYER_NUMBER
+        int playerNumber = getPlayerNumber( reader );
+        reader.nextName();// GameEvent.TEAM_ID
+        UUID teamID = UUID.fromString( reader.nextString() );
         Team team = getTeamFromUUID( teamID );
         Player player = getPlayerFromTeam( team, playerNumber );
+        reader.nextName();// GameEvent.TIME
+        int time = reader.nextInt();
+        reader.nextName();// GameEvent.APPENDED
+        GameEvent appended = readEvent( reader );
         switch( type )
         {
+            // cases where GameEvent.ADDITIONAL_DETAILS has a value
+            case SHOOT:
+                thisEvent = readEventShoot( reader, player, team );
+                break;
+            case FOUL:
+                thisEvent = readEventFoul( reader, player, team );
+                break;
+            case TURNOVER:
+                thisEvent = readEventTurnover( reader, team, player );
+                break;
+            case REBOUND:
+                thisEvent = readEventRebound( reader, team, player );
+                break;
+            case SUBSTITUTION:
+                thisEvent = readEventSubstitution( reader, team, player );
+                break;
+            // cases where GameEvent.ADDITIONAL_DETAILS has a null value
             case ASSIST:
                 thisEvent = new AssistEvent( player, team );
                 break;
             case BLOCK:
                 thisEvent = new BlockEvent( player, team );
                 break;
-            case FOUL:
-                thisEvent = readEventFoul( reader, player, team );
-                break;
-            case REBOUND:
-                thisEvent = readEventRebound( reader, team, player );
-                break;
-            case SHOOT:
-                thisEvent = readEventShoot( reader, player, team );
-                break;
             case STEAL:
                 thisEvent = new StealEvent( player, team );
                 break;
-            case SUBSTITUTION:
-                thisEvent = readEventSubstitution( reader, team, player );
-                break;
             case TIME_OUT:
                 thisEvent = new TimeoutEvent( team );
-                break;
-            case TURNOVER:
-                thisEvent = readEventTurnover( reader, team, player );
                 break;
         }
         thisEvent.setTime( time );
@@ -189,42 +179,69 @@ public class JSONDeserializer
         return thisEvent;
     }
 
+    private static int getPlayerNumber( JsonReader reader ) throws IOException
+    {
+        if( reader.peek() == JsonToken.NULL )
+        {
+            reader.nextNull();
+            return -1;
+        }
+        else
+        {
+            return reader.nextInt();
+        }
+    }
+
     private static FoulEvent readEventFoul( JsonReader reader, Player player, Team team ) throws IOException
     {
+        reader.nextName();
         FoulType foulType = FoulType.valueOf( reader.nextString() );
         switch( foulType )
         {
             case OFFENSIVE:
                 return new OffensiveFoulEvent( player, team );
             case NON_SHOOTING:
+                reader.nextName();
                 return new NonShootingFoulEvent( NonShootingFoulType.valueOf( reader.nextString() ), player, team );
             case SHOOTING:
-                return new ShootingFoulEvent( player, team, getPlayerNumberFromOtherTeam( team, reader.nextInt() ),
-                        getTeamFromUUID( UUID.fromString( reader.nextString() ) ), reader.nextInt() );
+                reader.nextName();
+                int otherPlayerNumber = reader.nextInt();
+                reader.nextName();
+                String otherTeamUUID = reader.nextString();
+                reader.nextName();
+                int ftCount = reader.nextInt();
+                return new ShootingFoulEvent( player, team, getPlayerNumberFromOtherTeam( team, otherPlayerNumber ),
+                        getTeamFromUUID( UUID.fromString( otherTeamUUID ) ), ftCount );
+            default:
+                return null;
         }
-        return null;
     }
 
     private static ReboundEvent readEventRebound( JsonReader reader, Team team, Player player ) throws IOException
     {
+        reader.nextName();// ReboundEvent.REBOUND_TYPE
         return new ReboundEvent( ReboundType.valueOf( reader.nextString() ), player, team );
     }
 
     private static ShootEvent readEventShoot( JsonReader reader, Player player, Team team ) throws IOException
     {
+        reader.nextName();// ShootEvent.SHOT_CLASS
         ShotClass shotClass = ShotClass.valueOf( reader.nextString() );
-        ShotType shotType = ShotType.valueOf( reader.nextString() );
-        return new ShootEvent( shotClass, shotType, player, team );
+        reader.nextName();// ShootEvent.IS_SHOT_MADE
+        boolean isShotMade = reader.nextBoolean();
+        return new ShootEvent( shotClass, isShotMade, player, team );
     }
 
     private static SubstitutionEvent readEventSubstitution( JsonReader reader, Team team, Player player )
             throws IOException
     {
+        reader.nextName();// SubstitutionEvent.NEW_PLAYER_NUMBER
         return new SubstitutionEvent( player, getPlayerFromTeam( team, reader.nextInt() ), team );
     }
 
     private static TurnoverEvent readEventTurnover( JsonReader reader, Team team, Player player ) throws IOException
     {
+        reader.nextName();// TurnoverEvent.TURNOVER_TYPE
         return new TurnoverEvent( TurnoverType.valueOf( reader.nextString() ), player, team );
     }
 
@@ -261,6 +278,7 @@ public class JSONDeserializer
         while( reader.hasNext() )
         {
             reader.beginObject();
+            reader.nextName();
             GameEvent event = readEvent( reader );
             periodLog.add( event );
             reader.endObject();
@@ -271,106 +289,53 @@ public class JSONDeserializer
 
     private static Player readPlayer( JsonReader reader ) throws IOException
     {
-        int number = Integer.MIN_VALUE;
-        String fullName = null;
-        int miss1pt = Integer.MIN_VALUE;
-        int miss2pt = Integer.MIN_VALUE;
-        int miss3pt = Integer.MIN_VALUE;
-        int made1pt = Integer.MIN_VALUE;
-        int made2pt = Integer.MIN_VALUE;
-        int made3pt = Integer.MIN_VALUE;
-        int offReb = Integer.MIN_VALUE;
-        int defReb = Integer.MIN_VALUE;
-        int assist = Integer.MIN_VALUE;
-        int to = Integer.MIN_VALUE;
-        int stl = Integer.MIN_VALUE;
-        int blk = Integer.MIN_VALUE;
-        int foul = Integer.MIN_VALUE;
-        int playingTimeSec = Integer.MIN_VALUE;
         reader.beginObject();
-        String name;
-        while( reader.hasNext() )
-        {
-            name = reader.nextName();
-            if( name.equals( PlayerStats.NUMBER.toString() ) )
-            {
-                number = reader.nextInt();
-            }
-            else if( name.equals( PlayerStats.NAME.toString() ) )
-            {
-                fullName = reader.nextString();
-            }
-            else if( name.equals( PlayerStats.MISS_1PT.toString() ) )
-            {
-                miss1pt = reader.nextInt();
-            }
-            else if( name.equals( PlayerStats.MISS_2PT.toString() ) )
-            {
-                miss2pt = reader.nextInt();
-            }
-            else if( name.equals( PlayerStats.MISS_3PT.toString() ) )
-            {
-                miss3pt = reader.nextInt();
-            }
-            else if( name.equals( PlayerStats.MADE_1PT.toString() ) )
-            {
-                made1pt = reader.nextInt();
-            }
-            else if( name.equals( PlayerStats.MADE_2PT.toString() ) )
-            {
-                made2pt = reader.nextInt();
-            }
-            else if( name.equals( PlayerStats.MADE_3PT.toString() ) )
-            {
-                made3pt = reader.nextInt();
-            }
-            else if( name.equals( PlayerStats.OFFENSIVE_REBOUND.toString() ) )
-            {
-                offReb = reader.nextInt();
-            }
-            else if( name.equals( PlayerStats.DEFENSIVE_REBOUND.toString() ) )
-            {
-                defReb = reader.nextInt();
-            }
-            else if( name.equals( PlayerStats.ASSIST.toString() ) )
-            {
-                assist = reader.nextInt();
-            }
-            else if( name.equals( PlayerStats.TURNOVER.toString() ) )
-            {
-                to = reader.nextInt();
-            }
-            else if( name.equals( PlayerStats.STEAL.toString() ) )
-            {
-                stl = reader.nextInt();
-            }
-            else if( name.equals( PlayerStats.BLOCK.toString() ) )
-            {
-                blk = reader.nextInt();
-            }
-            else if( name.equals( PlayerStats.FOUL.toString() ) )
-            {
-                foul = reader.nextInt();
-            }
-            else if( name.equals( PlayerStats.PLAYING_TIME.toString() ) )
-            {
-                playingTimeSec = reader.nextInt();
-            }
-        }
+        reader.nextName();// PlayerStats.NUMBER
+        int number = reader.nextInt();
+        reader.nextName();// PlayerStats.NAME
+        String fullName = reader.nextString();
+        reader.nextName();// PlayerStats.MISS_1PT
+        int miss1pt = reader.nextInt();
+        reader.nextName();// PlayerStats.MISS_2PT
+        int miss2pt = reader.nextInt();
+        reader.nextName();// PlayerStats.MISS_3PT
+        int miss3pt = reader.nextInt();
+        reader.nextName();// PlayerStats.MADE_1PT
+        int made1pt = reader.nextInt();
+        reader.nextName();// PlayerStats.MADE_2PT
+        int made2pt = reader.nextInt();
+        reader.nextName();// PlayerStats.MADE_3PT
+        int made3pt = reader.nextInt();
+        reader.nextName();// PlayerStats.OFFENSIVE_REBOUND
+        int offReb = reader.nextInt();
+        reader.nextName();// PlayerStats.DEFENSIVE_REBOUND
+        int defReb = reader.nextInt();
+        reader.nextName();// PlayerStats.ASSIST
+        int assist = reader.nextInt();
+        reader.nextName();// PlayerStats.TURNOVER
+        int to = reader.nextInt();
+        reader.nextName();// PlayerStats.STEAL
+        int stl = reader.nextInt();
+        reader.nextName();// PlayerStats.BLOCK
+        int blk = reader.nextInt();
+        reader.nextName();// PlayerStats.FOUL
+        int foul = reader.nextInt();
+        reader.nextName();// PlayerStats.PLAYING_TIME
+        int playingTimeSec = reader.nextInt();
         reader.endObject();
         return new Player( number, fullName, miss1pt, miss2pt, miss3pt, made1pt, made2pt, made3pt, offReb, defReb,
                 assist, to, stl, blk, foul, playingTimeSec );
     }
 
-    private static SparseArray< Player > readPlayerList( JsonReader reader ) throws IOException
+    private static PlayerList readPlayerList( JsonReader reader ) throws IOException
     {
-        SparseArray< Player > list = new SparseArray< Player >();
+        PlayerList list = new PlayerList();
         Player player;
         reader.beginArray();
         while( reader.hasNext() )
         {
             player = readPlayer( reader );
-            list.append( player.getNumber(), player );
+            list.addPlayer( player );
         }
         reader.endArray();
         return list;
@@ -380,7 +345,7 @@ public class JSONDeserializer
     {
         UUID id = null;
         String teamName = null;
-        SparseArray< Player > playerList = null;
+        PlayerList playerList = null;
         List< Integer > inGamePlayerList = null;
         int teamFouls = Integer.MIN_VALUE;
         int teamRebounds = Integer.MIN_VALUE;

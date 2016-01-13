@@ -1,10 +1,12 @@
 package com.example.bballstatstrack.fragments;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import com.example.bballstatstrack.R;
 import com.example.bballstatstrack.models.Player;
+import com.example.bballstatstrack.models.PlayerList;
+import com.example.bballstatstrack.models.Team;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -15,15 +17,15 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-public class TeamInGameFragment extends Fragment
+public class TeamInGameFragment extends Fragment implements Observer
 {
-    List< Player > mInGameList = new ArrayList< Player >();
+    private PlayerList mInGameList = new PlayerList();
 
     private TableLayout mTableLayout;
 
-    public TeamInGameFragment( List< Player > inGameList )
+    public TeamInGameFragment( Team team )
     {
-        updateInGamePlayers( inGameList );
+        updateInGamePlayers( team.getInGamePlayers() );
     }
 
     @Override
@@ -42,7 +44,13 @@ public class TeamInGameFragment extends Fragment
         score.setText( String.valueOf( player.getTotalscore() ) );
     }
 
-    public void updateInGamePlayers( List< Player > inGameList )
+    @Override
+    public void update( Observable observable, Object data )
+    {
+        updateUI();
+    }
+
+    public void updateInGamePlayers( PlayerList inGameList )
     {
         mInGameList = inGameList;
     }
@@ -64,7 +72,7 @@ public class TeamInGameFragment extends Fragment
             TextView number = ( TextView ) child.getChildAt( 0 );
             TextView name = ( TextView ) child.getChildAt( 1 );
             TextView score = ( TextView ) child.getChildAt( 2 );
-            Player player = mInGameList.get( i - 1 );
+            Player player = mInGameList.playerAt( i - 1 );
             setInGamePlayerStats( player, number, name, score );
         }
     }

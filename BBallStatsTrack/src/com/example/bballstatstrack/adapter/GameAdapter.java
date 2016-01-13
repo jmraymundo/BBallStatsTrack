@@ -5,7 +5,8 @@ import java.util.ArrayList;
 import com.example.bballstatstrack.R;
 import com.example.bballstatstrack.models.Game;
 
-import android.app.Activity;
+import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -13,12 +14,9 @@ import android.widget.TextView;
 
 public class GameAdapter extends ArrayAdapter< Game >
 {
-    Activity mActivity;
-
-    public GameAdapter( ArrayList< Game > games, Activity activity )
+    public GameAdapter( ArrayList< Game > games, Context context )
     {
-        super( activity, android.R.layout.simple_list_item_1, games );
-        mActivity = activity;
+        super( context, android.R.layout.simple_list_item_1, games );
     }
 
     @Override
@@ -26,7 +24,7 @@ public class GameAdapter extends ArrayAdapter< Game >
     {
         if( null == convertView )
         {
-            convertView = mActivity.getLayoutInflater().inflate( R.layout.list_games, null );
+            convertView = LayoutInflater.from( getContext() ).inflate( R.layout.list_games, parent, false );
         }
         Game game = getItem( position );
         ViewHolder holder = ( ViewHolder ) convertView.getTag();

@@ -3,7 +3,7 @@ package com.example.bballstatstrack.models.utils;
 import android.text.Editable;
 import android.text.TextWatcher;
 
-public class PlayerNumberWatcher implements TextWatcher
+public class EditTextRangeNumberWatcher implements TextWatcher
 {
     String mCurrent = "";
 
@@ -11,7 +11,7 @@ public class PlayerNumberWatcher implements TextWatcher
 
     private final int MAX;
 
-    public PlayerNumberWatcher( int min, int max )
+    public EditTextRangeNumberWatcher( int min, int max )
     {
         MIN = min;
         MAX = max;

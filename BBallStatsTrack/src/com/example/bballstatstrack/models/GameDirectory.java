@@ -1,4 +1,4 @@
-package com.example.bballstatstrack.model;
+package com.example.bballstatstrack.models;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import org.json.JSONException;
 
-import com.example.bballstatstrack.models.Game;
 import com.example.bballstatstrack.models.utils.JSONFileSaverLoader;
 
 import android.content.Context;
@@ -64,7 +63,7 @@ public class GameDirectory
         saveGames();
     }
 
-    public Game getCrime( UUID id )
+    public Game getGame( UUID id )
     {
         for( Game game : mGames )
         {

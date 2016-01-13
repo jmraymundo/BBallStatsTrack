@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="app_name">BBall Stats Track</string>
-	<string name="hello_world">Hello world!</string>
-	<string name="action_settings">Settings</string>
 	<string name="new_game">New Game</string>
 	<string name="delete_game">Delete Game</string>
 	<string name="away_team">Away Team</string>
 	<string name="home_team">Home Team</string>
+	<string name="team_name_character_limit">Team name limited to 12 characters.</string>
 	<string name="add_new_player">Add new player</string>
 	<string name="go_next">Next</string>
 	<string name="player_number">#</string>
@@ -14,6 +13,7 @@
 	<string name="newTeam_new_player_action">Actions</string>
 	<string name="proceed">Proceed</string>
 	<string name="player_input_error">Error. All fields are mandatory.</string>
+	<string name="player_number_dulpicate_error">Error. Number already taken.</string>
 	<string name="clock_input_error">Error. Cannot be empty.</string>
 	<string name="on_back_button_title">Cancelling..</string>
 	<string name="on_back_button_message">Are you sure you want to cancel? Your progress will not be saved.</string>
@@ -45,10 +45,11 @@
 	<string name="turnover_dialog_type_question">What kind of turnover is committed?</string>
 	<string name="turnover_dialog_type_steal_text">Stolen by defending player</string>
 	<string name="turnover_dialog_type_offensivefoul_text">Offensive foul</string>
-	<string name="turnover_dialog_type_other_text">Another violation</string>
+	<string name="turnover_dialog_type_other_text">Turnover violation</string>
 	<string name="steal_dialog_player_question">Who stole the ball?</string>
 	<string name="coach_dialog_timeout_text">Time Out</string>
 	<string name="coach_dialog_substitution_text">Substitution</string>
+	<string name="timeout_decider_dialog_question">Who called the timeout?</string>
 	<string name="foul_dialog_player_question">Who committed the foul?</string>
 	<string name="foul_dialog_fouled_question">Who was fouled?</string>
 	<string name="foul_dialog_type_question">What kind of foul was committed?</string>
