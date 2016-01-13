@@ -30,6 +30,7 @@ public class StealEventListener implements OnClickListener
         TurnoverEvent turnoverEvent = ( TurnoverEvent ) v.getTag();
         turnoverEvent.append( mStealEvent );
         mActivity.addNewEvent( turnoverEvent );
+        mActivity.swapBallPossession();
     }
 
 }

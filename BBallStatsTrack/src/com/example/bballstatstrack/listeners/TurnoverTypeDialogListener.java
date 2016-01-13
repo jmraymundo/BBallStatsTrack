@@ -44,8 +44,8 @@ public class TurnoverTypeDialogListener implements OnClickListener
                 mTurnoverEvent.append( new OffensiveFoulEvent( mTurnoverEvent.getPlayer(), mTurnoverEvent.getTeam() ) );
             default:
                 mActivity.addNewEvent( mTurnoverEvent );
-                mActivity.timerStop();
                 mActivity.swapBallPossession();
+                mActivity.timerStop();
                 return;
         }
     }
