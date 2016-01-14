@@ -17,6 +17,10 @@ public class StringUtils
 
     public static String getLeadZeroFormattedString( int number )
     {
+        if( number < 0 )
+        {
+            return new String();
+        }
         if( number < 10 )
         {
             return "0" + number;

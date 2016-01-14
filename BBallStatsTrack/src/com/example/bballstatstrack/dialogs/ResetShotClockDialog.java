@@ -12,7 +12,7 @@ public class ResetShotClockDialog extends YesNoDialog
 
     public ResetShotClockDialog( GameActivity activity )
     {
-        super( activity, R.string.reset_game_clock_confirmation_question );
+        super( activity, R.string.reset_period_clock_confirmation_question );
         setButton( Dialog.BUTTON_POSITIVE, getContext().getText( R.string.yes ),
                 new ResetShotClockListener( activity.getGame() ) );
         setButton( Dialog.BUTTON_NEGATIVE, getContext().getText( R.string.no ), new DismissDialogListener() );

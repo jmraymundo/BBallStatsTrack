@@ -11,13 +11,13 @@ import android.content.DialogInterface.OnClickListener;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class MaxGameClockDialogListener implements OnClickListener
+public class MaxPeriodClockDialogListener implements OnClickListener
 {
     private GameActivity mActivity;
 
     private EditText mClockField;
 
-    public MaxGameClockDialogListener( GameActivity activity, EditText clockField )
+    public MaxPeriodClockDialogListener( GameActivity activity, EditText clockField )
     {
         mActivity = activity;
         mClockField = clockField;
@@ -33,7 +33,7 @@ public class MaxGameClockDialogListener implements OnClickListener
                     Toast.LENGTH_SHORT ).show();
             return;
         }
-        mActivity.setGameClock( Integer.parseInt( clockValue ) );
+        mActivity.setMaxPeriodClock( Integer.parseInt( clockValue ) );
         dialog.dismiss();
         AlertDialog nextDialog = new MaxShotClockResetDialog( mActivity );
         nextDialog.show();

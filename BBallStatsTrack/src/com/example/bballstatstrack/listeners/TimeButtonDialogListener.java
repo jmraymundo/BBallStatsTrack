@@ -3,7 +3,7 @@ package com.example.bballstatstrack.listeners;
 import com.example.bballstatstrack.R;
 import com.example.bballstatstrack.activities.GameActivity;
 import com.example.bballstatstrack.dialogs.BallPossessionDeciderDialog;
-import com.example.bballstatstrack.dialogs.ResetGameClockDialog;
+import com.example.bballstatstrack.dialogs.ResetPeriodClockDialog;
 import com.example.bballstatstrack.dialogs.ResetShotClockDialog;
 import com.example.bballstatstrack.dialogs.SaveGameDialog;
 import com.example.bballstatstrack.models.Game;
@@ -41,8 +41,8 @@ public class TimeButtonDialogListener implements OnClickListener
             case R.id.next_period_button:
                 goToNextPeriod();
                 break;
-            case R.id.reset_game_clock_button:
-                showResetGameClockDialog();
+            case R.id.reset_period_clock_button:
+                showResetPeriodClockDialog();
                 break;
             case R.id.reset_shot_clock_button:
                 showResetShotClockDialog();
@@ -73,9 +73,9 @@ public class TimeButtonDialogListener implements OnClickListener
         }
     }
 
-    private void showResetGameClockDialog()
+    private void showResetPeriodClockDialog()
     {
-        AlertDialog dialog = new ResetGameClockDialog( mActivity );
+        AlertDialog dialog = new ResetPeriodClockDialog( mActivity );
         dialog.show();
     }
 

@@ -33,7 +33,7 @@ public class SubstitutionEvent extends GameEvent
     @Override
     public String toString()
     {
-        return "Substitution by " + mTeam.getName() + ". " + mPlayer.getFullName() + " replaced by "
-                + mNewPlayer.getFullName() + ".";
+        return "Substitution by " + mTeam.getName() + ". " + mNewPlayer.getFullName() + " enters the game for "
+                + mPlayer.getFullName() + ".";
     }
 }

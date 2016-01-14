@@ -30,7 +30,7 @@ public class GameScoreBoardFragment extends Fragment implements Observer
 
     private TextView mAwayScore;
 
-    private TextView mGameClock;
+    private TextView mPeriodClock;
 
     private TextView mShotClock;
 
@@ -51,7 +51,7 @@ public class GameScoreBoardFragment extends Fragment implements Observer
         mAwayName = ( TextView ) view.findViewById( R.id.game_awayTeamName );
         mHomeScore = ( TextView ) view.findViewById( R.id.game_homeTeamScore );
         mAwayScore = ( TextView ) view.findViewById( R.id.game_awayTeamScore );
-        mGameClock = ( TextView ) view.findViewById( R.id.game_gameClock );
+        mPeriodClock = ( TextView ) view.findViewById( R.id.game_periodClock );
         mShotClock = ( TextView ) view.findViewById( R.id.game_shotClock );
         mPeriod = ( TextView ) view.findViewById( R.id.game_gamePeriod );
         return view;
@@ -62,11 +62,6 @@ public class GameScoreBoardFragment extends Fragment implements Observer
         mAwayScore.setText( StringUtils.getLeadZeroFormattedString( score ) );
     }
 
-    public void setGameClock( int gameClock )
-    {
-        mGameClock.setText( StringUtils.getMinSecFormattedString( gameClock ) );
-    }
-
     public void setHomeScore( int score )
     {
         mHomeScore.setText( StringUtils.getLeadZeroFormattedString( score ) );
@@ -75,6 +70,11 @@ public class GameScoreBoardFragment extends Fragment implements Observer
     public void setPeriod( int period )
     {
         mPeriod.setText( StringUtils.getPeriodString( period ) );
+    }
+
+    public void setPeriodClock( int periodClock )
+    {
+        mPeriodClock.setText( StringUtils.getMinSecFormattedString( periodClock ) );
     }
 
     public void setShotClock( int shotClock )
@@ -93,7 +93,7 @@ public class GameScoreBoardFragment extends Fragment implements Observer
         setBallPossession( game );
         setHomeScore( game.getHomeTeam().getTotalScore() );
         setAwayScore( game.getAwayTeam().getTotalScore() );
-        setGameClock( game.getCurrentGameClock() );
+        setPeriodClock( game.getCurrentPeriodClock() );
         setShotClock( game.getCurrentShotClock() );
         setPeriod( game.getPeriod() );
     }

@@ -3,17 +3,17 @@ package com.example.bballstatstrack.dialogs;
 import com.example.bballstatstrack.R;
 import com.example.bballstatstrack.activities.GameActivity;
 import com.example.bballstatstrack.listeners.DismissDialogListener;
-import com.example.bballstatstrack.listeners.ResetGameClockListener;
+import com.example.bballstatstrack.listeners.ResetPeriodClockListener;
 
 import android.app.Dialog;
 
-public class ResetGameClockDialog extends YesNoDialog
+public class ResetPeriodClockDialog extends YesNoDialog
 {
-    public ResetGameClockDialog( GameActivity activity )
+    public ResetPeriodClockDialog( GameActivity activity )
     {
-        super( activity, R.string.reset_game_clock_confirmation_question );
+        super( activity, R.string.reset_period_clock_confirmation_question );
         setButton( Dialog.BUTTON_POSITIVE, getContext().getText( R.string.yes ),
-                new ResetGameClockListener( activity.getGame() ) );
+                new ResetPeriodClockListener( activity.getGame() ) );
         setButton( Dialog.BUTTON_NEGATIVE, getContext().getText( R.string.no ), new DismissDialogListener() );
     }
 }

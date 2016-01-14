@@ -22,15 +22,15 @@ public class Game extends Observable
 
     private int mPeriod = 0;
 
-    private int mCurrentGameClock;
+    private int mCurrentPeriodClock;
 
-    private int mEventGameClock = -1;
+    private int mEventPeriodClock = -1;
 
     private int mCurrentShotClock;
 
-    private final int mMaxGameClock;
+    private final int mMaxRegulationPeriodClock;
 
-    private final int mMaxOTGameClock;
+    private final int mMaxOTPeriodClock;
 
     private final int mReducedMaxShotClock;
 
@@ -46,10 +46,12 @@ public class Game extends Observable
 
     private MyDate mDate;
 
-    public Game( int maxGameClock, int maxOTGameCock, int resetShotClock, Team homeTeam, Team awayTeam )
+    private boolean mIsShotClockOn = true;
+
+    public Game( int maxPeriodClock, int maxOTGameCock, int resetShotClock, Team homeTeam, Team awayTeam )
     {
-        mMaxGameClock = maxGameClock * 60;
-        mMaxOTGameClock = maxOTGameCock * 60;
+        mMaxRegulationPeriodClock = maxPeriodClock * 60;
+        mMaxOTPeriodClock = maxOTGameCock * 60;
         mReducedMaxShotClock = resetShotClock;
         mHomeTeam = homeTeam;
         mAwayTeam = awayTeam;
@@ -62,8 +64,8 @@ public class Game extends Observable
 
     public Game( UUID id, long longDate, Team homeTeam, Team awayTeam, GameLog gameLog )
     {
-        mMaxGameClock = 0;
-        mMaxOTGameClock = 0;
+        mMaxRegulationPeriodClock = 0;
+        mMaxOTPeriodClock = 0;
         mReducedMaxShotClock = 0;
         mID = id;
         mDate = new MyDate( longDate );
@@ -76,7 +78,7 @@ public class Game extends Observable
     public void addNewEvent( GameEvent event )
     {
         event.resolve();
-        event.setTime( mEventGameClock );
+        event.setTime( mEventPeriodClock );
         mPeriodLog.add( event );
         endNewEvent();
         setChanged();
@@ -97,7 +99,7 @@ public class Game extends Observable
 
     public void endNewEvent()
     {
-        mEventGameClock = -1;
+        mEventPeriodClock = -1;
     }
 
     public int getAwayPeriodFouls()
@@ -110,14 +112,18 @@ public class Game extends Observable
         return mAwayTeam;
     }
 
-    public int getCurrentGameClock()
+    public int getCurrentPeriodClock()
     {
-        return mCurrentGameClock;
+        return mCurrentPeriodClock;
     }
 
     public int getCurrentShotClock()
     {
-        return mCurrentShotClock;
+        if( mIsShotClockOn )
+        {
+            return mCurrentShotClock;
+        }
+        return -1;
     }
 
     public MyDate getDate()
@@ -201,7 +207,7 @@ public class Game extends Observable
 
     public boolean isPeriodOngoing()
     {
-        return mCurrentGameClock > 0;
+        return mCurrentPeriodClock > 0;
     }
 
     public boolean isPossessionOngoing()
@@ -214,31 +220,27 @@ public class Game extends Observable
         mGameLog.nextPeriod();
         mPeriod = mGameLog.getCurrentPeriod();
         mPeriodLog = mGameLog.getCurrentPeriodLog();
+        mIsShotClockOn = true;
         initializeClocks();
         resetPeriodFouls();
         setChanged();
         notifyObservers();
     }
 
-    public void resetGameClock()
+    public void resetMidShotClock()
+    {
+        resetShotClock( mReducedMaxShotClock );
+    }
+
+    public void resetPeriodClock()
     {
         if( mPeriod < 4 )
         {
-            mCurrentGameClock = mMaxGameClock;
+            mCurrentPeriodClock = mMaxRegulationPeriodClock;
         }
         else
         {
-            mCurrentGameClock = mMaxOTGameClock;
-        }
-        setChanged();
-        notifyObservers();
-    }
-
-    public void resetMidShotClock()
-    {
-        if( mCurrentShotClock < mReducedMaxShotClock )
-        {
-            mCurrentShotClock = mReducedMaxShotClock;
+            mCurrentPeriodClock = mMaxOTPeriodClock;
         }
         setChanged();
         notifyObservers();
@@ -246,18 +248,7 @@ public class Game extends Observable
 
     public void resetShotClock24()
     {
-        int timeDifference;
-        if( mEventGameClock == -1 )
-        {
-            timeDifference = 0;
-        }
-        else
-        {
-            timeDifference = mEventGameClock - mCurrentGameClock;
-        }
-        mCurrentShotClock = MAX_SHOT_CLOCK - timeDifference;
-        setChanged();
-        notifyObservers();
+        resetShotClock( MAX_SHOT_CLOCK );
     }
 
     public void setTeamWithPossession( Team team )
@@ -269,7 +260,7 @@ public class Game extends Observable
 
     public void startNewEvent()
     {
-        mEventGameClock = mCurrentGameClock;
+        mEventPeriodClock = mCurrentPeriodClock;
     }
 
     public void swapBallPossession()
@@ -292,16 +283,30 @@ public class Game extends Observable
             mHasBallPossession.updatePossessionTime();
             mAwayTeam.updatePlayingTime();
             mHomeTeam.updatePlayingTime();
-            mCurrentGameClock--;
-            mCurrentShotClock--;
+            updatePeriodClock();
+            updateShotClock();
             setChanged();
         }
         notifyObservers();
     }
 
+    private int getNewCurrentShotClock( int max )
+    {
+        int timeDifference;
+        if( mEventPeriodClock == -1 )
+        {
+            timeDifference = 0;
+        }
+        else
+        {
+            timeDifference = mEventPeriodClock - mCurrentPeriodClock;
+        }
+        return max - timeDifference;
+    }
+
     private void initializeClocks()
     {
-        resetGameClock();
+        resetPeriodClock();
         resetShotClock24();
         setChanged();
     }
@@ -317,6 +322,42 @@ public class Game extends Observable
     {
         mHomePeriodFouls = 0;
         mAwayPeriodFouls = 0;
+    }
+
+    private void resetShotClock( int max )
+    {
+        if( mIsShotClockOn )
+        {
+            if( mCurrentShotClock < max )
+            {
+                mCurrentShotClock = getNewCurrentShotClock( max );
+            }
+            if( mCurrentShotClock > mCurrentPeriodClock )
+            {
+                turnOffShotClock();
+            }
+        }
+        setChanged();
+        notifyObservers();
+
+    }
+
+    private void turnOffShotClock()
+    {
+        mIsShotClockOn = false;
+    }
+
+    private void updatePeriodClock()
+    {
+        mCurrentPeriodClock--;
+    }
+
+    private void updateShotClock()
+    {
+        if( mIsShotClockOn )
+        {
+            mCurrentShotClock--;
+        }
     }
 
     public enum GameStats

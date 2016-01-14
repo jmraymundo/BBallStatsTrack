@@ -8,7 +8,7 @@ import com.example.bballstatstrack.builders.StartingFiveAwayDialogBuilder;
 import com.example.bballstatstrack.builders.StartingFiveHomeDialogBuilder;
 import com.example.bballstatstrack.dialogs.BackConfirmationDialog;
 import com.example.bballstatstrack.dialogs.BallPossessionDeciderDialog;
-import com.example.bballstatstrack.dialogs.MaxGameClockDialog;
+import com.example.bballstatstrack.dialogs.MaxPeriodClockDialog;
 import com.example.bballstatstrack.fragments.GameLogFragment;
 import com.example.bballstatstrack.fragments.GameScoreBoardFragment;
 import com.example.bballstatstrack.fragments.TeamInGameFragment;
@@ -34,9 +34,9 @@ public class GameActivity extends Activity
 
     private Game mGame;
 
-    private int mGameClock = -1;
+    private int mMaxPeriodClock = -1;
 
-    private int mShotClockReset = -1;
+    private int mShotClockResetValue = -1;
 
     private GameScoreBoardFragment mScoreBoardFragment = new GameScoreBoardFragment();
 
@@ -99,16 +99,6 @@ public class GameActivity extends Activity
         return mGame;
     }
 
-    public int getGameClock()
-    {
-        return mGameClock;
-    }
-
-    public int getShotClockReset()
-    {
-        return mShotClockReset;
-    }
-
     public boolean isPenalty( Team team )
     {
         return mGame.isPenalty( team );
@@ -137,14 +127,14 @@ public class GameActivity extends Activity
         mGame.resetMidShotClock();
     }
 
-    public void setGameClock( int gameClock )
+    public void setMaxPeriodClock( int maxPeriodClock )
     {
-        mGameClock = gameClock;
+        mMaxPeriodClock = maxPeriodClock;
     }
 
     public void setShotClockReset( int shotClockReset )
     {
-        mShotClockReset = shotClockReset;
+        mShotClockResetValue = shotClockReset;
     }
 
     public void startEvent()
@@ -154,7 +144,7 @@ public class GameActivity extends Activity
 
     public void startNewGame()
     {
-        mGame = new Game( mGameClock, 5, mShotClockReset, mHomeTeam, mAwayTeam );
+        mGame = new Game( mMaxPeriodClock, 5, mShotClockResetValue, mHomeTeam, mAwayTeam );
         mScoreBoardFragment.initialize( mGame );
         mHomeInGameFragment = new TeamInGameFragment( mGame.getHomeTeam() );
         mAwayInGameFragment = new TeamInGameFragment( mGame.getAwayTeam() );
@@ -196,7 +186,7 @@ public class GameActivity extends Activity
     protected void onCreate( Bundle savedInstanceState )
     {
         super.onCreate( savedInstanceState );
-        showMaxGameClockDialog();
+        showMaxPeriodClockDialog();
         setContentView( R.layout.activity_game );
         mTimeButton = ( Button ) findViewById( R.id.timeRelatedButton );
         mCoachButton = ( Button ) findViewById( R.id.coachCommandsButton );
@@ -257,9 +247,9 @@ public class GameActivity extends Activity
         dialog.show();
     }
 
-    private void showMaxGameClockDialog()
+    private void showMaxPeriodClockDialog()
     {
-        AlertDialog dialog = new MaxGameClockDialog( GameActivity.this );
+        AlertDialog dialog = new MaxPeriodClockDialog( GameActivity.this );
         dialog.show();
     }
 }

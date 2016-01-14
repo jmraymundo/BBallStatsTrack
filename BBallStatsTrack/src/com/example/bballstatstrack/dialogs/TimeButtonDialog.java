@@ -22,13 +22,13 @@ public class TimeButtonDialog extends AlertDialog
 
         Button saveGameButton = ( Button ) view.findViewById( R.id.save_game_button );
         Button nextPeriodButton = ( Button ) view.findViewById( R.id.next_period_button );
-        Button resetGameClockButton = ( Button ) view.findViewById( R.id.reset_game_clock_button );
+        Button resetPeriodClockButton = ( Button ) view.findViewById( R.id.reset_period_clock_button );
         Button resetShotClockButton = ( Button ) view.findViewById( R.id.reset_shot_clock_button );
         Button pauseResumeButton = ( Button ) view.findViewById( R.id.pauseResume_time_button );
 
         saveGameButton.setOnClickListener( listener );
         nextPeriodButton.setOnClickListener( listener );
-        resetGameClockButton.setOnClickListener( listener );
+        resetPeriodClockButton.setOnClickListener( listener );
         resetShotClockButton.setOnClickListener( listener );
         pauseResumeButton.setOnClickListener( listener );
 
@@ -37,7 +37,7 @@ public class TimeButtonDialog extends AlertDialog
         nextPeriodButton.setEnabled( !isPeriodOngoing );
 
         boolean timerStopped = activity.isTimerStopped();
-        resetGameClockButton.setEnabled( timerStopped );
+        resetPeriodClockButton.setEnabled( timerStopped );
         resetShotClockButton.setEnabled( timerStopped );
         pauseResumeButton.setText( timerStopped ? R.string.time_dialog_resume_text : R.string.time_dialog_pause_text );
     }

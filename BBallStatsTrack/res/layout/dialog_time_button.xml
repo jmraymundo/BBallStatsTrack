@@ -27,11 +27,11 @@
 		android:gravity="center"
 		android:text="@string/time_dialog_reset_shot_clock_text" />
 	<Button
-		android:id="@+id/reset_game_clock_button"
+		android:id="@+id/reset_period_clock_button"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:gravity="center"
-		android:text="@string/time_dialog_reset_game_clock_text" />
+		android:text="@string/time_dialog_reset_period_clock_text" />
 	<Button
 		android:id="@+id/pauseResume_time_button"
 		android:layout_width="match_parent"

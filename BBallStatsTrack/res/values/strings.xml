@@ -18,14 +18,14 @@
 	<string name="on_back_button_title">Cancelling..</string>
 	<string name="on_back_button_message">Are you sure you want to cancel? Your progress will not be saved.</string>
 	<string name="reset_shot_clock_confirmation_question">Are you sure you want to reset the shot clock?</string>
-	<string name="reset_game_clock_confirmation_question">Are you sure you want to reset the game clock?</string>
+	<string name="reset_period_clock_confirmation_question">Are you sure you want to reset the period clock?</string>
 	<string name="generic_confirmation_question">Are you sure?</string>
 	<string name="yes">Yes</string>
 	<string name="no">No</string>
 	<string name="player_score">Score</string>
 	<string name="game_log_title">Game Log:</string>
 	<string name="set_time_title">Set time:</string>
-	<string name="set_max_game_clock_title">Max game clock per quarter? (in minutes)</string>
+	<string name="set_max_period_clock_title">Max regulation period clock per quarter? (in minutes)</string>
 	<string name="set_reset_shot_clock_title">In same ball possession situations, reset shot clock to how many seconds?</string>
 	<string name="select_starters">Select starters of team:</string>
 	<string name="need_five_players">Error! Need five players!</string>
@@ -37,7 +37,7 @@
 	<string name="shoot_button_text">Shoot</string>
 	<string name="time_dialog_next_period_text">Start Next Period</string>
 	<string name="time_dialog_reset_shot_clock_text">Reset Shot Clock</string>
-	<string name="time_dialog_reset_game_clock_text">Reset Game Clock</string>
+	<string name="time_dialog_reset_period_clock_text">Reset Period Clock</string>
 	<string name="time_dialog_pause_text">Pause Time</string>
 	<string name="time_dialog_resume_text">Resume Time</string>
 	<string name="generic_dialog_question">What do you want to do?</string>
