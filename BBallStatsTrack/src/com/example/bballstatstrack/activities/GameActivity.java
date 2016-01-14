@@ -8,19 +8,16 @@ import com.example.bballstatstrack.builders.StartingFiveAwayDialogBuilder;
 import com.example.bballstatstrack.builders.StartingFiveHomeDialogBuilder;
 import com.example.bballstatstrack.dialogs.BackConfirmationDialog;
 import com.example.bballstatstrack.dialogs.BallPossessionDeciderDialog;
-import com.example.bballstatstrack.dialogs.CoachButtonDialog;
-import com.example.bballstatstrack.dialogs.FoulButtonDialog;
 import com.example.bballstatstrack.dialogs.MaxGameClockDialog;
-import com.example.bballstatstrack.dialogs.ShootButtonDialog;
-import com.example.bballstatstrack.dialogs.TimeButtonDialog;
-import com.example.bballstatstrack.dialogs.TurnoverButtonDialog;
 import com.example.bballstatstrack.fragments.GameLogFragment;
 import com.example.bballstatstrack.fragments.GameScoreBoardFragment;
 import com.example.bballstatstrack.fragments.TeamInGameFragment;
+import com.example.bballstatstrack.listeners.GameActivityButtonListnener;
 import com.example.bballstatstrack.models.Game;
 import com.example.bballstatstrack.models.Team;
 import com.example.bballstatstrack.models.UpdateTimeTask;
 import com.example.bballstatstrack.models.gameevents.GameEvent;
+import com.example.bballstatstrack.models.gameevents.foulevents.NonShootingFoulEvent;
 import com.example.bballstatstrack.models.gameevents.foulevents.ShootingFoulEvent;
 
 import android.app.Activity;
@@ -28,7 +25,6 @@ import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
@@ -69,6 +65,7 @@ public class GameActivity extends Activity
     public void addNewEvent( GameEvent event )
     {
         mGame.addNewEvent( event );
+        checkTeamFoulEvent( event );
     }
 
     public void endEvent()
@@ -210,6 +207,22 @@ public class GameActivity extends Activity
         setButtonListeners();
     }
 
+    private void checkTeamFoulEvent( GameEvent event )
+    {
+        if( event == null )
+        {
+            return;
+        }
+        if( event instanceof ShootingFoulEvent || event instanceof NonShootingFoulEvent )
+        {
+            mGame.addPeriodFoul( event.getTeam() );
+        }
+        else
+        {
+            checkTeamFoulEvent( event.getAppended() );
+        }
+    }
+
     private void initializeMainStatsFragmentView()
     {
         FragmentManager manager = getFragmentManager();
@@ -230,46 +243,12 @@ public class GameActivity extends Activity
 
     private void setButtonListeners()
     {
-        mTimeButton.setOnClickListener( new OnClickListener()
-        {
-            @Override
-            public void onClick( View v )
-            {
-                showTimeButtonDialog();
-            }
-        } );
-        mCoachButton.setOnClickListener( new OnClickListener()
-        {
-            @Override
-            public void onClick( View v )
-            {
-                showCoachButtonDialog();
-            }
-        } );
-        mFoulButton.setOnClickListener( new OnClickListener()
-        {
-            @Override
-            public void onClick( View v )
-            {
-                showFoulButtonDialog();
-            }
-        } );
-        mTurnoverButton.setOnClickListener( new OnClickListener()
-        {
-            @Override
-            public void onClick( View v )
-            {
-                showTurnoverButtonDialog();
-            }
-        } );
-        mShootButton.setOnClickListener( new OnClickListener()
-        {
-            @Override
-            public void onClick( View v )
-            {
-                showShootButtonDialog( null );
-            }
-        } );
+        OnClickListener listener = new GameActivityButtonListnener( GameActivity.this );
+        mTimeButton.setOnClickListener( listener );
+        mCoachButton.setOnClickListener( listener );
+        mFoulButton.setOnClickListener( listener );
+        mTurnoverButton.setOnClickListener( listener );
+        mShootButton.setOnClickListener( listener );
     }
 
     private void showBallPossessionDeciderDialog()
@@ -278,39 +257,9 @@ public class GameActivity extends Activity
         dialog.show();
     }
 
-    private void showCoachButtonDialog()
-    {
-        AlertDialog dialog = new CoachButtonDialog( GameActivity.this );
-        dialog.show();
-    }
-
-    private void showFoulButtonDialog()
-    {
-        AlertDialog dialog = new FoulButtonDialog( GameActivity.this );
-        dialog.show();
-    }
-
     private void showMaxGameClockDialog()
     {
         AlertDialog dialog = new MaxGameClockDialog( GameActivity.this );
-        dialog.show();
-    }
-
-    private void showShootButtonDialog( ShootingFoulEvent event )
-    {
-        AlertDialog dialog = new ShootButtonDialog( GameActivity.this, null );
-        dialog.show();
-    }
-
-    private void showTimeButtonDialog()
-    {
-        AlertDialog dialog = new TimeButtonDialog( GameActivity.this );
-        dialog.show();
-    }
-
-    private void showTurnoverButtonDialog()
-    {
-        AlertDialog dialog = new TurnoverButtonDialog( GameActivity.this );
         dialog.show();
     }
 }

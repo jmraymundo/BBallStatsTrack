@@ -39,6 +39,10 @@ public class ReboundEventListener implements OnClickListener
         {
             mActivity.timerStop();
         }
+        else
+        {
+            mActivity.timerStart();
+        }
         switch( event.getReboundType() )
         {
             case DEFENSIVE:

@@ -7,9 +7,6 @@ import java.util.UUID;
 
 import com.example.bballstatstrack.models.game.GameLog;
 import com.example.bballstatstrack.models.gameevents.GameEvent;
-import com.example.bballstatstrack.models.gameevents.TurnoverEvent;
-import com.example.bballstatstrack.models.gameevents.foulevents.NonShootingFoulEvent;
-import com.example.bballstatstrack.models.gameevents.foulevents.ShootingFoulEvent;
 
 import android.text.format.DateFormat;
 
@@ -81,11 +78,21 @@ public class Game extends Observable
         event.resolve();
         event.setTime( mEventGameClock );
         mPeriodLog.add( event );
-        checkTeamFoulEvent( event );
-        checkTurnoverEvent( event );
         endNewEvent();
         setChanged();
         notifyObservers();
+    }
+
+    public void addPeriodFoul( Team team )
+    {
+        if( team.equals( mAwayTeam ) )
+        {
+            mAwayPeriodFouls++;
+        }
+        else if( team.equals( mHomeTeam ) )
+        {
+            mHomePeriodFouls++;
+        }
     }
 
     public void endNewEvent()
@@ -290,46 +297,6 @@ public class Game extends Observable
             setChanged();
         }
         notifyObservers();
-    }
-
-    private void addPeriodFoul( Team team )
-    {
-        if( team.equals( mAwayTeam ) )
-        {
-            mAwayPeriodFouls++;
-        }
-        else if( team.equals( mHomeTeam ) )
-        {
-            mHomePeriodFouls++;
-        }
-    }
-
-    private void checkTeamFoulEvent( GameEvent event )
-    {
-        if( event == null )
-        {
-            return;
-        }
-        if( event instanceof ShootingFoulEvent || event instanceof NonShootingFoulEvent )
-        {
-            addPeriodFoul( event.getTeam() );
-        }
-        else
-        {
-            checkTeamFoulEvent( event.getAppended() );
-        }
-    }
-
-    private void checkTurnoverEvent( GameEvent event )
-    {
-        if( event == null )
-        {
-            return;
-        }
-        if( event instanceof TurnoverEvent )
-        {
-            swapBallPossession();
-        }
     }
 
     private void initializeClocks()

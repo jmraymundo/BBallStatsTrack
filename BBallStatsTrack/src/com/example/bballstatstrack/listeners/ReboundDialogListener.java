@@ -27,8 +27,8 @@ public class ReboundDialogListener implements OnClickListener
     @Override
     public void onClick( DialogInterface dialog, int which )
     {
-        AlertDialog aDialog = new ReboundEventDialog( mActivity, mShootEvent, mTeam );
-        aDialog.show();
+        AlertDialog nextDialog = new ReboundEventDialog( mActivity, mShootEvent, mTeam );
+        nextDialog.show();
     }
 
 }

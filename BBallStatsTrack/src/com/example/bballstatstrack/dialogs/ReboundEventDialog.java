@@ -36,10 +36,7 @@ public class ReboundEventDialog extends MultipleButtonsDialog
         {
             return ReboundType.OFFENSIVE;
         }
-        else
-        {
-            return ReboundType.DEFENSIVE;
-        }
+        return ReboundType.DEFENSIVE;
     }
 
     private void setPlayerListeners( GameActivity activity, ShootEvent shootEvent, Team team, ReboundType type )

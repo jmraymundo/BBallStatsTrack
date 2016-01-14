@@ -15,6 +15,11 @@ public class ShootButtonDialog extends MultipleButtonsDialog
 {
     private ShootingFoulEvent mShootingFoulEvent;
 
+    public ShootButtonDialog( GameActivity activity )
+    {
+        this( activity, null );
+    }
+
     public ShootButtonDialog( GameActivity activity, ShootingFoulEvent shootingFoulEvent )
     {
         super( activity, R.string.shoot_dialog_player_question );
