@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 public class TeamReviewFragment extends Fragment
 {
-    Team mTeam;
+    private Team mTeam;
 
     private TextView mTeamName;
 

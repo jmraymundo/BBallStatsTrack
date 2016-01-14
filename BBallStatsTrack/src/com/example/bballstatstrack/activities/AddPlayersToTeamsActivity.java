@@ -4,6 +4,7 @@ import com.example.bballstatstrack.R;
 import com.example.bballstatstrack.dialogs.BackConfirmationDialog;
 import com.example.bballstatstrack.fragments.TeamFragment;
 import com.example.bballstatstrack.listeners.FragmentButtonListener;
+import com.example.bballstatstrack.listeners.ProceedButtonListener;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -15,9 +16,9 @@ import android.widget.Button;
 
 public class AddPlayersToTeamsActivity extends Activity
 {
-    protected static final String HOME_TEAM = "HomeTeam";
+    public static final String HOME_TEAM = "HomeTeam";
 
-    protected static final String AWAY_TEAM = "AwayTeam";
+    public static final String AWAY_TEAM = "AwayTeam";
 
     private TeamFragment mHomeTeamFragment;
 

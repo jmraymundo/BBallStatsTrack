@@ -1,5 +1,6 @@
 package com.example.bballstatstrack.models.gameevents;
 
+import com.example.bballstatstrack.R;
 import com.example.bballstatstrack.models.Player;
 import com.example.bballstatstrack.models.Team;
 
@@ -84,11 +85,6 @@ public abstract class GameEvent
         SHOOTING, NON_SHOOTING, OFFENSIVE;
     }
 
-    public enum MissType
-    {
-        BLOCKED, UNFORCED;
-    }
-
     public enum NonShootingFoulType
     {
         PENALTY, NON_PENALTY;
@@ -117,6 +113,19 @@ public abstract class GameEvent
 
     public enum TurnoverType
     {
-        STEAL, OFFENSIVE_FOUL, OTHER;
+        STEAL( R.string.turnover_dialog_type_steal_text ), OFFENSIVE_FOUL(
+                R.string.turnover_dialog_type_offensivefoul_text ), OTHER( R.string.turnover_dialog_type_other_text );
+
+        private final int mTextResId;
+
+        private TurnoverType( int textRedId )
+        {
+            mTextResId = textRedId;
+        }
+
+        public int getTextResId()
+        {
+            return mTextResId;
+        }
     }
 }

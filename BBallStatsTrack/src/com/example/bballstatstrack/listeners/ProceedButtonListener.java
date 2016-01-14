@@ -1,5 +1,7 @@
-package com.example.bballstatstrack.activities;
+package com.example.bballstatstrack.listeners;
 
+import com.example.bballstatstrack.activities.AddPlayersToTeamsActivity;
+import com.example.bballstatstrack.activities.GameActivity;
 import com.example.bballstatstrack.fragments.TeamFragment;
 import com.example.bballstatstrack.models.PlayerList;
 import com.example.bballstatstrack.models.Team;
@@ -10,7 +12,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
 
-class ProceedButtonListener implements OnClickListener
+public class ProceedButtonListener implements OnClickListener
 {
     private Activity mActivity;
 

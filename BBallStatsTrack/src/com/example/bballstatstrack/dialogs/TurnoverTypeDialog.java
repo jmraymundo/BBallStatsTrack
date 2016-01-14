@@ -20,33 +20,10 @@ public class TurnoverTypeDialog extends MultipleButtonsDialog
         {
             Button button = new Button( activity );
             button.setTag( type );
-            button.setText( getStringResIDFromEnum( type ) );
+            button.setText( type.getTextResId() );
             button.setOnClickListener(
                     new TurnoverTypeDialogListener( activity, TurnoverTypeDialog.this, turnoverEvent, type ) );
             mDialogView.addView( button );
-        }
-    }
-
-    private int getStringResIDFromEnum( TurnoverType type )
-    {
-        switch( type )
-        {
-            case OTHER:
-            {
-                return R.string.turnover_dialog_type_other_text;
-            }
-            case OFFENSIVE_FOUL:
-            {
-                return R.string.turnover_dialog_type_offensivefoul_text;
-            }
-            case STEAL:
-            {
-                return R.string.turnover_dialog_type_steal_text;
-            }
-            default:
-            {
-                return -1;
-            }
         }
     }
 }
