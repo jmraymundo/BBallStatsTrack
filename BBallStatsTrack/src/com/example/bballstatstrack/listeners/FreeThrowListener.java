@@ -2,6 +2,7 @@ package com.example.bballstatstrack.listeners;
 
 import com.example.bballstatstrack.activities.GameActivity;
 import com.example.bballstatstrack.dialogs.FreeThrowDialog;
+import com.example.bballstatstrack.dialogs.ReboundDialog;
 import com.example.bballstatstrack.models.gameevents.GameEvent.ShotClass;
 import com.example.bballstatstrack.models.gameevents.ShootEvent;
 
@@ -33,12 +34,20 @@ public class FreeThrowListener implements OnClickListener
         ShootEvent event = new ShootEvent( ShotClass.FT, mShotMade, mShootEvent.getPlayer(), mShootEvent.getTeam() );
         mActivity.addNewEvent( event );
         dialog.dismiss();
+        AlertDialog nextDialog;
         if( --mFTCount == 0 )
         {
-            mActivity.swapBallPossession();
+            if( mShotMade )
+            {
+                mActivity.swapBallPossession();
+                return;
+            }
+            nextDialog = new ReboundDialog( mActivity, event );
+            nextDialog.show();
             return;
+
         }
-        AlertDialog nextDialog = new FreeThrowDialog( mActivity, mShootEvent, mFTCount );
+        nextDialog = new FreeThrowDialog( mActivity, mShootEvent, mFTCount );
         nextDialog.show();
     }
 
