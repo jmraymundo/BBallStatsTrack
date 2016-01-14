@@ -37,7 +37,7 @@ public class GameLog extends SparseArray< List< GameEvent > >
     public ArrayList< String > toStringList()
     {
         ArrayList< String > output = new ArrayList< String >();
-        for( int index = 0; index < size(); index++ )
+        for( int index = size() - 1; index >= 0; index-- )
         {
             List< GameEvent > periodLog = valueAt( index );
             for( int innerIndex = periodLog.size() - 1; innerIndex >= 0; innerIndex-- )

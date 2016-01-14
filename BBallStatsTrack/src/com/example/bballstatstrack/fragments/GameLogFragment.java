@@ -20,7 +20,7 @@ public class GameLogFragment extends Fragment implements Observer
 
     private ListView mView;
 
-    private ArrayAdapter< String > myAdapter;
+    private ArrayAdapter< String > mAdapter;
 
     public GameLogFragment( GameLog gameLog )
     {
@@ -31,9 +31,9 @@ public class GameLogFragment extends Fragment implements Observer
     public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
     {
         mView = ( ListView ) inflater.inflate( R.layout.fragment_game_log, container, false );
-        myAdapter = new ArrayAdapter< String >( getActivity(), R.layout.adapter_gamelog_list_item,
+        mAdapter = new ArrayAdapter< String >( getActivity(), R.layout.adapter_gamelog_list_item,
                 mGameLog.toStringList() );
-        mView.setAdapter( myAdapter );
+        mView.setAdapter( mAdapter );
         return mView;
     }
 
@@ -45,8 +45,8 @@ public class GameLogFragment extends Fragment implements Observer
 
     public void updateUI()
     {
-        myAdapter.clear();
-        myAdapter.addAll( mGameLog.toStringList() );
-        myAdapter.notifyDataSetChanged();
+        mAdapter.clear();
+        mAdapter.addAll( mGameLog.toStringList() );
+        mAdapter.notifyDataSetChanged();
     }
 }

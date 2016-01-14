@@ -90,6 +90,13 @@ public class GameActivity extends Activity
         dialog.show();
     }
 
+    @Override
+    public void finish()
+    {
+        timerStop();
+        super.finish();
+    }
+
     public Game getGame()
     {
         return mGame;
