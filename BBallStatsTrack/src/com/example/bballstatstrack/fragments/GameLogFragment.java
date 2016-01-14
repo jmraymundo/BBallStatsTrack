@@ -1,8 +1,5 @@
 package com.example.bballstatstrack.fragments;
 
-import java.util.Observable;
-import java.util.Observer;
-
 import com.example.bballstatstrack.R;
 import com.example.bballstatstrack.models.game.GameLog;
 
@@ -14,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class GameLogFragment extends Fragment implements Observer
+public class GameLogFragment extends Fragment
 {
     private GameLog mGameLog;
 
@@ -35,12 +32,6 @@ public class GameLogFragment extends Fragment implements Observer
                 mGameLog.toStringList() );
         mView.setAdapter( mAdapter );
         return mView;
-    }
-
-    @Override
-    public void update( Observable observable, Object data )
-    {
-        updateUI();
     }
 
     public void updateUI()

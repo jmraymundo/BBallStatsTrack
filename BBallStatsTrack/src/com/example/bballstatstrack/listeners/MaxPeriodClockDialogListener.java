@@ -6,8 +6,8 @@ import com.example.bballstatstrack.dialogs.MaxShotClockResetDialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -17,24 +17,27 @@ public class MaxPeriodClockDialogListener implements OnClickListener
 
     private EditText mClockField;
 
-    public MaxPeriodClockDialogListener( GameActivity activity, EditText clockField )
+    private Dialog mDialog;
+
+    public MaxPeriodClockDialogListener( GameActivity activity, Dialog dialog, EditText clockField )
     {
         mActivity = activity;
+        mDialog = dialog;
         mClockField = clockField;
     }
 
     @Override
-    public void onClick( DialogInterface dialog, int which )
+    public void onClick( View v )
     {
         String clockValue = mClockField.getText().toString();
         if( clockValue.isEmpty() )
         {
-            Toast.makeText( mActivity, ( ( Dialog ) dialog ).getContext().getText( R.string.clock_input_error ),
-                    Toast.LENGTH_SHORT ).show();
+            Toast.makeText( mActivity, mDialog.getContext().getText( R.string.clock_input_error ), Toast.LENGTH_SHORT )
+                    .show();
             return;
         }
         mActivity.setMaxPeriodClock( Integer.parseInt( clockValue ) );
-        dialog.dismiss();
+        mDialog.dismiss();
         AlertDialog nextDialog = new MaxShotClockResetDialog( mActivity );
         nextDialog.show();
     }

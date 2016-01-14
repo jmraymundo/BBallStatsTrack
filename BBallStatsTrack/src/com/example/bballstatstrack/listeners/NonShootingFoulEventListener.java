@@ -1,12 +1,11 @@
 package com.example.bballstatstrack.listeners;
 
 import com.example.bballstatstrack.activities.GameActivity;
-import com.example.bballstatstrack.dialogs.ShootButtonDialog;
+import com.example.bballstatstrack.dialogs.PenaltyDialog;
 import com.example.bballstatstrack.models.Player;
 import com.example.bballstatstrack.models.Team;
 import com.example.bballstatstrack.models.gameevents.GameEvent.NonShootingFoulType;
 import com.example.bballstatstrack.models.gameevents.foulevents.NonShootingFoulEvent;
-import com.example.bballstatstrack.models.gameevents.foulevents.ShootingFoulEvent;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -36,9 +35,7 @@ public class NonShootingFoulEventListener implements OnClickListener
                 isPenalty ? NonShootingFoulType.PENALTY : NonShootingFoulType.NON_PENALTY, mPlayer, mTeam );
         if( isPenalty )
         {
-            ShootingFoulEvent sfEvent = new ShootingFoulEvent( mPlayer, mTeam );
-            sfEvent.setFTCount( 2 );
-            AlertDialog nextDialog = new ShootButtonDialog( mActivity, sfEvent );
+            AlertDialog nextDialog = new PenaltyDialog( mActivity );
             nextDialog.show();
         }
         mActivity.addNewEvent( event );

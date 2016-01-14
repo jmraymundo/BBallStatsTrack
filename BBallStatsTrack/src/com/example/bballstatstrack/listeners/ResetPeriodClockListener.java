@@ -17,6 +17,7 @@ public class ResetPeriodClockListener implements OnClickListener
     @Override
     public void onClick( DialogInterface dialog, int which )
     {
+        mGame.resetPeriodLog();
         mGame.resetPeriodClock();
     }
 }

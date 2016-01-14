@@ -1,5 +1,7 @@
 package com.example.bballstatstrack.activities;
 
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -28,7 +30,7 @@ import android.os.Bundle;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-public class GameActivity extends Activity
+public class GameActivity extends Activity implements Observer
 {
     public static final String EXTRA_GAME_ID = "gameID";
 
@@ -149,10 +151,7 @@ public class GameActivity extends Activity
         mHomeInGameFragment = new TeamInGameFragment( mGame.getHomeTeam() );
         mAwayInGameFragment = new TeamInGameFragment( mGame.getAwayTeam() );
         mGameLogFragment = new GameLogFragment( mGame.getGameLog() );
-        mGame.addObserver( mScoreBoardFragment );
-        mGame.addObserver( mHomeInGameFragment );
-        mGame.addObserver( mAwayInGameFragment );
-        mGame.addObserver( mGameLogFragment );
+        mGame.addObserver( GameActivity.this );
         initializeTeamInGameViews();
         showBallPossessionDeciderDialog();
     }
@@ -180,6 +179,19 @@ public class GameActivity extends Activity
         }
         mTimer.cancel();
         mTimer = null;
+    }
+
+    @Override
+    public void update( Observable observable, Object data )
+    {
+        mScoreBoardFragment.updateUI( mGame );
+        mHomeInGameFragment.updateUI();
+        mAwayInGameFragment.updateUI();
+        mGameLogFragment.updateUI();
+        if( data != null )
+        {
+            timerStop();
+        }
     }
 
     @Override

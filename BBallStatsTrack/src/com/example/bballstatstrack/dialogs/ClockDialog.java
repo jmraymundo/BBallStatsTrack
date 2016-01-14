@@ -2,9 +2,11 @@ package com.example.bballstatstrack.dialogs;
 
 import com.example.bballstatstrack.R;
 import com.example.bballstatstrack.activities.GameActivity;
+import com.example.bballstatstrack.listeners.DismissDialogListener;
 import com.example.bballstatstrack.models.utils.EditTextRangeNumberWatcher;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -30,6 +32,7 @@ public class ClockDialog extends AlertDialog
         setTitle( R.string.set_time_title );
         setView( mDialogView );
         setCancelable( false );
+        setButton( Dialog.BUTTON_POSITIVE, getContext().getText( android.R.string.ok ), new DismissDialogListener() );
         getWindow().setSoftInputMode( WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE );
         setCanceledOnTouchOutside( false );
     }

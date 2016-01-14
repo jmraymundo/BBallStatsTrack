@@ -98,6 +98,7 @@ public abstract class GameEvent
     public enum ShotClass
     {
         FT( "FT shot" ), FG_2PT( "2pt shot" ), FG_3PT( "3pt shot" );
+
         private final String mText;
 
         private ShotClass( String text )

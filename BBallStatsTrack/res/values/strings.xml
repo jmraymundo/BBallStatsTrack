@@ -53,7 +53,7 @@
 	<string name="foul_dialog_player_question">Who committed the foul?</string>
 	<string name="foul_dialog_fouled_question">Who was fouled?</string>
 	<string name="foul_dialog_type_question">What kind of foul was committed?</string>
-	<string name="free_throw_dialog_penalty">Penalty situation! Bonus 2 free throws.</string>
+	<string name="free_throw_dialog_penalty">Penalty situation! Who will shoot 2 free throws?</string>
 	<string name="free_throw_dialog_question">Did he made the free throw?</string>
 	<string name="substitution_dialog_question">Which team made a substitution?</string>
 	<string name="substitution_dialog_player_out_question">Who would you like to substitute?</string>

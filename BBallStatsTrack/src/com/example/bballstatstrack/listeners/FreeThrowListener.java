@@ -31,6 +31,7 @@ public class FreeThrowListener implements OnClickListener
     @Override
     public void onClick( DialogInterface dialog, int which )
     {
+        mActivity.startEvent();
         dialog.dismiss();
         ShootEvent event = new ShootEvent( ShotClass.FT, mShotMade, mShootEvent.getPlayer(), mShootEvent.getTeam() );
         AlertDialog nextDialog;
@@ -40,14 +41,15 @@ public class FreeThrowListener implements OnClickListener
             nextDialog = new FreeThrowDialog( mActivity, mShootEvent, mFTCount );
             nextDialog.show();
         }
-        else if( mShotMade )
-        {
-            mActivity.swapBallPossession();
-        }
-        else
+        else if( !mShotMade )
         {
             nextDialog = new ReboundDialog( mActivity, event );
             nextDialog.show();
+        }
+        else
+        {
+            mActivity.addNewEvent( event );
+            mActivity.swapBallPossession();
         }
     }
 

@@ -220,7 +220,6 @@ public class Game extends Observable
         mGameLog.nextPeriod();
         mPeriod = mGameLog.getCurrentPeriod();
         mPeriodLog = mGameLog.getCurrentPeriodLog();
-        mIsShotClockOn = true;
         initializeClocks();
         resetPeriodFouls();
         setChanged();
@@ -242,8 +241,13 @@ public class Game extends Observable
         {
             mCurrentPeriodClock = mMaxOTPeriodClock;
         }
-        setChanged();
-        notifyObservers();
+        mIsShotClockOn = true;
+        resetShotClock24();
+    }
+
+    public void resetPeriodLog()
+    {
+        mPeriodLog.clear();
     }
 
     public void resetShotClock24()
@@ -278,14 +282,16 @@ public class Game extends Observable
 
     public void updateTime()
     {
-        if( isPeriodOngoing() && isPossessionOngoing() )
+        setChanged();
+        mHasBallPossession.updatePossessionTime();
+        mAwayTeam.updatePlayingTime();
+        mHomeTeam.updatePlayingTime();
+        updatePeriodClock();
+        updateShotClock();
+        if( !isPeriodOngoing() || !isPossessionOngoing() )
         {
-            mHasBallPossession.updatePossessionTime();
-            mAwayTeam.updatePlayingTime();
-            mHomeTeam.updatePlayingTime();
-            updatePeriodClock();
-            updateShotClock();
-            setChanged();
+            notifyObservers( new Object() );
+            return;
         }
         notifyObservers();
     }
@@ -307,7 +313,6 @@ public class Game extends Observable
     private void initializeClocks()
     {
         resetPeriodClock();
-        resetShotClock24();
         setChanged();
     }
 

@@ -17,7 +17,5 @@ public class FreeThrowDialog extends YesNoDialog
         setButton( Dialog.BUTTON_NEGATIVE, getContext().getText( R.string.no ),
                 new FreeThrowListener( activity, shootEvent, false, ftCount ) );
         setCancelable( false );
-
-        activity.startEvent();
     }
 }

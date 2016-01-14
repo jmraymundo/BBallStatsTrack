@@ -1,8 +1,5 @@
 package com.example.bballstatstrack.fragments;
 
-import java.util.Observable;
-import java.util.Observer;
-
 import com.example.bballstatstrack.R;
 import com.example.bballstatstrack.models.Player;
 import com.example.bballstatstrack.models.PlayerList;
@@ -17,7 +14,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-public class TeamInGameFragment extends Fragment implements Observer
+public class TeamInGameFragment extends Fragment
 {
     private PlayerList mInGameList = new PlayerList();
 
@@ -42,12 +39,6 @@ public class TeamInGameFragment extends Fragment implements Observer
         number.setText( String.valueOf( player.getNumber() ) );
         name.setText( player.getFullName() );
         score.setText( String.valueOf( player.getTotalscore() ) );
-    }
-
-    @Override
-    public void update( Observable observable, Object data )
-    {
-        updateUI();
     }
 
     public void updateInGamePlayers( PlayerList inGameList )
