@@ -39,6 +39,8 @@ public class TimeButtonDialog extends AlertDialog
         boolean timerStopped = activity.isTimerStopped();
         resetPeriodClockButton.setEnabled( timerStopped );
         resetShotClockButton.setEnabled( timerStopped );
+
         pauseResumeButton.setText( timerStopped ? R.string.time_dialog_resume_text : R.string.time_dialog_pause_text );
+        pauseResumeButton.setEnabled( isPeriodOngoing && game.isPossessionOngoing() );
     }
 }
