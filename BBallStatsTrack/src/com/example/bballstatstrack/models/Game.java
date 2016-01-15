@@ -114,6 +114,10 @@ public class Game extends Observable
 
     public int getCurrentPeriodClock()
     {
+        if( mCurrentPeriodClock < 0 )
+        {
+            mCurrentPeriodClock = 0;
+        }
         return mCurrentPeriodClock;
     }
 
