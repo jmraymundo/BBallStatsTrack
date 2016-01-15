@@ -25,7 +25,7 @@ public class EditTextRangeNumberWatcher implements TextWatcher
             return;
         }
         int input = Integer.parseInt( s.toString() );
-        if( inRange( input ) )
+        if( s.length() < 3 && inRange( input ) )
         {
             return;
         }
