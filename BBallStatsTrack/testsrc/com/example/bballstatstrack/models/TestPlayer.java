@@ -19,10 +19,13 @@ public class TestPlayer extends TestCase
     }
 
     @Test
-    public void testPlayer()
+    public void testGet2ptFGMade()
     {
-        assertEquals( 0, mTestPlayer.getNumber() );
-        assertEquals( "John Doe", mTestPlayer.getFullName() );
+        assertEquals( 0, mTestPlayer.get2ptFGMade() );
+        assertEquals( 0, mTestPlayer.get2ptFGMiss() );
+        mTestPlayer.shoot2pt( true );
+        assertEquals( 1, mTestPlayer.get2ptFGMade() );
+        assertEquals( 0, mTestPlayer.get2ptFGMiss() );
     }
 
     @Test
@@ -36,13 +39,13 @@ public class TestPlayer extends TestCase
     }
 
     @Test
-    public void testGet2ptFGMade()
+    public void testGet3ptFGMade()
     {
-        assertEquals( 0, mTestPlayer.get2ptFGMade() );
-        assertEquals( 0, mTestPlayer.get2ptFGMiss() );
-        mTestPlayer.shoot2pt( true );
-        assertEquals( 1, mTestPlayer.get2ptFGMade() );
-        assertEquals( 0, mTestPlayer.get2ptFGMiss() );
+        assertEquals( 0, mTestPlayer.get3ptFGMade() );
+        assertEquals( 0, mTestPlayer.get3ptFGMiss() );
+        mTestPlayer.shoot3pt( true );
+        assertEquals( 1, mTestPlayer.get3ptFGMade() );
+        assertEquals( 0, mTestPlayer.get3ptFGMiss() );
     }
 
     @Test
@@ -56,43 +59,19 @@ public class TestPlayer extends TestCase
     }
 
     @Test
-    public void testGet3ptFGMade()
+    public void testGetAssist()
     {
-        assertEquals( 0, mTestPlayer.get3ptFGMade() );
-        assertEquals( 0, mTestPlayer.get3ptFGMiss() );
-        mTestPlayer.shoot3pt( true );
-        assertEquals( 1, mTestPlayer.get3ptFGMade() );
-        assertEquals( 0, mTestPlayer.get3ptFGMiss() );
+        assertEquals( 0, mTestPlayer.getAssist() );
+        mTestPlayer.makeAssist();
+        assertEquals( 1, mTestPlayer.getAssist() );
     }
 
     @Test
-    public void testGetFTMiss()
+    public void testGetBlock()
     {
-        assertEquals( 0, mTestPlayer.getFTMade() );
-        assertEquals( 0, mTestPlayer.getFTMiss() );
-        mTestPlayer.shootFT( false );
-        assertEquals( 0, mTestPlayer.getFTMade() );
-        assertEquals( 1, mTestPlayer.getFTMiss() );
-    }
-
-    @Test
-    public void testGetFTMade()
-    {
-        assertEquals( 0, mTestPlayer.getFTMade() );
-        assertEquals( 0, mTestPlayer.getFTMiss() );
-        mTestPlayer.shootFT( true );
-        assertEquals( 1, mTestPlayer.getFTMade() );
-        assertEquals( 0, mTestPlayer.getFTMiss() );
-    }
-
-    @Test
-    public void testGetOffRebound()
-    {
-        assertEquals( 0, mTestPlayer.getOffRebound() );
-        assertEquals( 0, mTestPlayer.getDefRebound() );
-        mTestPlayer.makeRebound( true );
-        assertEquals( 1, mTestPlayer.getOffRebound() );
-        assertEquals( 0, mTestPlayer.getDefRebound() );
+        assertEquals( 0, mTestPlayer.getBlock() );
+        mTestPlayer.makeBlock();
+        assertEquals( 1, mTestPlayer.getBlock() );
     }
 
     @Test
@@ -106,19 +85,49 @@ public class TestPlayer extends TestCase
     }
 
     @Test
-    public void testGetAssist()
+    public void testGetFoulCount()
     {
-        assertEquals( 0, mTestPlayer.getAssist() );
-        mTestPlayer.makeAssist();
-        assertEquals( 1, mTestPlayer.getAssist() );
+        assertEquals( 0, mTestPlayer.getFoulCount() );
+        mTestPlayer.makeFoul();
+        assertEquals( 1, mTestPlayer.getFoulCount() );
     }
 
     @Test
-    public void testGetTurnover()
+    public void testGetFTMade()
     {
-        assertEquals( 0, mTestPlayer.getTurnover() );
-        mTestPlayer.makeTurnover();
-        assertEquals( 1, mTestPlayer.getTurnover() );
+        assertEquals( 0, mTestPlayer.getFTMade() );
+        assertEquals( 0, mTestPlayer.getFTMiss() );
+        mTestPlayer.shootFT( true );
+        assertEquals( 1, mTestPlayer.getFTMade() );
+        assertEquals( 0, mTestPlayer.getFTMiss() );
+    }
+
+    @Test
+    public void testGetFTMiss()
+    {
+        assertEquals( 0, mTestPlayer.getFTMade() );
+        assertEquals( 0, mTestPlayer.getFTMiss() );
+        mTestPlayer.shootFT( false );
+        assertEquals( 0, mTestPlayer.getFTMade() );
+        assertEquals( 1, mTestPlayer.getFTMiss() );
+    }
+
+    @Test
+    public void testGetOffRebound()
+    {
+        assertEquals( 0, mTestPlayer.getOffRebound() );
+        assertEquals( 0, mTestPlayer.getDefRebound() );
+        mTestPlayer.makeRebound( true );
+        assertEquals( 1, mTestPlayer.getOffRebound() );
+        assertEquals( 0, mTestPlayer.getDefRebound() );
+    }
+
+    @Test
+    public void testGetPlayingTimeSec()
+    {
+        assertEquals( 0, mTestPlayer.getPlayingTimeSec() );
+        mTestPlayer.incrementPlayingTime();
+        assertEquals( 1, mTestPlayer.getPlayingTimeSec() );
     }
 
     @Test
@@ -130,27 +139,18 @@ public class TestPlayer extends TestCase
     }
 
     @Test
-    public void testGetBlock()
+    public void testGetTurnover()
     {
-        assertEquals( 0, mTestPlayer.getBlock() );
-        mTestPlayer.makeBlock();
-        assertEquals( 1, mTestPlayer.getBlock() );
+        assertEquals( 0, mTestPlayer.getTurnover() );
+        mTestPlayer.makeTurnover();
+        assertEquals( 1, mTestPlayer.getTurnover() );
     }
 
     @Test
-    public void testGetFoulCount()
+    public void testPlayer()
     {
-        assertEquals( 0, mTestPlayer.getFoulCount() );
-        mTestPlayer.makeFoul();
-        assertEquals( 1, mTestPlayer.getFoulCount() );
-    }
-
-    @Test
-    public void testGetPlayingTimeSec()
-    {
-        assertEquals( 0, mTestPlayer.getPlayingTimeSec() );
-        mTestPlayer.incrementPlayingTime();
-        assertEquals( 1, mTestPlayer.getPlayingTimeSec() );
+        assertEquals( 0, mTestPlayer.getNumber() );
+        assertEquals( "John Doe", mTestPlayer.getFullName() );
     }
 
 }

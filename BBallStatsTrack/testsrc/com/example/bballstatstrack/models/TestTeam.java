@@ -1,8 +1,5 @@
 package com.example.bballstatstrack.models;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.Before;
 
 import junit.framework.TestCase;

@@ -14,7 +14,8 @@ public class FoulButtonDialog extends MultipleButtonsDialog
     public FoulButtonDialog( GameActivity activity )
     {
         super( activity, R.string.foul_dialog_player_question );
-        setOnCancelListener( new UnpauseGameOnCancelListener( activity ) );
+        boolean isAlreadyPaused = activity.isTimerStopped();
+        setOnCancelListener( new UnpauseGameOnCancelListener( activity, isAlreadyPaused ) );
 
         Team team = activity.getGame().getTeamWithoutPossession();
         for( Player player : team.getInGamePlayers() )
@@ -26,6 +27,10 @@ public class FoulButtonDialog extends MultipleButtonsDialog
         }
 
         activity.startEvent();
+        if( isAlreadyPaused )
+        {
+            return;
+        }
         activity.timerStop();
     }
 
