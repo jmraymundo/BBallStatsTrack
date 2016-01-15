@@ -29,15 +29,14 @@ public class NewPlayerDialogListener implements OnClickListener
         EditText playerNumberText = ( EditText ) mDialog.findViewById( R.id.player_number_editText );
         EditText playerNameText = ( EditText ) mDialog.findViewById( R.id.player_name_editText );
         String playerNumberString = playerNumberText.getText().toString();
-        String playerNameString = playerNameText.getText().toString();
-        if( playerNumberString.isEmpty() || playerNameString.isEmpty() )
+        String playerName = playerNameText.getText().toString();
+        if( playerNumberString.isEmpty() || playerName.isEmpty() )
         {
             Toast.makeText( mFragment.getActivity(), mFragment.getResources().getString( R.string.player_input_error ),
                     Toast.LENGTH_SHORT ).show();
             return;
         }
         int playerNumber = Integer.parseInt( playerNumberString );
-        String playerName = playerNameString;
         Team team = mFragment.getTeam();
         if( team.isNumberAlreadyIn( playerNumber ) )
         {
