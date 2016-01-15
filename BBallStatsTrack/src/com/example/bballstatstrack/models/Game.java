@@ -114,10 +114,6 @@ public class Game extends Observable
 
     public int getCurrentPeriodClock()
     {
-        if( mCurrentPeriodClock < 0 )
-        {
-            mCurrentPeriodClock = 0;
-        }
         return mCurrentPeriodClock;
     }
 
@@ -358,12 +354,16 @@ public class Game extends Observable
 
     private void updatePeriodClock()
     {
+        if( mCurrentPeriodClock == 0 )
+        {
+            return;
+        }
         mCurrentPeriodClock--;
     }
 
     private void updateShotClock()
     {
-        if( mIsShotClockOn )
+        if( mIsShotClockOn && mCurrentShotClock > 0 )
         {
             mCurrentShotClock--;
         }
