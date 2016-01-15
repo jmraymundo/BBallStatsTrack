@@ -5,6 +5,7 @@ import com.example.bballstatstrack.dialogs.BackConfirmationDialog;
 import com.example.bballstatstrack.fragments.TeamFragment;
 import com.example.bballstatstrack.listeners.FragmentButtonListener;
 import com.example.bballstatstrack.listeners.ProceedButtonListener;
+import com.example.bballstatstrack.models.utils.ViewUtils;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -12,6 +13,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 
 public class AddPlayersToTeamsActivity extends Activity
@@ -64,6 +66,8 @@ public class AddPlayersToTeamsActivity extends Activity
     {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_new_team );
+        View view = ( View ) findViewById( R.id.newTeamContainer );
+        ViewUtils.setupKeyboardHiding( AddPlayersToTeamsActivity.this, view );
         mHomeTeamFragment = new TeamFragment( R.string.home_team );
         mAwayTeamFragment = new TeamFragment( R.string.away_team );
         mHomeButton = ( Button ) findViewById( R.id.homeTeamButton );

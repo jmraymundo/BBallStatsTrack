@@ -92,7 +92,7 @@ public class TeamReviewFragment extends Fragment
         mTeamOffRebs.setText( String.valueOf( mTeam.getOffRebounds() ) );
         mTeamDefRebs.setText( String.valueOf( mTeam.getDefRebounds() ) );
         mTeamTotalRebs.setText( String.valueOf( mTeam.getTotalRebounds() ) );
-        mTeamAssists.setText( String.valueOf( mTeam.getSteals() ) );
+        mTeamAssists.setText( String.valueOf( mTeam.getAssists() ) );
         mTeamSteals.setText( String.valueOf( mTeam.getSteals() ) );
         mTeamBlocks.setText( String.valueOf( mTeam.getBlocks() ) );
         mTeamTOs.setText( String.valueOf( mTeam.getTurnovers() ) );
