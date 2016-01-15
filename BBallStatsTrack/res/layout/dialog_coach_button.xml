@@ -4,20 +4,15 @@
 	android:layout_height="wrap_content"
 	android:orientation="vertical" >
 	<TextView
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
+		style="@style/DialogTextView"
 		android:gravity="center"
 		android:text="@string/generic_dialog_question" />
 	<Button
 		android:id="@+id/time_out_button"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:gravity="center"
+		style="@style/DialogButton"
 		android:text="@string/coach_dialog_timeout_text" />
 	<Button
 		android:id="@+id/substitution_button"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:gravity="center"
+		style="@style/DialogButton"
 		android:text="@string/coach_dialog_substitution_text" />
 </LinearLayout>

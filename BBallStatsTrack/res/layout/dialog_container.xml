@@ -5,7 +5,6 @@
 	android:orientation="vertical" >
 	<TextView
 		android:id="@+id/dialog_container_question_textview"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
+		style="@style/DialogTextView"
 		android:gravity="center" />
 </LinearLayout>

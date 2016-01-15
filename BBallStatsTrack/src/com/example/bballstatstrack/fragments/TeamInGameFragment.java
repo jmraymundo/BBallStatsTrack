@@ -53,16 +53,12 @@ public class TeamInGameFragment extends Fragment
             return;
         }
         TableRow child;
-        for( int i = 0; i < mTableLayout.getChildCount(); i++ )
+        for( int i = 1; i < mTableLayout.getChildCount(); i++ )
         {
             child = ( TableRow ) mTableLayout.getChildAt( i );
-            if( child.getId() == R.id.inGameHeader )
-            {
-                continue;
-            }
-            TextView number = ( TextView ) child.getChildAt( 0 );
-            TextView name = ( TextView ) child.getChildAt( 1 );
-            TextView score = ( TextView ) child.getChildAt( 2 );
+            TextView number = ( TextView ) child.findViewById( R.id.game_ingame_playerNumber );
+            TextView name = ( TextView ) child.findViewById( R.id.game_ingame_playerName );
+            TextView score = ( TextView ) child.findViewById( R.id.game_ingame_playerScore );
             Player player = mInGameList.playerAt( i - 1 );
             setInGamePlayerStats( player, number, name, score );
         }

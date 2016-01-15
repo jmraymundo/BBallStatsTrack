@@ -7,7 +7,7 @@
 	android:weightSum="10" >
 	<LinearLayout
 		android:id="@+id/homeScoreContainer"
-		android:layout_width="0dp"
+		style="@style/WidthDependsOnWeight"
 		android:layout_height="wrap_content"
 		android:layout_weight="4"
 		android:background="@drawable/cell_border"
@@ -26,7 +26,7 @@
 	</LinearLayout>
 	<LinearLayout
 		android:id="@+id/gameTimeContainer"
-		android:layout_width="0dp"
+		style="@style/WidthDependsOnWeight"
 		android:layout_height="wrap_content"
 		android:layout_weight="2"
 		android:background="@drawable/cell_border"
@@ -50,7 +50,7 @@
 	</LinearLayout>
 	<LinearLayout
 		android:id="@+id/awayScoreContainer"
-		android:layout_width="0dp"
+		style="@style/WidthDependsOnWeight"
 		android:layout_height="wrap_content"
 		android:layout_weight="4"
 		android:background="@drawable/cell_border"

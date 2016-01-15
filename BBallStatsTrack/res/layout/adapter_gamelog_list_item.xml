@@ -2,6 +2,8 @@
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	android:gravity="center_vertical"
+	android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
 	android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
 	android:paddingRight="?android:attr/listPreferredItemPaddingRight"
-	android:textSize="8sp" />
+	android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+	android:textSize="@dimen/gamelog_item_list_textSize" />

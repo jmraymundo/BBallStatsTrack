@@ -7,17 +7,15 @@
 		android:id="@+id/game_list_item_titleTextView"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:paddingLeft="4dp"
-		android:paddingRight="4dp"
-		android:text="Game results"
+		android:paddingLeft="@dimen/standard_padding_size"
+		android:paddingRight="@dimen/standard_padding_size"
 		android:textStyle="bold" />
 	<TextView
 		android:id="@+id/game_list_item_dateTextView"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_below="@id/game_list_item_titleTextView"
-		android:paddingLeft="4dp"
-		android:paddingRight="4dp"
-		android:paddingTop="4dp"
-		android:text="Game date" />
+		android:paddingLeft="@dimen/standard_padding_size"
+		android:paddingRight="@dimen/standard_padding_size"
+		android:paddingTop="@dimen/standard_padding_size" />
 </RelativeLayout>

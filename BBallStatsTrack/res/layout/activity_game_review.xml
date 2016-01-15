@@ -10,121 +10,66 @@
 		android:weightSum="4" >
 		<RelativeLayout
 			android:id="@+id/game_review_home_container"
-			android:layout_width="0dp"
-			android:layout_height="match_parent"
-			android:layout_weight="1" />
+			style="@style/GameReviewTeamContainer" />
 		<LinearLayout
-			android:layout_width="0dp"
+			style="@style/WidthDependsOnWeight"
 			android:layout_height="match_parent"
 			android:layout_weight="2"
 			android:orientation="vertical" >
 			<TextView
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:background="@drawable/cell_border"
-				android:gravity="center"
+				style="@style/GameReviewTableCell"
 				android:text="@string/game_review_team_name" />
 			<TextView
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:background="@drawable/cell_border"
-				android:gravity="center"
+				style="@style/GameReviewTableCell"
 				android:text="@string/game_review_team_points" />
 			<TextView
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:background="@drawable/cell_border"
-				android:gravity="center"
+				style="@style/GameReviewTableCell"
 				android:text="@string/game_review_team_2pt_fg" />
 			<TextView
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:background="@drawable/cell_border"
-				android:gravity="center"
+				style="@style/GameReviewTableCell"
 				android:text="@string/game_review_team_2pt_fg_percentage" />
 			<TextView
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:background="@drawable/cell_border"
-				android:gravity="center"
+				style="@style/GameReviewTableCell"
 				android:text="@string/game_review_team_3pt_fg" />
 			<TextView
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:background="@drawable/cell_border"
-				android:gravity="center"
+				style="@style/GameReviewTableCell"
 				android:text="@string/game_review_team_3pt_fg_percentage" />
 			<TextView
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:background="@drawable/cell_border"
-				android:gravity="center"
+				style="@style/GameReviewTableCell"
 				android:text="@string/game_review_team_ft" />
 			<TextView
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:background="@drawable/cell_border"
-				android:gravity="center"
+				style="@style/GameReviewTableCell"
 				android:text="@string/game_review_team_ft_percentage" />
 			<TextView
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:background="@drawable/cell_border"
-				android:gravity="center"
+				style="@style/GameReviewTableCell"
 				android:text="@string/game_review_team_offensive_rebounds" />
 			<TextView
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:background="@drawable/cell_border"
-				android:gravity="center"
+				style="@style/GameReviewTableCell"
 				android:text="@string/game_review_team_defensive_rebounds" />
 			<TextView
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:background="@drawable/cell_border"
-				android:gravity="center"
+				style="@style/GameReviewTableCell"
 				android:text="@string/game_review_team_total_rebounds" />
 			<TextView
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:background="@drawable/cell_border"
-				android:gravity="center"
+				style="@style/GameReviewTableCell"
 				android:text="@string/game_review_team_assists" />
 			<TextView
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:background="@drawable/cell_border"
-				android:gravity="center"
+				style="@style/GameReviewTableCell"
 				android:text="@string/game_review_team_steals" />
 			<TextView
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:background="@drawable/cell_border"
-				android:gravity="center"
+				style="@style/GameReviewTableCell"
 				android:text="@string/game_review_team_blocks" />
 			<TextView
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:background="@drawable/cell_border"
-				android:gravity="center"
+				style="@style/GameReviewTableCell"
 				android:text="@string/game_review_team_turnovers" />
 			<TextView
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:background="@drawable/cell_border"
-				android:gravity="center"
+				style="@style/GameReviewTableCell"
 				android:text="@string/game_review_team_fouls" />
 			<TextView
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:background="@drawable/cell_border"
-				android:gravity="center"
+				style="@style/GameReviewTableCell"
 				android:text="@string/game_review_team_total_possession" />
 		</LinearLayout>
 		<RelativeLayout
 			android:id="@+id/game_review_away_container"
-			android:layout_width="0dp"
-			android:layout_height="match_parent"
-			android:layout_weight="1" />
+			style="@style/GameReviewTeamContainer" />
 	</LinearLayout>
 </ScrollView>

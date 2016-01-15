@@ -5,8 +5,7 @@
 	android:layout_height="match_parent" >
 	<TextView
 		android:id="@+id/game_homeTeamName"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
+		style="@style/DialogTextView"
 		android:text="@string/player_number" />
 	<EditText
 		android:id="@+id/player_number_editText"
@@ -20,11 +19,12 @@
 		android:id="@+id/team_location_text"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:padding="@dimen/standard_padding_size"
 		android:text="@string/player_name" />
 	<EditText
 		android:id="@+id/player_name_editText"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:ems="10"
-		android:inputType="textPersonName" />
+		android:inputType="textCapWords" />
 </TableLayout>

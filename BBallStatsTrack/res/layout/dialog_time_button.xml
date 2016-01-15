@@ -4,38 +4,26 @@
 	android:layout_height="wrap_content"
 	android:orientation="vertical" >
 	<TextView
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:gravity="center"
+		style="@style/DialogTextView"
 		android:text="@string/generic_dialog_question" />
 	<Button
 		android:id="@+id/save_game_button"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:gravity="center"
+		style="@style/DialogButton"
 		android:text="@string/time_dialog_save_game_text" />
 	<Button
 		android:id="@+id/next_period_button"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:gravity="center"
+		style="@style/DialogButton"
 		android:text="@string/time_dialog_next_period_text" />
 	<Button
 		android:id="@+id/reset_shot_clock_button"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:gravity="center"
+		style="@style/DialogButton"
 		android:text="@string/time_dialog_reset_shot_clock_text" />
 	<Button
 		android:id="@+id/reset_period_clock_button"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:gravity="center"
+		style="@style/DialogButton"
 		android:text="@string/time_dialog_reset_period_clock_text" />
 	<Button
 		android:id="@+id/pauseResume_time_button"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:gravity="center"
+		style="@style/DialogButton"
 		android:text="@string/time_dialog_pause_text" />
 </LinearLayout>

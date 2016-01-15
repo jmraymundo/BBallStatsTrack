@@ -5,6 +5,7 @@
 	<string name="delete_game">Delete Game</string>
 	<string name="away_team">Away Team</string>
 	<string name="home_team">Home Team</string>
+	<string name="team_name_label">Team Name:</string>
 	<string name="team_name_character_limit">Team name limited to 12 characters.</string>
 	<string name="add_new_player">Add new player</string>
 	<string name="go_next">Next</string>

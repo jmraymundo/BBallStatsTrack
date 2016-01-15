@@ -19,8 +19,8 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_gravity="left"
-			android:layout_marginTop="4dp"
-			android:text="Team Name:"
+			android:layout_marginTop="@dimen/standard_margin_size"
+			android:text="@string/team_name_label"
 			android:textAppearance="?android:attr/textAppearanceLarge" />
 		<EditText
 			android:id="@+id/team_name_editText"
