@@ -57,7 +57,7 @@ public class Game extends Observable
         mAwayTeam = awayTeam;
         String id = mAwayTeam.getName() + mHomeTeam.getName() + System.currentTimeMillis();
         mID = UUID.nameUUIDFromBytes( id.getBytes() );
-        initializeClocks();
+        resetPeriodClock();
         initializeLogs();
         mDate = new MyDate();
     }
@@ -220,7 +220,7 @@ public class Game extends Observable
         mGameLog.nextPeriod();
         mPeriod = mGameLog.getCurrentPeriod();
         mPeriodLog = mGameLog.getCurrentPeriodLog();
-        initializeClocks();
+        resetPeriodClock();
         resetPeriodFouls();
         setChanged();
         notifyObservers();
@@ -310,12 +310,6 @@ public class Game extends Observable
         return max - timeDifference;
     }
 
-    private void initializeClocks()
-    {
-        resetPeriodClock();
-        setChanged();
-    }
-
     private void initializeLogs()
     {
         mGameLog = new GameLog();
@@ -369,36 +363,86 @@ public class Game extends Observable
         }
     }
 
+    /**
+     * Enum used for identifying key Game fields for the purpose of storing a
+     * Game's instance as a JSON object and reconstructing a Game's instance
+     * from a JSON object.
+     * 
+     * @author janmichaelraymundo
+     */
     public enum GameStats
     {
         ID( "id" ), AWAY_TEAM( "awayTeam" ), HOME_TEAM( "homeTeam" ), GAME_LOG( "gameLog" ), PERIOD_LOG(
                 "periodLog" ), DATE( "date" );
 
+        /**
+         * Used as a property name for constructing the JSON object
+         * representation of a Game.
+         */
         private String mString;
 
+        /**
+         * Constructor for this Enum and associates a property name with it.
+         * 
+         * @param string
+         *            the property name
+         */
         private GameStats( String string )
         {
             mString = string;
         }
 
+        /**
+         * Gets the property name associated with this Enum.
+         * 
+         * @return the property name associated with this Enum
+         */
         public String getString()
         {
             return mString;
         }
     }
 
+    /**
+     * Custom wrapper class for Date. Used for customizing the return value of
+     * toString() method.
+     * 
+     * @see Date
+     * @author janmichaelraymundo
+     */
     public class MyDate extends Date
     {
+        /**
+         * Generated Serial Version UID
+         */
+        private static final long serialVersionUID = 3915875533664395454L;
+
+        /**
+         * Initializes this MyDate instance to the current time.
+         */
         public MyDate()
         {
             super();
         }
 
+        /**
+         * Initializes this MyDate instance using the specified millisecond
+         * value. The value is the number of milliseconds since Jan. 1, 1970
+         * GMT.
+         * 
+         * @param milliseconds
+         *            the number of milliseconds since Jan. 1, 1970 GMT.
+         */
         public MyDate( long milliseconds )
         {
             super( milliseconds );
         }
 
+        /**
+         * Returns a string representation of this MyDate. The formatting is
+         * equivalent to using a DateFormat with the format string
+         * "EEE, MMM dd, yyyy", which looks something like "Tue, Jun 22, 1999".
+         */
         @Override
         public String toString()
         {
