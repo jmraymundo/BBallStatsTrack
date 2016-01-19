@@ -10,8 +10,17 @@ import com.example.bballstatstrack.models.gameevents.GameEvent;
 
 import android.text.format.DateFormat;
 
+/**
+ * Model representation of a basketball game.
+ * 
+ * @author janmichaelraymundo
+ *
+ */
 public class Game extends Observable
 {
+    /**
+     * Integer constant for the maximum shot clock value.
+     */
     private static final int MAX_SHOT_CLOCK = 24;
 
     private Team mAwayTeam;

@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.example.bballstatstrack.R;
 import com.example.bballstatstrack.fragments.TeamReviewFragment;
+import com.example.bballstatstrack.listeners.touch.TeamReviewFragmentOnTouchListener;
 import com.example.bballstatstrack.models.Game;
 import com.example.bballstatstrack.models.GameDirectory;
 
@@ -12,6 +13,7 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.view.View;
 
 public class GameReviewActivity extends Activity
 {
@@ -49,5 +51,13 @@ public class GameReviewActivity extends Activity
         transaction.replace( R.id.game_review_home_container, mHomeFragment );
         transaction.replace( R.id.game_review_away_container, mAwayFragment );
         transaction.commit();
+        View homeView = findViewById( R.id.game_review_home_container );
+        homeView.setTag( mGame.getHomeTeam() );
+        TeamReviewFragmentOnTouchListener listener = new TeamReviewFragmentOnTouchListener( GameReviewActivity.this,
+                mGame );
+        homeView.setOnTouchListener( listener );
+        View awayView = findViewById( R.id.game_review_away_container );
+        awayView.setTag( mGame.getAwayTeam() );
+        awayView.setOnTouchListener( listener );
     }
 }
