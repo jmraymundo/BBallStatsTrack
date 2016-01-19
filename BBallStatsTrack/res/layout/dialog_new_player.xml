@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/TableLayout1"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent" >
+	<TextView
+		android:id="@+id/game_homeTeamName"
+		style="@style/DialogTextView"
+		android:text="@string/player_number" />
+	<EditText
+		android:id="@+id/player_number_editText"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:ems="10"
+		android:inputType="number" >
+		<requestFocus />
+	</EditText>
+	<TextView
+		android:id="@+id/team_location_text"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:padding="@dimen/standard_padding_size"
+		android:text="@string/player_name" />
+	<EditText
+		android:id="@+id/player_name_editText"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:ems="10"
+		android:inputType="textCapWords|textPersonName" />
+</TableLayout>
