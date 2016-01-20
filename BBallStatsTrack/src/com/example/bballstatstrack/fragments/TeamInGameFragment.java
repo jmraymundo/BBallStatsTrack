@@ -2,7 +2,6 @@ package com.example.bballstatstrack.fragments;
 
 import com.example.bballstatstrack.R;
 import com.example.bballstatstrack.models.Player;
-import com.example.bballstatstrack.models.PlayerList;
 import com.example.bballstatstrack.models.Team;
 
 import android.app.Fragment;
@@ -16,13 +15,13 @@ import android.widget.TextView;
 
 public class TeamInGameFragment extends Fragment
 {
-    private PlayerList mInGameList = new PlayerList();
+    private Team mTeam;
 
     private TableLayout mTableLayout;
 
     public TeamInGameFragment( Team team )
     {
-        updateInGamePlayers( team.getInGamePlayers() );
+        mTeam = team;
     }
 
     @Override
@@ -38,12 +37,7 @@ public class TeamInGameFragment extends Fragment
     {
         number.setText( String.valueOf( player.getNumber() ) );
         name.setText( player.getFullName() );
-        score.setText( String.valueOf( player.getTotalscore() ) );
-    }
-
-    public void updateInGamePlayers( PlayerList inGameList )
-    {
-        mInGameList = inGameList;
+        score.setText( String.valueOf( player.getTotalScore() ) );
     }
 
     public void updateUI()
@@ -59,7 +53,7 @@ public class TeamInGameFragment extends Fragment
             TextView number = ( TextView ) child.findViewById( R.id.game_ingame_playerNumber );
             TextView name = ( TextView ) child.findViewById( R.id.game_ingame_playerName );
             TextView score = ( TextView ) child.findViewById( R.id.game_ingame_playerScore );
-            Player player = mInGameList.playerAt( i - 1 );
+            Player player = mTeam.getInGamePlayers().get( i - 1 );
             setInGamePlayerStats( player, number, name, score );
         }
     }

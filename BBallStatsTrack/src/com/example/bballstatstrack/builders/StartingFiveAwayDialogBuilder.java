@@ -8,7 +8,6 @@ import android.app.AlertDialog;
 
 public class StartingFiveAwayDialogBuilder extends StartingFiveDialogBuilder
 {
-
     public StartingFiveAwayDialogBuilder( GameActivity activity, Team team )
     {
         super( activity, team );
@@ -19,8 +18,8 @@ public class StartingFiveAwayDialogBuilder extends StartingFiveDialogBuilder
     {
         AlertDialog dialog = super.create();
         dialog.show();
-        dialog.getButton( AlertDialog.BUTTON_POSITIVE ).setOnClickListener(
-                new TeamAwayStartersConfirmationListener( mActivity, mTeam, dialog, mSelectedPlayers ) );
+        dialog.getButton( AlertDialog.BUTTON_POSITIVE )
+                .setOnClickListener( new TeamAwayStartersConfirmationListener( mActivity, mTeam, dialog ) );
         return dialog;
     }
 }

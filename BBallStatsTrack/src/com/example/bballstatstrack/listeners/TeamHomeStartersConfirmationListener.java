@@ -11,23 +11,21 @@ import android.widget.Toast;
 
 public class TeamHomeStartersConfirmationListener extends TeamStartersConfirmationListener
 {
-    public TeamHomeStartersConfirmationListener( GameActivity activity, Team team, AlertDialog dialog,
-            PlayerList selectedPlayers )
+    public TeamHomeStartersConfirmationListener( GameActivity activity, Team team, AlertDialog dialog )
     {
-        super( activity, team, dialog, selectedPlayers );
+        super( activity, team, dialog );
     }
 
     @Override
     public void onClick( View v )
     {
-        if( mSelectedPlayers.getSize() != 5 )
+        if( mTeam.isStartersInvalid() )
         {
             Toast.makeText( mActivity, mActivity.getResources().getString( R.string.need_five_players ),
                     Toast.LENGTH_SHORT ).show();
         }
         else
         {
-            mTeam.setStarters( mSelectedPlayers );
             mActivity.fetchAwayStarters();
             mDialog.dismiss();
         }

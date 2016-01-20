@@ -17,13 +17,12 @@ public class SubstitutionInDialog extends MultipleButtonsDialog
         super( activity, R.string.substitution_dialog_player_out_question );
         setOnCancelListener( new SubstitutionInDialogOnCancelListener( activity, team ) );
 
-        PlayerList inGamePlayers = team.getInGamePlayers();
         PlayerList allPlayers = team.getPlayers();
 
         for( int index = 0; index < allPlayers.getSize(); index++ )
         {
             Player playerIn = allPlayers.playerAt( index );
-            if( inGamePlayers.contains( playerIn ) )
+            if( team.getInGamePlayers().contains( playerIn ) )
             {
                 continue;
             }

@@ -15,8 +15,6 @@ public class StartingFiveDialogBuilder extends Builder
 
     protected Team mTeam;
 
-    protected PlayerList mSelectedPlayers;
-
     public StartingFiveDialogBuilder( GameActivity activity, Team team )
     {
         super( activity );
@@ -31,8 +29,7 @@ public class StartingFiveDialogBuilder extends Builder
         {
             playersArray[i] = players.playerAt( i ).toString();
         }
-        mSelectedPlayers = new PlayerList();
-        setMultiChoiceItems( playersArray, null, new AddStartersMultiChoiceClickListener( mSelectedPlayers, players ) );
+        setMultiChoiceItems( playersArray, null, new AddStartersMultiChoiceClickListener( players ) );
         setPositiveButton( getContext().getResources().getString( R.string.proceed ), new DismissDialogListener() );
         setCancelable( false );
     }

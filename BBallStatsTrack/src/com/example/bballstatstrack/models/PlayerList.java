@@ -23,15 +23,23 @@ public class PlayerList implements Parcelable, Iterable< Player >
 
     private ArrayList< Player > mList;
 
+    private ArrayList< Player > mStarters;
+
+    private ArrayList< Player > mInGame;
+
     public PlayerList()
     {
         mList = new ArrayList< Player >();
+        mStarters = new ArrayList< Player >( 5 );
+        mInGame = new ArrayList< Player >( 5 );
     }
 
     public PlayerList( Parcel in )
     {
         this();
         in.readTypedList( mList, Player.CREATOR );
+        in.readTypedList( mStarters, Player.CREATOR );
+        in.readTypedList( mInGame, Player.CREATOR );
     }
 
     public void addPlayer( Player player )
@@ -107,7 +115,7 @@ public class PlayerList implements Parcelable, Iterable< Player >
 
     public void updatePlayingTime()
     {
-        for( Player player : mList )
+        for( Player player : mInGame )
         {
             player.incrementPlayingTime();
         }
@@ -117,5 +125,43 @@ public class PlayerList implements Parcelable, Iterable< Player >
     public void writeToParcel( Parcel dest, int flags )
     {
         dest.writeTypedList( mList );
+        dest.writeTypedList( mStarters );
+        dest.writeTypedList( mInGame );
+    }
+
+    public void setStarter( int index, boolean isChecked )
+    {
+        Player player = mList.get( index );
+        if( isChecked )
+        {
+            mStarters.add( player );
+            mInGame.add( player );
+        }
+        else
+        {
+            mStarters.remove( player );
+            mInGame.remove( player );
+        }
+    }
+
+    public void substitute( Player in, Player out )
+    {
+        mInGame.remove( out );
+        mInGame.add( in );
+    }
+
+    public boolean isStartersInvalid()
+    {
+        return mStarters.size() != 5;
+    }
+
+    public ArrayList< Player > getInGame()
+    {
+        return mInGame;
+    }
+
+    public void setStarter( Player player )
+    {
+        mStarters.add( player );
     }
 }

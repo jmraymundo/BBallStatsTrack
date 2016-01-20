@@ -9,24 +9,14 @@ public class AddStartersMultiChoiceClickListener implements OnMultiChoiceClickLi
 {
     private PlayerList mPlayers;
 
-    private PlayerList mStarters;
-
-    public AddStartersMultiChoiceClickListener( PlayerList starters, PlayerList players )
+    public AddStartersMultiChoiceClickListener( PlayerList players )
     {
-        mStarters = starters;
         mPlayers = players;
     }
 
     @Override
     public void onClick( DialogInterface dialog, int index, boolean isChecked )
     {
-        if( isChecked )
-        {
-            mStarters.addPlayer( mPlayers.playerAt( index ) );
-        }
-        else
-        {
-            mStarters.removePlayer( mPlayers.playerAt( index ) );
-        }
+        mPlayers.setStarter( index, isChecked );
     }
 }

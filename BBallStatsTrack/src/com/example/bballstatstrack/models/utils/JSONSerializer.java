@@ -133,16 +133,6 @@ public class JSONSerializer
         writer.endArray();
     }
 
-    public static void writeInGamePlayerNumbers( JsonWriter writer, PlayerList playerList ) throws IOException
-    {
-        writer.beginArray();
-        for( int index = 0; index < playerList.getSize(); index++ )
-        {
-            writer.value( playerList.playerAt( index ).getNumber() );
-        }
-        writer.endArray();
-    }
-
     public static void writePeriodLog( JsonWriter writer, List< GameEvent > periodLog ) throws IOException
     {
         writer.beginArray();
@@ -186,8 +176,6 @@ public class JSONSerializer
         writer.name( TeamStats.NAME.toString() ).value( team.getName() );
         writer.name( TeamStats.PLAYER_LIST.toString() );
         writePlayerList( writer, team.getPlayers() );
-        writer.name( TeamStats.INGAME_PLAYER_LIST.toString() );
-        writeInGamePlayerNumbers( writer, team.getInGamePlayers() );
         writer.name( TeamStats.TOTAL_FOULS.toString() ).value( team.getTeamFouls() );
         writer.name( TeamStats.TEAM_REBOUNDS.toString() ).value( team.getTeamRebounds() );
         writer.name( TeamStats.TIMEOUTS.toString() ).value( team.getTimeOuts() );

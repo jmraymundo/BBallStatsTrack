@@ -13,16 +13,12 @@ public abstract class TeamStartersConfirmationListener implements OnClickListene
 
     protected final AlertDialog mDialog;
 
-    protected final PlayerList mSelectedPlayers;
-
     protected GameActivity mActivity;
 
-    public TeamStartersConfirmationListener( GameActivity activity, Team team, AlertDialog dialog,
-            PlayerList selectedPlayers )
+    public TeamStartersConfirmationListener( GameActivity activity, Team team, AlertDialog dialog )
     {
         mActivity = activity;
         mTeam = team;
         mDialog = dialog;
-        mSelectedPlayers = selectedPlayers;
     }
 }

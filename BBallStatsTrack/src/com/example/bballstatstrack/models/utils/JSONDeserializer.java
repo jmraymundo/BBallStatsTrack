@@ -258,18 +258,6 @@ public class JSONDeserializer
         return gameLog;
     }
 
-    private static List< Integer > readInGamePlayerNumbers( JsonReader reader ) throws IOException
-    {
-        List< Integer > list = new ArrayList< Integer >();
-        reader.beginArray();
-        while( reader.hasNext() )
-        {
-            list.add( reader.nextInt() );
-        }
-        reader.endArray();
-        return list;
-    }
-
     private static List< GameEvent > readPeriodLog( JsonReader reader ) throws IOException
     {
         List< GameEvent > periodLog = new ArrayList< GameEvent >();
@@ -345,7 +333,6 @@ public class JSONDeserializer
         UUID id = null;
         String teamName = null;
         PlayerList playerList = null;
-        List< Integer > inGamePlayerList = null;
         int teamFouls = Integer.MIN_VALUE;
         int teamRebounds = Integer.MIN_VALUE;
         int timeouts = Integer.MIN_VALUE;
@@ -367,10 +354,6 @@ public class JSONDeserializer
             {
                 playerList = readPlayerList( reader );
             }
-            else if( name.equals( TeamStats.INGAME_PLAYER_LIST.toString() ) )
-            {
-                inGamePlayerList = readInGamePlayerNumbers( reader );
-            }
             else if( name.equals( TeamStats.TOTAL_FOULS.toString() ) )
             {
                 teamFouls = reader.nextInt();
@@ -389,7 +372,6 @@ public class JSONDeserializer
             }
         }
         reader.endObject();
-        return new Team( id, teamName, playerList, inGamePlayerList, teamFouls, teamRebounds, timeouts,
-                possessionTimeSec );
+        return new Team( id, teamName, playerList, teamFouls, teamRebounds, timeouts, possessionTimeSec );
     }
 }

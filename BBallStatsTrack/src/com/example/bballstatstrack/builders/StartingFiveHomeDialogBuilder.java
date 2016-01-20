@@ -18,8 +18,8 @@ public class StartingFiveHomeDialogBuilder extends StartingFiveDialogBuilder
     {
         AlertDialog dialog = super.create();
         dialog.show();
-        dialog.getButton( AlertDialog.BUTTON_POSITIVE ).setOnClickListener(
-                new TeamHomeStartersConfirmationListener( mActivity, mTeam, dialog, mSelectedPlayers ) );
+        dialog.getButton( AlertDialog.BUTTON_POSITIVE )
+                .setOnClickListener( new TeamHomeStartersConfirmationListener( mActivity, mTeam, dialog ) );
         return dialog;
     }
 }

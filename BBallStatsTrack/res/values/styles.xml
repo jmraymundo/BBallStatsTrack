@@ -15,6 +15,7 @@
 			go here.
 		-->
 	</style>
+	<style name="AppThemeNoTitleBar" parent="android:Theme.Light.NoTitleBar.Fullscreen"></style>
 	<style name="HeightDependsOnWeight">
 		<item name="android:layout_height">0dp</item>
 	</style>
@@ -24,6 +25,9 @@
 	<style name="InGameStatsTableCell" parent="WidthDependsOnWeight">
 		<item name="android:layout_height">wrap_content</item>
 		<item name="android:textSize">7sp</item>
+		<item name="android:maxLines">1</item>
+		<item name="android:paddingLeft">0dp</item>
+		<item name="android:paddingRight">0dp</item>
 		<item name="android:background">@drawable/cell_border</item>
 		<item name="android:gravity">center</item>
 	</style>
@@ -70,5 +74,23 @@
 		<item name="android:layout_width">match_parent</item>
 		<item name="android:layout_height">wrap_content</item>
 		<item name="android:gravity">center</item>
+	</style>
+	<style name="TeamReviewTableDefaultCell" parent="InGameStatsTableCell">
+		<item name="android:layout_weight">1</item>
+	</style>
+	<style name="TeamReviewTableDidNotPlay" parent="InGameStatsTableCell">
+		<item name="android:layout_weight">14</item>
+	</style>
+	<style name="TeamReviewTablePlayerNameCell" parent="InGameStatsTableCell">
+		<item name="android:layout_weight">5</item>
+	</style>
+	<style name="TeamReviewTablePlayerTimeCell" parent="InGameStatsTableCell">
+		<item name="android:layout_weight">2</item>
+	</style>
+	<style name="TeamReviewTablePlayerStats">
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:orientation">horizontal</item>
+		<item name="android:weightSum">20</item>
 	</style>
 </resources>

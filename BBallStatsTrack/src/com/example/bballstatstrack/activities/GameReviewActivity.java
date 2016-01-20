@@ -53,8 +53,7 @@ public class GameReviewActivity extends Activity
         transaction.commit();
         View homeView = findViewById( R.id.game_review_home_container );
         homeView.setTag( mGame.getHomeTeam() );
-        TeamReviewFragmentOnTouchListener listener = new TeamReviewFragmentOnTouchListener( GameReviewActivity.this,
-                mGame );
+        TeamReviewFragmentOnTouchListener listener = new TeamReviewFragmentOnTouchListener( GameReviewActivity.this );
         homeView.setOnTouchListener( listener );
         View awayView = findViewById( R.id.game_review_away_container );
         awayView.setTag( mGame.getAwayTeam() );

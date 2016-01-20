@@ -1,5 +1,6 @@
 package com.example.bballstatstrack.models;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.UUID;
@@ -32,8 +33,6 @@ public class Team extends Observable implements Parcelable
 
     private PlayerList mPlayerList;
 
-    private PlayerList mInGamePlayerList;
-
     private int mTeamFouls;
 
     private int mTeamRebound;
@@ -45,7 +44,6 @@ public class Team extends Observable implements Parcelable
     public Team()
     {
         mPlayerList = new PlayerList();
-        mInGamePlayerList = new PlayerList();
         mTeamFouls = 0;
         mTeamRebound = 0;
         mTimeOuts = 0;
@@ -57,20 +55,18 @@ public class Team extends Observable implements Parcelable
         mID = UUID.fromString( source.readString() );
         mName = source.readString();
         mPlayerList = source.readParcelable( PlayerList.class.getClassLoader() );
-        mInGamePlayerList = source.readParcelable( PlayerList.class.getClassLoader() );
         mTeamFouls = source.readInt();
         mTeamRebound = source.readInt();
         mTimeOuts = source.readInt();
         mPossessionTime = source.readInt();
     }
 
-    public Team( UUID id, String name, PlayerList playerList, List< Integer > inGamePlayerListNumbers, int teamFouls,
-            int teamRebounds, int timeouts, int possessionTimeSec )
+    public Team( UUID id, String name, PlayerList playerList, int teamFouls, int teamRebounds, int timeouts,
+            int possessionTimeSec )
     {
         mID = id;
         mName = name;
         mPlayerList = playerList;
-        mInGamePlayerList = getInGamePlayerList( inGamePlayerListNumbers );
         mTeamFouls = teamFouls;
         mTeamRebound = teamRebounds;
         mTimeOuts = timeouts;
@@ -87,11 +83,6 @@ public class Team extends Observable implements Parcelable
         mPlayerList.addPlayer( player );
         setChanged();
         notifyObservers();
-    }
-
-    public void addStarter( Player player )
-    {
-        mInGamePlayerList.addPlayer( player );
     }
 
     @Override
@@ -159,9 +150,9 @@ public class Team extends Observable implements Parcelable
         return mID;
     }
 
-    public PlayerList getInGamePlayers()
+    public ArrayList< Player > getInGamePlayers()
     {
-        return mInGamePlayerList;
+        return mPlayerList.getInGame();
     }
 
     public String getName()
@@ -259,11 +250,6 @@ public class Team extends Observable implements Parcelable
         mID = UUID.nameUUIDFromBytes( name.getBytes() );
     }
 
-    public void setStarters( PlayerList selectedPlayers )
-    {
-        mInGamePlayerList = selectedPlayers;
-    }
-
     public void setTimeOuts( int timeOuts )
     {
         mTimeOuts = timeOuts;
@@ -271,13 +257,12 @@ public class Team extends Observable implements Parcelable
 
     public void substitutePlayer( Player in, Player out )
     {
-        mInGamePlayerList.removePlayer( out );
-        mInGamePlayerList.addPlayer( in );
+        mPlayerList.substitute( in, out );
     }
 
     public void updatePlayingTime()
     {
-        mInGamePlayerList.updatePlayingTime();
+        mPlayerList.updatePlayingTime();
     }
 
     public void updatePossessionTime()
@@ -296,21 +281,10 @@ public class Team extends Observable implements Parcelable
         dest.writeString( mID.toString() );
         dest.writeString( mName );
         dest.writeParcelable( mPlayerList, flags );
-        dest.writeParcelable( mInGamePlayerList, flags );
         dest.writeInt( mTeamFouls );
         dest.writeInt( mTeamRebound );
         dest.writeInt( mTimeOuts );
         dest.writeInt( mPossessionTime );
-    }
-
-    private PlayerList getInGamePlayerList( List< Integer > numbers )
-    {
-        PlayerList list = new PlayerList();
-        for( int number : numbers )
-        {
-            list.addPlayer( mPlayerList.getPlayer( number ) );
-        }
-        return list;
     }
 
     private int getStats( PlayerStats stat )
@@ -370,9 +344,8 @@ public class Team extends Observable implements Parcelable
 
     public enum TeamStats
     {
-        NAME( "name" ), PLAYER_LIST( "playerList" ), INGAME_PLAYER_LIST( "inGamePlayerList" ), TOTAL_FOULS(
-                "totalFouls" ), TEAM_REBOUNDS( "teamRebound" ), TIMEOUTS( "timeOuts" ), POSSESSION_TIME(
-                        "possessionTime" ), TEAM_ID( "signature" );
+        NAME( "name" ), PLAYER_LIST( "playerList" ), TOTAL_FOULS( "totalFouls" ), TEAM_REBOUNDS(
+                "teamRebound" ), TIMEOUTS( "timeOuts" ), POSSESSION_TIME( "possessionTime" ), TEAM_ID( "signature" );
 
         private final String mConstant;
 
@@ -386,5 +359,10 @@ public class Team extends Observable implements Parcelable
         {
             return mConstant;
         }
+    }
+
+    public boolean isStartersInvalid()
+    {
+        return mPlayerList.isStartersInvalid();
     }
 }

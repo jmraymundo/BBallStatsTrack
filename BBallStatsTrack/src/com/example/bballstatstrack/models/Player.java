@@ -199,7 +199,7 @@ public class Player implements Parcelable
         return mSteal;
     }
 
-    public int getTotalscore()
+    public int getTotalScore()
     {
         return getFTMade() + ( get2ptFGMade() * 2 ) + ( get3ptFGMade() * 3 );
     }
