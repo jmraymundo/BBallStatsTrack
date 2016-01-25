@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="gamelog_item_list_textSize">8sp</dimen>
+    <dimen name="standard_margin_size">4dp</dimen>
+    <dimen name="standard_padding_size">4dp</dimen>
+    <string name="add_new_player">Add new player</string>
+    <string name="app_name">BBall Stats Track</string>
+    <string name="assist_dialog_player_question">Who assisted the shot?</string>
+    <string name="away_team">Away Team</string>
+    <string name="ball_possession_question">Who has the ball possession?</string>
+    <string name="block_dialog_player_question">Who blocked the shot?</string>
+    <string name="clock_input_error">Error. Cannot be empty.</string>
+    <string name="coach_button_text">Coach</string>
+    <string name="coach_dialog_substitution_text">Substitution</string>
+    <string name="coach_dialog_timeout_text">Time Out</string>
+    <string name="delete_game">Delete Game</string>
+    <string name="detailed_team_review_player2ptFG">FG</string>
+    <string name="detailed_team_review_player3ptFG">3pt</string>
+    <string name="detailed_team_review_playerAst">Ast</string>
+    <string name="detailed_team_review_playerBlk">Blk</string>
+    <string name="detailed_team_review_playerDNP">Did not play</string>
+    <string name="detailed_team_review_playerDefReb">Def</string>
+    <string name="detailed_team_review_playerFT">#</string>
+    <string name="detailed_team_review_playerFoul">PF</string>
+    <string name="detailed_team_review_playerName">Name</string>
+    <string name="detailed_team_review_playerNumber">#</string>
+    <string name="detailed_team_review_playerOffReb">Off</string>
+    <string name="detailed_team_review_playerPts">Pts</string>
+    <string name="detailed_team_review_playerStl">Stl</string>
+    <string name="detailed_team_review_playerTO">TO</string>
+    <string name="detailed_team_review_playerTime">Min</string>
+    <string name="detailed_team_review_playerTotalReb">Reb</string>
+    <string name="foul_button_text">Foul</string>
+    <string name="foul_dialog_fouled_question">Who was fouled?</string>
+    <string name="foul_dialog_player_question">Who committed the foul?</string>
+    <string name="foul_dialog_shooting_question">Is it a shooting foul?</string>
+    <string name="foul_dialog_type_question">What kind of foul was committed?</string>
+    <string name="free_throw_dialog_penalty">Penalty situation! Who will shoot 2 free throws?</string>
+    <string name="free_throw_dialog_question">Did he made the free throw?</string>
+    <string name="game_log_title">Game Log:</string>
+    <string name="game_review_team_2pt_fg">2pt Field Goal</string>
+    <string name="game_review_team_2pt_fg_percentage">2pt Field Goal Percentage</string>
+    <string name="game_review_team_3pt_fg">3pt Field Goal</string>
+    <string name="game_review_team_3pt_fg_percentage">3pt Field Goal Percentage</string>
+    <string name="game_review_team_assists">Assists</string>
+    <string name="game_review_team_blocks">Blocks</string>
+    <string name="game_review_team_defensive_rebounds">Defensive Rebounds</string>
+    <string name="game_review_team_fouls">Team Fouls</string>
+    <string name="game_review_team_ft">Free Throw</string>
+    <string name="game_review_team_ft_percentage">Free Throw Percentage</string>
+    <string name="game_review_team_name">Team</string>
+    <string name="game_review_team_offensive_rebounds">Offensive Rebounds</string>
+    <string name="game_review_team_points">Points</string>
+    <string name="game_review_team_steals">Steals</string>
+    <string name="game_review_team_total_possession">Total Ball Possession Duration</string>
+    <string name="game_review_team_total_rebounds">Total Rebounds</string>
+    <string name="game_review_team_turnovers">Turnovers</string>
+    <string name="generic_confirmation_question">Are you sure?</string>
+    <string name="generic_dialog_question">What do you want to do?</string>
+    <string name="go_next">Next</string>
+    <string name="home_team">Home Team</string>
+    <string name="need_five_players">Error! Need five players!</string>
+    <string name="newTeam_new_player_action">Actions</string>
+    <string name="new_game">New Game</string>
+    <string name="no">No</string>
+    <string name="on_back_button_message">Are you sure you want to cancel? Your progress will not be saved.</string>
+    <string name="on_back_button_title">Cancelling..</string>
+    <string name="player_input_error">Error. All fields are mandatory.</string>
+    <string name="player_name">Name</string>
+    <string name="player_number">#</string>
+    <string name="player_number_dulpicate_error">Error. Number already taken.</string>
+    <string name="player_score">Score</string>
+    <string name="proceed">Proceed</string>
+    <string name="rebound_dialog_player_question">Who made the rebound?</string>
+    <string name="rebound_dialog_team_rebound">Ball went out of bounds.</string>
+    <string name="reset_period_clock_confirmation_question">Are you sure you want to reset the period clock?</string>
+    <string name="reset_shot_clock_confirmation_question">Are you sure you want to reset the shot clock?</string>
+    <string name="save_dialog_confirmation_question">Are you sure you want to save now? You will not be able to track this game again.</string>
+    <string name="select_starters">Select starters of team:</string>
+    <string name="set_max_period_clock_title">Max regulation period clock per quarter? (in minutes)</string>
+    <string name="set_reset_shot_clock_title">In same ball possession situations, reset shot clock to how many seconds?</string>
+    <string name="set_time_title">Set time:</string>
+    <string name="shoot_button_text">Shoot</string>
+    <string name="shoot_dialog_assist_check_question">Was the shot assisted?</string>
+    <string name="shoot_dialog_block_check_question">Did the shot got blocked?</string>
+    <string name="shoot_dialog_class_2pt">2pt shot</string>
+    <string name="shoot_dialog_class_3pt">3pt shot</string>
+    <string name="shoot_dialog_class_question">What kind of shot the player took?</string>
+    <string name="shoot_dialog_player_question">Who took the shot?</string>
+    <string name="shoot_dialog_type_question">Did the shot go in?</string>
+    <string name="steal_dialog_player_question">Who stole the ball?</string>
+    <string name="substitution_dialog_player_in_question">Who would you like to insert into the game?</string>
+    <string name="substitution_dialog_player_out_question">Who would you like to substitute?</string>
+    <string name="substitution_dialog_question">Which team made a substitution?</string>
+    <string name="substitution_toast_not_enough_players">Cannot substitute. The team has no bench players!</string>
+    <string name="team_name_character_limit">Team name limited to 12 characters.</string>
+    <string name="team_name_label">Team Name:</string>
+    <string name="time_button_text">Time</string>
+    <string name="time_dialog_next_period_text">Start Next Period</string>
+    <string name="time_dialog_pause_text">Pause Time</string>
+    <string name="time_dialog_reset_period_clock_text">Reset Period Clock</string>
+    <string name="time_dialog_reset_shot_clock_text">Reset Shot Clock</string>
+    <string name="time_dialog_resume_text">Resume Time</string>
+    <string name="time_dialog_save_game_text">Save game</string>
+    <string name="timeout_decider_dialog_question">Who called the timeout?</string>
+    <string name="turnover_button_text">Turnover</string>
+    <string name="turnover_dialog_player_question">Who committed the turnover?</string>
+    <string name="turnover_dialog_type_offensivefoul_text">Offensive foul</string>
+    <string name="turnover_dialog_type_other_text">Turnover violation</string>
+    <string name="turnover_dialog_type_question">What kind of turnover is committed?</string>
+    <string name="turnover_dialog_type_steal_text">Stolen by defending player</string>
+    <string name="yes">Yes</string>
+    <style name="AppBaseTheme" parent="android:Theme.Light">		<!--
+             Theme customizations available in newer API levels can go in res/values-vXX/styles.xml, 
+			while customizations related to backward-compatibility can go here.
+		-->
+	</style>
+    <style name="AppTheme" parent="AppBaseTheme">		<!--
+      All customizations that are NOT specific to a particular API-level can 
+			go here.
+		-->
+	</style>
+    <style name="AppThemeNoTitleBar" parent="android:Theme.Light.NoTitleBar.Fullscreen"/>
+    <style name="DetailedStatsContainer" parent="WidthDependsOnWeight">
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:layout_weight">1</item>
+		<item name="android:orientation">vertical</item>
+	</style>
+    <style name="DialogButton">
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:gravity">center</item>
+	</style>
+    <style name="DialogTextView">
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:padding">@dimen/standard_padding_size</item>
+	</style>
+    <style name="GameActivityButton" parent="WidthDependsOnWeight">
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:layout_weight">1</item>
+		<item name="android:gravity">center</item>
+	</style>
+    <style name="GameReviewTableCell">
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:background">@drawable/cell_border</item>
+		<item name="android:gravity">center</item>
+	</style>
+    <style name="GameReviewTeamContainer" parent="WidthDependsOnWeight">
+		<item name="android:layout_height">match_parent</item>
+		<item name="android:layout_weight">1</item>
+	</style>
+    <style name="HeightDependsOnWeight">
+		<item name="android:layout_height">0dp</item>
+	</style>
+    <style name="InGameStatsTableCell" parent="WidthDependsOnWeight">
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:textSize">7sp</item>
+		<item name="android:maxLines">1</item>
+		<item name="android:paddingLeft">0dp</item>
+		<item name="android:paddingRight">0dp</item>
+		<item name="android:background">@drawable/cell_border</item>
+		<item name="android:gravity">center</item>
+	</style>
+    <style name="InGameStatsTableNameCell" parent="InGameStatsTableCell">
+		<item name="android:layout_weight">3</item>
+	</style>
+    <style name="InGameStatsTableNumberCell" parent="InGameStatsTableCell">
+		<item name="android:layout_weight">1</item>
+	</style>
+    <style name="InGameStatsTableRow">
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:weightSum">5</item>
+	</style>
+    <style name="InGameStatsTableScoreCell" parent="InGameStatsTableCell">
+		<item name="android:layout_weight">1</item>
+	</style>
+    <style name="TeamReviewTableDefaultCell" parent="InGameStatsTableCell">
+		<item name="android:layout_weight">1</item>
+	</style>
+    <style name="TeamReviewTableDidNotPlay" parent="InGameStatsTableCell">
+		<item name="android:layout_weight">14</item>
+	</style>
+    <style name="TeamReviewTablePlayerNameCell" parent="InGameStatsTableCell">
+		<item name="android:layout_weight">5</item>
+	</style>
+    <style name="TeamReviewTablePlayerStats">
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:orientation">horizontal</item>
+		<item name="android:weightSum">20</item>
+	</style>
+    <style name="TeamReviewTablePlayerTimeCell" parent="InGameStatsTableCell">
+		<item name="android:layout_weight">2</item>
+	</style>
+    <style name="WidthDependsOnWeight">
+		<item name="android:layout_width">0dp</item>
+	</style>
+</resources>

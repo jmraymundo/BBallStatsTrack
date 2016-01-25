@@ -1,0 +1,109 @@
+-- Merging decision tree log ---
+manifest
+ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:2:1-50:12
+	package
+		ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:3:2-39
+		INJECTED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml
+		INJECTED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml
+	android:versionName
+		ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:5:2-27
+		INJECTED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml
+		INJECTED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml
+	android:versionCode
+		ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:4:2-25
+		INJECTED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml
+		INJECTED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:2:11-69
+uses-sdk
+ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:6:2-8:35
+MERGED from [com.android.support:support-v4:21.0.3] C:\AndroidStudioProjects\BBallStatsTrack\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\AndroidManifest.xml:15:5-42
+	android:targetSdkVersion
+		ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:8:3-32
+		INJECTED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml
+		INJECTED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:7:3-29
+		INJECTED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml
+		INJECTED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml
+instrumentation#android.test.InstrumentationTestRunner
+ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:9:2-12:20
+	android:targetPackage
+		ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:11:3-54
+	android:name
+		ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:10:3-56
+application
+ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:13:2-49:16
+MERGED from [com.android.support:support-v4:21.0.3] C:\AndroidStudioProjects\BBallStatsTrack\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\AndroidManifest.xml:16:5-19
+	android:label
+		ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:16:3-35
+	android:allowBackup
+		ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:14:3-29
+	android:icon
+		ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:15:3-39
+	android:theme
+		ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:17:3-44
+uses-library#android.test.runner
+ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:18:3-54
+	android:name
+		ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:18:17-51
+activity#com.example.bballstatstrack.activities.ListGamesActivity
+ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:19:3-28:14
+	android:screenOrientation
+		ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:22:4-40
+	android:label
+		ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:21:4-36
+	android:theme
+		ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:23:4-35
+	android:name
+		ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:20:4-48
+intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
+ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:24:4-27:20
+action#android.intent.action.MAIN
+ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:25:5-57
+	android:name
+		ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:25:13-54
+category#android.intent.category.LAUNCHER
+ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:26:5-65
+	android:name
+		ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:26:15-62
+activity#com.example.bballstatstrack.activities.AddPlayersToTeamsActivity
+ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:29:3-33:50
+	android:screenOrientation
+		ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:32:4-40
+	android:label
+		ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:31:4-36
+	android:windowSoftInputMode
+		ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:33:4-47
+	android:name
+		ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:30:4-56
+activity#com.example.bballstatstrack.activities.GameActivity
+ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:34:3-38:50
+	android:screenOrientation
+		ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:38:4-47
+	android:label
+		ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:37:4-36
+	android:configChanges
+		ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:36:4-54
+	android:name
+		ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:35:4-43
+activity#com.example.bballstatstrack.activities.GameReviewActivity
+ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:39:3-43:50
+	android:screenOrientation
+		ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:43:4-47
+	android:label
+		ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:42:4-36
+	android:configChanges
+		ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:41:4-54
+	android:name
+		ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:40:4-49
+activity#com.example.bballstatstrack.activities.DetailedTeamReviewActivity
+ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:44:3-48:50
+	android:screenOrientation
+		ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:48:4-47
+	android:label
+		ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:47:4-36
+	android:configChanges
+		ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:46:4-54
+	android:name
+		ADDED from C:\AndroidStudioProjects\BBallStatsTrack\app\src\main\AndroidManifest.xml:45:4-57

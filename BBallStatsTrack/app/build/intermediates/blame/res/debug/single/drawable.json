@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "C:\\AndroidStudioProjects\\BBallStatsTrack\\app\\build\\intermediates\\res\\merged\\debug\\drawable\\background_activated.xml",
+        "source": "C:\\AndroidStudioProjects\\BBallStatsTrack\\app\\src\\main\\res\\drawable\\background_activated.xml"
+    },
+    {
+        "merged": "C:\\AndroidStudioProjects\\BBallStatsTrack\\app\\build\\intermediates\\res\\merged\\debug\\drawable\\basketball.png",
+        "source": "C:\\AndroidStudioProjects\\BBallStatsTrack\\app\\src\\main\\res\\drawable\\basketball.png"
+    },
+    {
+        "merged": "C:\\AndroidStudioProjects\\BBallStatsTrack\\app\\build\\intermediates\\res\\merged\\debug\\drawable\\cell_border.xml",
+        "source": "C:\\AndroidStudioProjects\\BBallStatsTrack\\app\\src\\main\\res\\drawable\\cell_border.xml"
+    }
+]

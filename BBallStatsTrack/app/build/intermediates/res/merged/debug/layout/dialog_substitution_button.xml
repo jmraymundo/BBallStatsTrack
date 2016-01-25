@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical" >
+	<TextView
+		android:id="@+id/substitution_dialog_question"
+		style="@style/DialogTextView"
+		android:text="@string/substitution_dialog_question" />
+	<Button
+		android:id="@+id/substitution_dialog_home_button"
+		style="@style/DialogButton" />
+	<Button
+		android:id="@+id/substitution_dialog_away_button"
+		style="@style/DialogButton" />
+</LinearLayout>
