@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/inGameTable"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="1">
+
+    <TableRow
+        android:id="@+id/inGameHeader"
+        style="@style/InGameStatsTableRow">
+
+        <TextView
+            android:id="@+id/game_ingame_playerNumber"
+            style="@style/InGameStatsTableNumberCell"
+            android:text="@string/player_number" />
+
+        <TextView
+            android:id="@+id/game_ingame_playerName"
+            style="@style/InGameStatsTableNameCell"
+            android:text="@string/player_name" />
+
+        <TextView
+            android:id="@+id/game_ingame_playerScore"
+            style="@style/InGameStatsTableScoreCell"
+            android:text="@string/player_score" />
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/player1"
+        style="@style/InGameStatsTableRow">
+
+        <TextView
+            android:id="@id/game_ingame_playerNumber"
+            style="@style/InGameStatsTableNumberCell" />
+
+        <TextView
+            android:id="@id/game_ingame_playerName"
+            style="@style/InGameStatsTableNameCell" />
+
+        <TextView
+            android:id="@id/game_ingame_playerScore"
+            style="@style/InGameStatsTableScoreCell" />
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/player2"
+        style="@style/InGameStatsTableRow">
+
+        <TextView
+            android:id="@id/game_ingame_playerNumber"
+            style="@style/InGameStatsTableNumberCell" />
+
+        <TextView
+            android:id="@id/game_ingame_playerName"
+            style="@style/InGameStatsTableNameCell" />
+
+        <TextView
+            android:id="@id/game_ingame_playerScore"
+            style="@style/InGameStatsTableScoreCell" />
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/player3"
+        style="@style/InGameStatsTableRow">
+
+        <TextView
+            android:id="@id/game_ingame_playerNumber"
+            style="@style/InGameStatsTableNumberCell" />
+
+        <TextView
+            android:id="@id/game_ingame_playerName"
+            style="@style/InGameStatsTableNameCell" />
+
+        <TextView
+            android:id="@id/game_ingame_playerScore"
+            style="@style/InGameStatsTableScoreCell" />
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/player4"
+        style="@style/InGameStatsTableRow">
+
+        <TextView
+            android:id="@id/game_ingame_playerNumber"
+            style="@style/InGameStatsTableNumberCell" />
+
+        <TextView
+            android:id="@id/game_ingame_playerName"
+            style="@style/InGameStatsTableNameCell" />
+
+        <TextView
+            android:id="@id/game_ingame_playerScore"
+            style="@style/InGameStatsTableScoreCell" />
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/player5"
+        style="@style/InGameStatsTableRow">
+
+        <TextView
+            android:id="@id/game_ingame_playerNumber"
+            style="@style/InGameStatsTableNumberCell" />
+
+        <TextView
+            android:id="@id/game_ingame_playerName"
+            style="@style/InGameStatsTableNameCell" />
+
+        <TextView
+            android:id="@id/game_ingame_playerScore"
+            style="@style/InGameStatsTableScoreCell" />
+    </TableRow>
+</TableLayout>
