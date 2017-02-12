@@ -28,10 +28,10 @@ public class GameDirectory {
             mGames = mFileSaverLoader.loadGames();
         } catch (IOException e) {
             e.printStackTrace();
-            mGames = new ArrayList<Game>();
+            mGames = new ArrayList<>();
         } catch (JSONException e) {
             e.printStackTrace();
-            mGames = new ArrayList<Game>();
+            mGames = new ArrayList<>();
         }
     }
 
