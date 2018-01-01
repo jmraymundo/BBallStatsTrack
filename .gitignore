@@ -1,9 +1,8 @@
-### Android ###
 # Built application files
 *.apk
 *.ap_
 
-# Files for the Dalvik VM
+# Files for the ART/Dalvik VM
 *.dex
 
 # Java class files
@@ -27,23 +26,31 @@ proguard/
 # Log Files
 *.log
 
-# MAC files
-.DS_Store
-/.DS_Store
-*/*/.DS_Store
+# Android Studio Navigation editor temp files
+.navigation/
 
-# Intellij project files
-*.ipr
-*.iws
-.idea
+# Android Studio captures folder
+captures/
+
+# IntelliJ
 *.iml
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/gradle.xml
+.idea/dictionaries
+.idea/libraries
 
-# Eclipse project files
-.classpath
-.project
-.settings
-project.properties
-local.properties
+# Keystore files
+# Uncomment the following line if you do not want to check your keystore files in.
+#*.jks
 
-.metadata
-.recommenders
+# External native build folder generated in Android Studio 2.2 and later
+.externalNativeBuild
+
+# Google Services (e.g. APIs or Firebase)
+google-services.json
+
+# Freeline
+freeline.py
+freeline/
+freeline_project_description.json
